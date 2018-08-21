@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">TravelBD</string>
+    <string name="profile_name">My Profile</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="settings">Settings</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="developer">Asaduzzaman Nur Shuvo</string>
+    <string name="total_post_number">250</string>
+    <string name="text_posts">Posts</string>
+    <string name="total_follower_number">375</string>
+    <string name="text_followers">Followers</string>
+    <string name="total_following_number">750</string>
+    <string name="text_following">Following</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="hometown">Lives in Maijdee, Noakhali, Bangledesh</string>
+    <string name="traveled">Traveled to 6 places!</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="gender">Male</string>
+    <string name="phone_no">+8801840098467</string>
+    <string name="bio">A special house is built in Shanghai. It is upside down.
+                        The house features a bathroom, bedrooms, a kitchen and a living area.
+                        Everything is upside down in the house, even the furniture and the cutlery.
+                        Many people are shocked. They lose their balance.
+                        One tourist likes the bathroom the most.
+                        There is a toilet in the bathroom. The tourist thinks that the water can fall out of the toilet.</string>
+    <string-array name="Gender_Names">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+    <string name="login">Log In</string>
+    <string name="signup">Sign Up</string>
+    <string name="hello_user">Hello Moshiur</string>
+    <string name="welcome">Welcome to our community</string>
+    <string name="get_started">get started</string>
+    <string name="user_personal_Info">User Personal Info</string>
+    <string name="user_public_Info">User Public Info</string>
+    <string name="check_your_email">Check Your Email</string>
+    <string name="check_email_dialog_box_text">Follow the link in the email we sent shuvroshawon9@gmail.com to confirm your email address and help secure your account.</string>
+    <string name="ok">OK</string>
+    <string name="field_username">username</string>
+    <string name="field_gender">gender</string>
+    <string name="field_phone_number">phone_number</string>
+    <string name="field_bio">bio</string>
+    <string name="gallery">GALLERY</string>
+    <string name="photo">PHOTO</string>
+    <string name="next">Next</string>
+    <string name="selected_image">Selected Image</string>
+
+</resources>
