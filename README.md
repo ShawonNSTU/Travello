@@ -1,5 +1,5 @@
-                                                             # Travello
-                                                        My Final Year Project
+                                                          # Travello
+                                                     My Final Year Project
 
 1) A login page will appear initially and the user has to login in order to continue.
 2) If the user is new, then he/she will have to fill the registration form (username, password, email etc.)
