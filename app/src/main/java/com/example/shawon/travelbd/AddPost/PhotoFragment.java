@@ -48,6 +48,22 @@ public class PhotoFragment extends Fragment {
 
         capturePhoto();
 
+        closeButtonHandler();
+
+    }
+
+    private void closeButtonHandler() {
+
+        ImageView mClose = (ImageView) getView().findViewById(R.id.close);
+
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick : Closing the Photo Fragment");
+                getActivity().finish();
+            }
+        });
+
     }
 
     /**
