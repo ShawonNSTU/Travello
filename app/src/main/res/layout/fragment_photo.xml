@@ -4,11 +4,20 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1">
+
+        <include layout="@layout/snippet_top_photo_fragment"/>
+
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/frameLayout"
+        android:layout_below="@+id/relativeLayout1"
         android:layout_marginBottom="125dp">
     </FrameLayout>
 

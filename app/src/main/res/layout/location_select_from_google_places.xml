@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        tools:context=".AddPost.LocationSelectFromGooglePlaces"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/relativeLayout1"
+        android:background="@drawable/white_gray_border_bottom"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        >
+
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:id="@+id/location_search"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_location_search"
+            />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/save_check"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="5dp"
+            />
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/location_search"
+            android:layout_toStartOf="@+id/save_check"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:textColor="@color/light_black"
+            android:id="@+id/input_search"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="@string/try_your_traveled_places"
+            android:background="@null"
+            android:textColorHint="@color/edittext_hint_color"
+            />
+
+    </RelativeLayout>
+    
+</RelativeLayout>
