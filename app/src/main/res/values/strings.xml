@@ -49,5 +49,14 @@
     <string name="photo">PHOTO</string>
     <string name="next">Next</string>
     <string name="selected_image">Selected Image</string>
+    <string name="photo_string">Photo</string>
+    <string name="write_a_caption">Write a caption...</string>
+    <string name="share_to">Share To</string>
+    <string name="share">Share</string>
+    <string name="add_location">Add Location</string>
+    <string name="google_maps_API_key">AIzaSyA4_6s8a86g3a-67vu0zIKdgZhMCGq63Hw</string>
+    <string name="try_your_traveled_places">Try your traveled places</string>
+    <string name="user_selected_location">User Selected Location</string>
+    <string name="rate_this_place">Rate This Place</string>
 
 </resources>

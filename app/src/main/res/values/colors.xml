@@ -15,4 +15,6 @@
     <color name="divider">#D3D3D3</color>
     <color name="next">#1E90FF</color>
     <color name="transparent">#7f333639</color>
+    <color name="edittext_hint_color">#C0C0C0</color>
+    <color name="light_white">#F5F5F5</color>
 </resources>
