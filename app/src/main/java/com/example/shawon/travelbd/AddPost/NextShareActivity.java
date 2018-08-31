@@ -88,6 +88,7 @@ public class NextShareActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"rateYourTraveledPlace : OnClick");
+
                 if (mSelectedLocation.equals("")){
                     Log.d(TAG,"rateYourTraveledPlaceOnClick : Didn't click on add location");
                     Toast.makeText(context,"Sorry, you didn't add the location of your traveled place",Toast.LENGTH_SHORT).show();
