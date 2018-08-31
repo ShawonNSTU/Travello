@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,14 +46,14 @@ public class NextShareActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
 
-    private String mAppend = "file://";
+    private String mSelectedLocation = "";
+    private String mSelectedLocationRating = "";
+    private float mRating = (float) 0.0;
 
     private TextView mAddLocation;
     private ImageView mLocationIcon;
-
-    private String mSelectedLocation = "";
-
-    private String mSelectedLocationRating = "";
+    private TextView mRateYourTraveledPlace;
+    private ImageView mRatingIcon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class NextShareActivity extends AppCompatActivity {
 
         mAddLocation = (TextView) findViewById(R.id.add_location);
         mLocationIcon = (ImageView) findViewById(R.id.location_icon);
+        mRateYourTraveledPlace = (TextView) findViewById(R.id.add_rating);
+        mRatingIcon = (ImageView) findViewById(R.id.rating_icon);
 
         setupToolbar();
 
@@ -71,6 +75,92 @@ public class NextShareActivity extends AppCompatActivity {
         addLocationOnClick();
 
         isUserLoggedInOrNot();
+
+        rateYourTraveledPlaceOnClick();
+
+    }
+
+    private void rateYourTraveledPlaceOnClick() {
+
+        RelativeLayout mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout4);
+
+        mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"rateYourTraveledPlace : OnClick");
+                if (mSelectedLocation.equals("")){
+                    Log.d(TAG,"rateYourTraveledPlaceOnClick : Didn't click on add location");
+                    Toast.makeText(context,"Sorry, you didn't add the location of your traveled place",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d(TAG,"rateYourTraveledPlaceOnClick : Navigating To Rating Dialog");
+                    setupRatingDialog();
+                }
+            }
+        });
+    }
+
+    private void setupRatingDialog() {
+
+        final Dialog mDialog;
+
+        mDialog = new Dialog(context);
+
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        mDialog.setContentView(R.layout.custom_rating_dialog);
+
+        RelativeLayout mOkButtonArea = (RelativeLayout) mDialog.findViewById(R.id.ok_button_area);
+
+        final RatingBar mRatingBar = (RatingBar) mDialog.findViewById(R.id.ratingBar);
+
+        mRatingBar.setRating(mRating);
+
+        final TextView mRateThisPlace = (TextView) mDialog.findViewById(R.id.rate_this_place);
+
+        final TextView mRatingBarIndicatorText = (TextView) mDialog.findViewById(R.id.ratingBarIndicatorText);
+
+        mDialog.getWindow().getAttributes().windowAnimations = R.style.fade_in_animation;
+
+        mDialog.setCanceledOnTouchOutside(false);
+
+        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+
+                mRating = rating;
+
+                Log.d(TAG,"mRatingBar : Rating Changed To: "+mRating);
+
+                if (mRating > 0.0) {
+                    mRateThisPlace.setText(R.string.thank_you_for_the_rating);
+                    mRatingBarIndicatorText.setText(String.valueOf(rating));
+                }
+                else {
+                    mRateThisPlace.setText(getString(R.string.rate_this_place));
+                    mRatingBarIndicatorText.setText(getString(R.string.tap_a_star_to_rate));
+                }
+            }
+        });
+
+        mOkButtonArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"setupRatingDialog : OnClickOkButton");
+
+                mDialog.dismiss();
+
+                if (mRating > 0.0){
+                    mRateYourTraveledPlace.setText(String.valueOf(mRating));
+                    mRatingIcon.setColorFilter(getResources().getColor(R.color.next));
+                }
+                else {
+                    mRatingIcon.setColorFilter(null);
+                    mRateYourTraveledPlace.setText(getString(R.string.rate_this_place));
+                }
+            }
+        });
+        mDialog.show();
 
     }
 
@@ -120,6 +210,8 @@ public class NextShareActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d(TAG,"onActivityResult : Called");
+
         if (requestCode == INCOMING_ACTIVITY_REQUEST_CODE){
             if (resultCode == RESULT_OK){
                 String mGetIntentFromIncomingActivity = data.getStringExtra(getString(R.string.user_selected_location));
@@ -133,8 +225,14 @@ public class NextShareActivity extends AppCompatActivity {
                 for(int j = i+1; j<mGetIntentFromIncomingActivity.length(); j++){
                     mSelectedLocationRating+=mGetIntentFromIncomingActivity.charAt(j);
                 }
+                if (Float.parseFloat(mSelectedLocationRating) < 0){
+                    mSelectedLocationRating = "2.2";
+                }
                 mAddLocation.setText(mSelectedLocation);
                 mLocationIcon.setColorFilter(getResources().getColor(R.color.next));
+                mRateYourTraveledPlace.setText(getString(R.string.rate_this_place));
+                mRatingIcon.setColorFilter(null);
+                mRating = 0;
             }
         }
     }
@@ -148,7 +246,7 @@ public class NextShareActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ImageView mSelectedImage = (ImageView) findViewById(R.id.imageShare);
-        String imageUrl = mAppend + intent.getStringExtra(getString(R.string.selected_image));
+        String imageUrl = "file://" + intent.getStringExtra(getString(R.string.selected_image));
         Picasso.get().load(imageUrl).resize(200,200).onlyScaleDown().centerCrop().into(mSelectedImage);
 
     }
