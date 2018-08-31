@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:minWidth="275dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rate_this_place"
+        android:text="@string/rate_this_place"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBar"
+        android:layout_gravity="center_horizontal"
+        android:theme="@style/RatingBar"
+        android:numStars="5"
+        android:rating="0.0"
+        android:stepSize="0.1"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:isIndicator="false"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBarIndicatorText"
+        android:text="@string/tap_a_star_to_rate"
+        android:textColor="@color/light_black"
+        android:textSize="14sp"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/ok_button_area"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:textColor="@color/light_black"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
