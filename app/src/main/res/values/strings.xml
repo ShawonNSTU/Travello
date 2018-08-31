@@ -58,5 +58,8 @@
     <string name="try_your_traveled_places">Try your traveled places</string>
     <string name="user_selected_location">User Selected Location</string>
     <string name="rate_this_place">Rate This Place</string>
+    <string name="tap_a_star_to_rate">Tap a star to rate</string>
+    <string name="rate_your_traveled_place">Rate Your Traveled Place</string>
+    <string name="thank_you_for_the_rating">Thank you for the rating</string>
 
 </resources>
