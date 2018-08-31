@@ -17,4 +17,13 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/next</item>
+        <item name="colorControlActivated">@color/next</item>
+    </style>
+
+    <style name="fade_in_animation">
+        <item name="android:windowEnterAnimation">@anim/fade_in_anim</item>
+    </style>
+
 </resources>
