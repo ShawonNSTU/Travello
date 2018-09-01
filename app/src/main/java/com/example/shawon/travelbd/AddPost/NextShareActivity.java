@@ -2,6 +2,7 @@ package com.example.shawon.travelbd.AddPost;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -162,6 +164,23 @@ public class NextShareActivity extends AppCompatActivity {
             }
         });
         mDialog.show();
+
+        mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK){
+                    Log.d(TAG,"mDialog : setOnKeyListener : Pressed on the back button to dismiss while dialog is open");
+                    if (!mRateYourTraveledPlace.getText().toString().equals("Rate This Place")) {
+                        mRating = Float.parseFloat(mRateYourTraveledPlace.getText().toString());
+                    }
+                    else{
+                        mRating = 0;
+                    }
+                    dialog.dismiss();
+                }
+                return true;
+            }
+        });
 
     }
 
