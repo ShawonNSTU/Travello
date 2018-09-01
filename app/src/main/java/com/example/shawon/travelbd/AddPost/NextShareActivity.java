@@ -105,6 +105,8 @@ public class NextShareActivity extends AppCompatActivity {
 
     private void setupRatingDialog() {
 
+        Log.d(TAG,"setupRatingDialog : Setting up the rating dialog");
+
         final Dialog mDialog;
 
         mDialog = new Dialog(context);
@@ -133,7 +135,7 @@ public class NextShareActivity extends AppCompatActivity {
 
                 mRating = rating;
 
-                Log.d(TAG,"mRatingBar : Rating Changed To: "+mRating);
+                Log.d(TAG,"mRatingBar : setOnRatingBarChangeListener : Rating Changed To: "+mRating);
 
                 if (mRating > 0.0) {
                     mRateThisPlace.setText(R.string.thank_you_for_the_rating);
@@ -168,9 +170,11 @@ public class NextShareActivity extends AppCompatActivity {
         mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
                 if (keyCode == KeyEvent.KEYCODE_BACK){
-                    Log.d(TAG,"mDialog : setOnKeyListener : Pressed on the back button to dismiss while dialog is open");
-                    if (!mRateYourTraveledPlace.getText().toString().equals("Rate This Place")) {
+                    Log.d(TAG,"mDialog : setOnKeyListener : Pressed on the back button to dismiss the dialog");
+
+                    if (!mRateYourTraveledPlace.getText().toString().equals(getString(R.string.rate_this_place))) {
                         mRating = Float.parseFloat(mRateYourTraveledPlace.getText().toString());
                     }
                     else{
@@ -248,10 +252,13 @@ public class NextShareActivity extends AppCompatActivity {
                 if (Float.parseFloat(mSelectedLocationRating) < 0){
                     mSelectedLocationRating = "2.2";
                 }
+
                 mAddLocation.setText(mSelectedLocation);
                 mLocationIcon.setColorFilter(getResources().getColor(R.color.next));
+
                 mRateYourTraveledPlace.setText(getString(R.string.rate_this_place));
                 mRatingIcon.setColorFilter(null);
+
                 mRating = 0;
             }
         }
