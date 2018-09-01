@@ -35,6 +35,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
@@ -63,7 +65,8 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        TextWatcher {
+        TextWatcher,
+        LocationListener {
 
     private static final String TAG = "LocationSelectActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -367,8 +370,19 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                 getDeviceLocation();
             }
             else {
-                Log.d(TAG,"mGoogleApiClient : onConnected : Location is null");
-                Toast.makeText(context,"Unable to get current location",Toast.LENGTH_SHORT).show();
+                LocationRequest mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(1000);
+                mLocationRequest.setFastestInterval(1000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
+                if (location == null) {
+                    Log.d(TAG, "mGoogleApiClient : onConnected : Location is null");
+                    Toast.makeText(context, "Unable to get current location. Please turn on your location.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d(TAG,"mGoogleApiClient : onConnected : Location Found");
+                    getDeviceLocation();
+                }
             }
         }catch (SecurityException e){
             e.printStackTrace();
@@ -503,5 +517,10 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
     @Override
     public void afterTextChanged(Editable s) {
         // Nothing To Do
+    }
+
+    @Override
+    public void onLocationChanged(Location mLocation) {
+        location = mLocation;
     }
 }
