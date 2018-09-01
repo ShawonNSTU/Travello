@@ -20,6 +20,7 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
 
     private Camera camera;
     private SurfaceHolder surfaceHolder;
+    Camera.Parameters parameters;
 
     public ShowCamera(Context context,Camera camera) {
         super(context);
@@ -30,8 +31,6 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-        Camera.Parameters parameters = null;
 
         try {
             Log.d(TAG,"Getting Camera Parameters");
