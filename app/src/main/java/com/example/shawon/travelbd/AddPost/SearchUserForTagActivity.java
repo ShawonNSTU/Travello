@@ -23,5 +23,6 @@ public class SearchUserForTagActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_user_for_tag);
 
         Log.d(TAG, "onCreate : Started.");
+
     }
 }
