@@ -228,6 +228,7 @@
                     android:layout_marginBottom="1dp"
                     android:layout_alignParentEnd="true"
                     android:checked="false"
+                    android:theme="@style/SwitchCompatColor"
                     />
 
                 <TextView
