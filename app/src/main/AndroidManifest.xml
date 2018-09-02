@@ -44,6 +44,7 @@
         <activity android:name=".SplashSreen.SignUpToWelcomeActivity"/>
         <activity android:name=".AddPost.NextShareActivity"/>
         <activity android:name=".AddPost.LocationSelectFromGooglePlaces"/>
+        <activity android:name=".AddPost.SearchUserForTagActivity"/>
     </application>
 
 </manifest>
