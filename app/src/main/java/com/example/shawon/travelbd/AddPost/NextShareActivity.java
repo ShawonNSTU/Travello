@@ -80,6 +80,23 @@ public class NextShareActivity extends AppCompatActivity {
 
         rateYourTraveledPlaceOnClick();
 
+        tagPeopleOnClick();
+
+    }
+
+    private void tagPeopleOnClick() {
+
+        RelativeLayout mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout5);
+
+        mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"TagPeople : OnClick : Navigating To SearchUserForTagActivity");
+
+                startActivity(new Intent(context,SearchUserForTagActivity.class));
+            }
+        });
+
     }
 
     private void rateYourTraveledPlaceOnClick() {
