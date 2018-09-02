@@ -25,5 +25,9 @@
     <style name="fade_in_animation">
         <item name="android:windowEnterAnimation">@anim/fade_in_anim</item>
     </style>
+    
+    <style name="SwitchCompatColor" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/next</item>
+    </style>
 
 </resources>
