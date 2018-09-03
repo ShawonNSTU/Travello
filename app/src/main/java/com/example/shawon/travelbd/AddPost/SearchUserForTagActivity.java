@@ -21,8 +21,6 @@ public class SearchUserForTagActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user_for_tag);
-
         Log.d(TAG, "onCreate : Started.");
-
     }
 }
