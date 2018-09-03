@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.example.shawon.travelbd.R;
@@ -25,16 +24,6 @@ public class SearchUserForTagActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate : Started.");
 
-        setupToolbar();
     }
 
-    private void setupToolbar() {
-
-        Log.d(TAG,"setupToolbar : Setting up toolbar in SearchUserForTag Activity");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.searchUserForTagToolBar);
-
-        setSupportActionBar(toolbar);
-
-    }
 }
