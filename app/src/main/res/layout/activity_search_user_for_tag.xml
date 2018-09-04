@@ -7,4 +7,12 @@
 
     <include layout="@layout/search_user_for_tag_toolbar"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycler_user"
+        android:scrollbars="vertical"
+        >
+    </android.support.v7.widget.RecyclerView>
+
 </LinearLayout>
