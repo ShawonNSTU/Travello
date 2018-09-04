@@ -63,5 +63,6 @@
     <string name="thank_you_for_the_rating">Thank you for the rating</string>
     <string name="tag_people">Tag People</string>
     <string name="facebook">Facebook</string>
+    <string name="search_for_a_user">Search for a user</string>
 
 </resources>
