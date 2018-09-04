@@ -63,7 +63,7 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
     private void loadAllUserInRecyclerAdapter(String search) {
 
-        Log.d(TAG,"loadAllUserInRecyclerAdapter : Loading Recycler Adapter For Searched String");
+        Log.d(TAG,"loadAllUserInRecyclerAdapter : Loading Recycler Adapter For Searched String : "+search);
 
         Query query = mUserPublicInfo.orderByChild(getString(R.string.field_username)).startAt(search).endAt(search + "\uf8ff");
 
@@ -90,7 +90,7 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
                 viewHolder.setRecyclerViewItemClickListener(new RecyclerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-
+                        Log.d(TAG,"RecyclerViewItemClickListener : onClick");
                     }
                 });
 
@@ -107,6 +107,8 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        Log.d(TAG, "onTextChanged : Current Text In The Search Bar is : "+mInputSearch.getText().toString());
 
         String mSearchedString = mInputSearch.getText().toString();
 
