@@ -54,16 +54,16 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
         mDatabase = FirebaseDatabase.getInstance();
         mUserPublicInfo = mDatabase.getReference().child(getString(R.string.user_public_Info));
 
-        loadAllUserInRecyclerAdapter("");
+        loadSearchedUserInRecyclerAdapter("");
 
         mInputSearch = (AutoCompleteTextView) findViewById(R.id.user_input_search);
         mInputSearch.addTextChangedListener(this);
 
     }
 
-    private void loadAllUserInRecyclerAdapter(String search) {
+    private void loadSearchedUserInRecyclerAdapter(String search) {
 
-        Log.d(TAG,"loadAllUserInRecyclerAdapter : Loading Recycler Adapter For Searched String : "+search);
+        Log.d(TAG,"loadSearchedUserInRecyclerAdapter : Loading Recycler Adapter For Searched String : "+search);
 
         Query query = mUserPublicInfo.orderByChild(getString(R.string.field_username)).startAt(search).endAt(search + "\uf8ff");
 
@@ -126,10 +126,10 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
             mFirstLetter += mRestString;
 
-            loadAllUserInRecyclerAdapter(mFirstLetter);
+            loadSearchedUserInRecyclerAdapter(mFirstLetter);
         }
         else {
-            loadAllUserInRecyclerAdapter("");
+            loadSearchedUserInRecyclerAdapter("");
         }
     }
 
