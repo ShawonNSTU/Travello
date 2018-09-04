@@ -25,5 +25,4 @@ public class SearchUserForTagActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate : Started.");
 
     }
-
 }
