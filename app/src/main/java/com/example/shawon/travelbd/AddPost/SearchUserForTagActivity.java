@@ -10,8 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
@@ -58,6 +62,45 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
         mInputSearch = (AutoCompleteTextView) findViewById(R.id.user_input_search);
         mInputSearch.addTextChangedListener(this);
+
+        mInputSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || event.getAction() == KeyEvent.ACTION_DOWN
+                        || event.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                    Log.d(TAG, "mInputSearch : onEditorAction");
+
+                    InputMethodManager in = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(SearchUserForTagActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+
+                    String mSearchedString = mInputSearch.getText().toString();
+
+                    if (!mSearchedString.isEmpty()) {
+
+                        String mFirstLetter = String.valueOf(mSearchedString.charAt(0));
+
+                        mFirstLetter = mFirstLetter.toUpperCase();
+
+                        String mRestString = "";
+
+                        for (int i = 1; i < mSearchedString.length(); i++) {
+                            mRestString += mSearchedString.charAt(i);
+                        }
+
+                        mFirstLetter += mRestString;
+
+                        loadSearchedUserInRecyclerAdapter(mFirstLetter);
+                    }
+                    else {
+                        loadSearchedUserInRecyclerAdapter("");
+                    }
+                }
+                return false;
+            }
+        });
 
     }
 
