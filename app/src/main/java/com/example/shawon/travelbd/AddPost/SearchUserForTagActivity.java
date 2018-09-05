@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
@@ -37,6 +38,7 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
     private RecyclerView recyclerView;
     private AutoCompleteTextView mInputSearch;
+    private ImageView mSaveCheck;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserPublicInfo;
@@ -102,6 +104,15 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
             }
         });
 
+        mSaveCheck = (ImageView) findViewById(R.id.save_check);
+
+        mSaveCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "mSaveCheck : OnClicked");
+            }
+        });
+
     }
 
     private void loadSearchedUserInRecyclerAdapter(String search) {
@@ -154,6 +165,13 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
         Log.d(TAG, "onTextChanged : Current Text In The Search Bar is : "+mInputSearch.getText().toString());
 
         String mSearchedString = mInputSearch.getText().toString();
+
+        if (!mSearchedString.isEmpty()){
+            mSaveCheck.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_check));
+        }
+        else {
+            mSaveCheck.setImageDrawable(null);
+        }
 
         if (!mSearchedString.isEmpty()) {
 
