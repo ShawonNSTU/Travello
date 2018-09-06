@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
@@ -43,6 +44,8 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserPublicInfo;
     private FirebaseRecyclerAdapter<UserPublicInfo,SearchUserForTagRecyclerViewHolder> mAdapter;
+
+    private boolean mRecyclerItemClickListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +113,13 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "mSaveCheck : OnClicked");
+
+                if (!mRecyclerItemClickListener) {
+                    Toast.makeText(context,"Sorry, you have to click on a username from the list that match with your search bar input.",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(context,"Your input is correct.",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -144,7 +154,14 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
                 viewHolder.setRecyclerViewItemClickListener(new RecyclerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Log.d(TAG,"RecyclerViewItemClickListener : onClick");
+                        Log.d(TAG,"RecyclerViewItemClickListener : onClicked : "+getItem(position).getUsername());
+
+                        InputMethodManager in = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        in.hideSoftInputFromWindow(SearchUserForTagActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+
+                        mInputSearch.setText(getItem(position).getUsername());
+
+                        mRecyclerItemClickListener = true;
                     }
                 });
 
@@ -163,6 +180,8 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
         Log.d(TAG, "onTextChanged : Current Text In The Search Bar is : "+mInputSearch.getText().toString());
+
+        mRecyclerItemClickListener = false;
 
         String mSearchedString = mInputSearch.getText().toString();
 
