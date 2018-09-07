@@ -151,6 +151,7 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
                         InputMethodManager in = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                         in.hideSoftInputFromWindow(SearchUserForTagActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
 
+                        Log.d(TAG,"Navigating Back To NextShareActivity With A User : "+getItem(position).getUsername());
                         Intent intent = new Intent();
                         intent.putExtra(getString(R.string.selected_user_info), getRef(position).getKey() + "@" + getItem(position).getUsername());
                         setResult(RESULT_OK, intent);
