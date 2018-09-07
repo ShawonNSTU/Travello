@@ -40,6 +40,7 @@ public class NextShareActivity extends AppCompatActivity {
     private static final String TAG = "NextShareActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int INCOMING_ACTIVITY_REQUEST_CODE = 701;
+    private static final int INCOMING_ACTIVITY_SEARCH_USER_FOR_TAG_REQUEST_CODE = 702;
     private Context context = NextShareActivity.this;
 
     private FirebaseAuth mAuth;
@@ -51,11 +52,15 @@ public class NextShareActivity extends AppCompatActivity {
     private String mSelectedLocation = "";
     private String mSelectedLocationRating = "";
     private float mRating = (float) 0.0;
+    private String mTotalSelectedUserNameForTag = "";
+    private String mTotalSelectedUserAuthIdForTag = "";
 
     private TextView mAddLocation;
     private ImageView mLocationIcon;
     private TextView mRateYourTraveledPlace;
     private ImageView mRatingIcon;
+    private TextView mTagPeople;
+    private ImageView mTagPeopleIcon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +74,8 @@ public class NextShareActivity extends AppCompatActivity {
         mLocationIcon = (ImageView) findViewById(R.id.location_icon);
         mRateYourTraveledPlace = (TextView) findViewById(R.id.add_rating);
         mRatingIcon = (ImageView) findViewById(R.id.rating_icon);
+        mTagPeople = (TextView) findViewById(R.id.tag_people);
+        mTagPeopleIcon = (ImageView) findViewById(R.id.tag_people_icon);
 
         setupToolbar();
 
@@ -93,7 +100,28 @@ public class NextShareActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG,"TagPeople : OnClick : Navigating To SearchUserForTagActivity");
 
-                startActivity(new Intent(context,SearchUserForTagActivity.class));
+                Intent intent = new Intent(context,SearchUserForTagActivity.class);
+                startActivityForResult(intent,INCOMING_ACTIVITY_SEARCH_USER_FOR_TAG_REQUEST_CODE);
+            }
+        });
+
+        mTagPeopleIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"mTagPeopleIcon : onClick");
+                if(!mTotalSelectedUserNameForTag.equals("")){
+                    Log.d(TAG,"mTagPeopleIcon : onClick : Removing All The Tagged People.");
+                    mTagPeople.setText(getString(R.string.tag_people));
+                    mTotalSelectedUserNameForTag = "";
+                    mTotalSelectedUserAuthIdForTag = "";
+                    mTagPeopleIcon.setImageDrawable(getDrawable(R.drawable.ic_tag_people));
+                    mTagPeopleIcon.setColorFilter(null);
+                }
+                else {
+                    Log.d(TAG,"mTagPeopleIcon : OnClick : Navigating To SearchUserForTagActivity");
+                    Intent intent = new Intent(context,SearchUserForTagActivity.class);
+                    startActivityForResult(intent,INCOMING_ACTIVITY_SEARCH_USER_FOR_TAG_REQUEST_CODE);
+                }
             }
         });
 
@@ -277,6 +305,64 @@ public class NextShareActivity extends AppCompatActivity {
                 mRatingIcon.setColorFilter(null);
 
                 mRating = 0;
+            }
+        }
+        if (requestCode == INCOMING_ACTIVITY_SEARCH_USER_FOR_TAG_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String mGetIntentFromIncomingActivity = data.getStringExtra(getString(R.string.selected_user_info));
+                String mSelectedSingleUserAuthIdForTag = "";
+                String mSelectedSingleUserNameForTag = "";
+                int i;
+                for (i=0; i<mGetIntentFromIncomingActivity.length(); i++){
+                    if(mGetIntentFromIncomingActivity.charAt(i)!='@') mSelectedSingleUserAuthIdForTag+=mGetIntentFromIncomingActivity.charAt(i);
+                    else break;
+                }
+                for(int j = i+1; j<mGetIntentFromIncomingActivity.length(); j++){
+                    mSelectedSingleUserNameForTag+=mGetIntentFromIncomingActivity.charAt(j);
+                }
+                if (mTotalSelectedUserNameForTag.equals("")){
+                    mTotalSelectedUserNameForTag+=mSelectedSingleUserNameForTag+"@";
+                }
+                if (mTotalSelectedUserAuthIdForTag.equals("")){
+                    mTotalSelectedUserAuthIdForTag+=mSelectedSingleUserAuthIdForTag+"@";
+                }
+                if (mTagPeople.getText().toString().equals(getString(R.string.tag_people))){
+                    mTagPeople.setText(mSelectedSingleUserNameForTag);
+                }
+                else{
+                    String single_user_auth = "";
+                    boolean check = false;
+                    for (int k=0; k<mTotalSelectedUserAuthIdForTag.length(); k++){
+                        char ch = mTotalSelectedUserAuthIdForTag.charAt(k);
+                        if (ch == '@'){
+                            if (single_user_auth.equals(mSelectedSingleUserAuthIdForTag)){
+                                check = true;
+                                break;
+                            }
+                            single_user_auth = "";
+                        }
+                        else {
+                            single_user_auth+=ch;
+                        }
+                    }
+                    if (!check){
+                        mTotalSelectedUserNameForTag+=mSelectedSingleUserNameForTag+"@";
+                        mTotalSelectedUserAuthIdForTag+=mSelectedSingleUserAuthIdForTag+"@";
+                        String string = "";
+                        for(int k=0; k<mTotalSelectedUserNameForTag.length(); k++){
+                            char character = mTotalSelectedUserNameForTag.charAt(k);
+                            if (character == '@'){
+                                string+=" ";
+                            }
+                            else {
+                                string+=character;
+                            }
+                        }
+                        mTagPeople.setText(string);
+                    }
+                }
+                mTagPeopleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+                mTagPeopleIcon.setColorFilter(getResources().getColor(R.color.next));
             }
         }
     }
