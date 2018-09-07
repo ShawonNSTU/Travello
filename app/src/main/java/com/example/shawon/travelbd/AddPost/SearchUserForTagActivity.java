@@ -1,6 +1,8 @@
 package com.example.shawon.travelbd.AddPost;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,12 +43,15 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
     private RecyclerView recyclerView;
     private AutoCompleteTextView mInputSearch;
     private ImageView mSaveCheck;
+    private ProgressBar mProgressBar;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserPublicInfo;
     private FirebaseRecyclerAdapter<UserPublicInfo,SearchUserForTagRecyclerViewHolder> mAdapter;
 
     private boolean mRecyclerItemClickListener;
+    private String mSelectedUserNameForTag;
+    private String mSelectedUserAuthIdForTag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +59,13 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
         setContentView(R.layout.activity_search_user_for_tag);
 
         Log.d(TAG, "onCreate : Started.");
+
+        mProgressBar = (ProgressBar) findViewById(R.id.searchUserForTagProgressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        if (Build.VERSION.SDK_INT >= 21){
+            mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.gray),android.graphics.PorterDuff.Mode.MULTIPLY);
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_user);
         recyclerView.setHasFixedSize(true);
@@ -64,6 +77,8 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
         mUserPublicInfo = mDatabase.getReference().child(getString(R.string.user_public_Info));
 
         loadSearchedUserInRecyclerAdapter("");
+
+        mProgressBar.setVisibility(View.GONE);
 
         mInputSearch = (AutoCompleteTextView) findViewById(R.id.user_input_search);
         mInputSearch.addTextChangedListener(this);
@@ -118,7 +133,12 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
                     Toast.makeText(context,"Sorry, you have to click on a username from the list that match with your search bar input.",Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Toast.makeText(context,"Your input is correct.",Toast.LENGTH_LONG).show();
+                    if (!mSelectedUserAuthIdForTag.equals("") && !mSelectedUserNameForTag.equals("")) {
+                        Intent intent = new Intent();
+                        intent.putExtra(getString(R.string.selected_user_info), mSelectedUserAuthIdForTag + "@" + mSelectedUserNameForTag);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                 }
             }
         });
@@ -162,6 +182,10 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
                         mInputSearch.setText(getItem(position).getUsername());
 
                         mRecyclerItemClickListener = true;
+
+                        mSelectedUserNameForTag = getItem(position).getUsername();
+
+                        mSelectedUserAuthIdForTag = getRef(position).getKey();
                     }
                 });
 
@@ -182,6 +206,10 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
         Log.d(TAG, "onTextChanged : Current Text In The Search Bar is : "+mInputSearch.getText().toString());
 
         mRecyclerItemClickListener = false;
+
+        mSelectedUserNameForTag = "";
+
+        mSelectedUserAuthIdForTag = "";
 
         String mSearchedString = mInputSearch.getText().toString();
 
