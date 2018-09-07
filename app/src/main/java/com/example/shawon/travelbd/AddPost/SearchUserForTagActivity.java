@@ -17,10 +17,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
@@ -42,16 +40,11 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
     private RecyclerView recyclerView;
     private AutoCompleteTextView mInputSearch;
-    private ImageView mSaveCheck;
     private ProgressBar mProgressBar;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserPublicInfo;
     private FirebaseRecyclerAdapter<UserPublicInfo,SearchUserForTagRecyclerViewHolder> mAdapter;
-
-    private boolean mRecyclerItemClickListener;
-    private String mSelectedUserNameForTag;
-    private String mSelectedUserAuthIdForTag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,27 +115,6 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
             }
         });
 
-        mSaveCheck = (ImageView) findViewById(R.id.save_check);
-
-        mSaveCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "mSaveCheck : OnClicked");
-
-                if (!mRecyclerItemClickListener) {
-                    Toast.makeText(context,"Sorry, you have to click on a username from the list that match with your search bar input.",Toast.LENGTH_LONG).show();
-                }
-                else {
-                    if (!mSelectedUserAuthIdForTag.equals("") && !mSelectedUserNameForTag.equals("")) {
-                        Intent intent = new Intent();
-                        intent.putExtra(getString(R.string.selected_user_info), mSelectedUserAuthIdForTag + "@" + mSelectedUserNameForTag);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                }
-            }
-        });
-
     }
 
     private void loadSearchedUserInRecyclerAdapter(String search) {
@@ -179,13 +151,10 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
                         InputMethodManager in = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                         in.hideSoftInputFromWindow(SearchUserForTagActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
 
-                        mInputSearch.setText(getItem(position).getUsername());
-
-                        mRecyclerItemClickListener = true;
-
-                        mSelectedUserNameForTag = getItem(position).getUsername();
-
-                        mSelectedUserAuthIdForTag = getRef(position).getKey();
+                        Intent intent = new Intent();
+                        intent.putExtra(getString(R.string.selected_user_info), getRef(position).getKey() + "@" + getItem(position).getUsername());
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 });
 
@@ -205,20 +174,7 @@ public class SearchUserForTagActivity extends AppCompatActivity implements TextW
 
         Log.d(TAG, "onTextChanged : Current Text In The Search Bar is : "+mInputSearch.getText().toString());
 
-        mRecyclerItemClickListener = false;
-
-        mSelectedUserNameForTag = "";
-
-        mSelectedUserAuthIdForTag = "";
-
         String mSearchedString = mInputSearch.getText().toString();
-
-        if (!mSearchedString.isEmpty()){
-            mSaveCheck.setImageDrawable(getResources().getDrawable(R.drawable.ic_save_check));
-        }
-        else {
-            mSaveCheck.setImageDrawable(null);
-        }
 
         if (!mSearchedString.isEmpty()) {
 
