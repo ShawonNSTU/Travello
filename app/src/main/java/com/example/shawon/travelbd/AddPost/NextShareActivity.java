@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -61,6 +63,8 @@ public class NextShareActivity extends AppCompatActivity {
     private ImageView mRatingIcon;
     private TextView mTagPeople;
     private ImageView mTagPeopleIcon;
+    private TextView mFacebook;
+    private SwitchCompat mSwitchCompat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +80,8 @@ public class NextShareActivity extends AppCompatActivity {
         mRatingIcon = (ImageView) findViewById(R.id.rating_icon);
         mTagPeople = (TextView) findViewById(R.id.tag_people);
         mTagPeopleIcon = (ImageView) findViewById(R.id.tag_people_icon);
+        mFacebook = (TextView) findViewById(R.id.facebook_share);
+        mSwitchCompat = (SwitchCompat) findViewById(R.id.facebook_share_switch);
 
         setupToolbar();
 
@@ -88,6 +94,43 @@ public class NextShareActivity extends AppCompatActivity {
         rateYourTraveledPlaceOnClick();
 
         tagPeopleOnClick();
+
+        mFacebookOnClick();
+
+        mSwitchCompatCheckedOnChangeListener();
+
+    }
+
+    private void mSwitchCompatCheckedOnChangeListener() {
+
+        mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Log.d(TAG,"mSwitchCompat : Checked");
+                }
+                else {
+                    Log.d(TAG,"mSwitchCompat : Unchecked");
+                }
+            }
+        });
+
+    }
+
+    private void mFacebookOnClick() {
+
+        mFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"mFacebook : onClicked");
+                if (mSwitchCompat.isChecked()){
+                    mSwitchCompat.setChecked(false);
+                }
+                else {
+                    mSwitchCompat.setChecked(true);
+                }
+            }
+        });
 
     }
 
