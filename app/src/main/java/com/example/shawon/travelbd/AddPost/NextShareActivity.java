@@ -395,7 +395,7 @@ public class NextShareActivity extends AppCompatActivity {
                         for(int k=0; k<mTotalSelectedUserNameForTag.length(); k++){
                             char character = mTotalSelectedUserNameForTag.charAt(k);
                             if (character == '@'){
-                                string+=" ";
+                                string+="  ";
                             }
                             else {
                                 string+=character;
