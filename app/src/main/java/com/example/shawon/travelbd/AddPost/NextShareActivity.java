@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
+import com.example.shawon.travelbd.Utils.IsConnectedToInternet;
+import com.facebook.CallbackManager;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 /**
  * Created by SHAWON on 8/20/2018.
@@ -51,6 +59,8 @@ public class NextShareActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
 
+    private String imageUrl = "file://";
+
     private String mSelectedLocation = "";
     private String mSelectedLocationRating = "";
     private float mRating = (float) 0.0;
@@ -66,6 +76,45 @@ public class NextShareActivity extends AppCompatActivity {
     private TextView mFacebook;
     private SwitchCompat mSwitchCompat;
 
+    private CallbackManager mCallbackManager;
+    private ShareDialog mShareDialog;
+
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+            Log.d(TAG, "Target : onBitmapLoaded : Started");
+
+            SharePhoto sharePhoto = new SharePhoto.Builder()
+                    .setBitmap(bitmap)
+                    .build();
+
+            if (ShareDialog.canShow(SharePhotoContent.class)){
+
+                SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
+                        .addPhoto(sharePhoto)
+                        .build();
+
+                mShareDialog.show(sharePhotoContent);
+
+                Log.d(TAG, "Target : onBitmapLoaded : Finished");
+            }
+
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            Log.d(TAG, "Target : onBitmapLoaded : Failed");
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +122,9 @@ public class NextShareActivity extends AppCompatActivity {
 
         Log.d(TAG,"NextShareActivity onCreate : Started");
         Log.d(TAG,"onCreate : Selected Image from GalleryFragment: "+getIntent().getStringExtra(getString(R.string.selected_image)));
+
+        mCallbackManager = CallbackManager.Factory.create();
+        mShareDialog = new ShareDialog(this);
 
         mAddLocation = (TextView) findViewById(R.id.add_location);
         mLocationIcon = (ImageView) findViewById(R.id.location_icon);
@@ -108,6 +160,14 @@ public class NextShareActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     Log.d(TAG,"mSwitchCompat : Checked");
+                    if (IsConnectedToInternet.isConnectedToInternet(context)){
+                        Picasso.get().load(imageUrl).into(target);
+                        mSwitchCompat.setChecked(false);
+                    }
+                    else {
+                        Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
+                        mSwitchCompat.setChecked(false);
+                    }
                 }
                 else {
                     Log.d(TAG,"mSwitchCompat : Unchecked");
@@ -419,7 +479,7 @@ public class NextShareActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ImageView mSelectedImage = (ImageView) findViewById(R.id.imageShare);
-        String imageUrl = "file://" + intent.getStringExtra(getString(R.string.selected_image));
+        imageUrl+= intent.getStringExtra(getString(R.string.selected_image));
         Picasso.get().load(imageUrl).resize(200,200).onlyScaleDown().centerCrop().into(mSelectedImage);
 
     }
