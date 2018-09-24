@@ -159,7 +159,7 @@ public class NextShareActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    Log.d(TAG,"mSwitchCompat : Checked");
+                    Log.d(TAG, "mSwitchCompat : Checked");
                     if (IsConnectedToInternet.isConnectedToInternet(context)){
                         Picasso.get().load(imageUrl).into(target);
                     }
