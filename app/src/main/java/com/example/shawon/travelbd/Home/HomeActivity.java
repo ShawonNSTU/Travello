@@ -21,6 +21,7 @@ import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
+import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -43,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_home);
         Log.d(TAG,"HomeActivity onCreate: Starting.");
 
