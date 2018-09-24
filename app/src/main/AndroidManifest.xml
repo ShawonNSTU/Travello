@@ -19,6 +19,10 @@
         android:theme="@style/AppTheme">
 
         <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA4_6s8a86g3a-67vu0zIKdgZhMCGq63Hw"/>
 
@@ -45,6 +49,12 @@
         <activity android:name=".AddPost.NextShareActivity"/>
         <activity android:name=".AddPost.LocationSelectFromGooglePlaces"/>
         <activity android:name=".AddPost.SearchUserForTagActivity"/>
+
+        <provider
+            android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
+
     </application>
 
 </manifest>
