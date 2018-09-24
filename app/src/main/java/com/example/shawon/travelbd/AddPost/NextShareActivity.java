@@ -162,7 +162,6 @@ public class NextShareActivity extends AppCompatActivity {
                     Log.d(TAG,"mSwitchCompat : Checked");
                     if (IsConnectedToInternet.isConnectedToInternet(context)){
                         Picasso.get().load(imageUrl).into(target);
-                        mSwitchCompat.setChecked(false);
                     }
                     else {
                         Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
