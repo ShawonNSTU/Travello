@@ -24,8 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
-import com.example.shawon.travelbd.Utils.IsConnectedToInternet;
-import com.facebook.CallbackManager;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -66,6 +64,7 @@ public class NextShareActivity extends AppCompatActivity {
     private float mRating = (float) 0.0;
     private String mTotalSelectedUserNameForTag = "";
     private String mTotalSelectedUserAuthIdForTag = "";
+    private boolean mFacebookSelected = false;
 
     private TextView mAddLocation;
     private ImageView mLocationIcon;
@@ -75,8 +74,8 @@ public class NextShareActivity extends AppCompatActivity {
     private ImageView mTagPeopleIcon;
     private TextView mFacebook;
     private SwitchCompat mSwitchCompat;
+    private TextView mShareButton;
 
-    private CallbackManager mCallbackManager;
     private ShareDialog mShareDialog;
 
     private Target target = new Target() {
@@ -100,12 +99,16 @@ public class NextShareActivity extends AppCompatActivity {
                 Log.d(TAG, "Target : onBitmapLoaded : Finished");
             }
 
+            else {
+                Log.d(TAG, "Target : onBitmapLoaded : SharePhotoContent.class does not supported.");
+            }
+
         }
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
-            Log.d(TAG, "Target : onBitmapLoaded : Failed");
+            Log.d(TAG, "Target : onBitmapFailed");
 
         }
 
@@ -123,7 +126,6 @@ public class NextShareActivity extends AppCompatActivity {
         Log.d(TAG,"NextShareActivity onCreate : Started");
         Log.d(TAG,"onCreate : Selected Image from GalleryFragment: "+getIntent().getStringExtra(getString(R.string.selected_image)));
 
-        mCallbackManager = CallbackManager.Factory.create();
         mShareDialog = new ShareDialog(this);
 
         mAddLocation = (TextView) findViewById(R.id.add_location);
@@ -134,6 +136,7 @@ public class NextShareActivity extends AppCompatActivity {
         mTagPeopleIcon = (ImageView) findViewById(R.id.tag_people_icon);
         mFacebook = (TextView) findViewById(R.id.facebook_share);
         mSwitchCompat = (SwitchCompat) findViewById(R.id.facebook_share_switch);
+        mShareButton = (TextView) findViewById(R.id.tvShare);
 
         setupToolbar();
 
@@ -151,6 +154,28 @@ public class NextShareActivity extends AppCompatActivity {
 
         mSwitchCompatCheckedOnChangeListener();
 
+        mShareButtonOnClick();
+
+    }
+
+    private void mShareButtonOnClick() {
+
+        mShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "mShareButton : OnClicked");
+                sharePost();
+            }
+        });
+
+    }
+
+    private void sharePost() {
+
+        if (mFacebookSelected){
+            Picasso.get().load(imageUrl).into(target);
+        }
+
     }
 
     private void mSwitchCompatCheckedOnChangeListener() {
@@ -160,16 +185,11 @@ public class NextShareActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     Log.d(TAG, "mSwitchCompat : Checked");
-                    if (IsConnectedToInternet.isConnectedToInternet(context)){
-                        Picasso.get().load(imageUrl).into(target);
-                    }
-                    else {
-                        Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
-                        mSwitchCompat.setChecked(false);
-                    }
+                    mFacebookSelected = true;
                 }
                 else {
                     Log.d(TAG,"mSwitchCompat : Unchecked");
+                    mFacebookSelected = false;
                 }
             }
         });
