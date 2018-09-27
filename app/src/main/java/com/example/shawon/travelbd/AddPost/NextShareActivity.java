@@ -118,6 +118,9 @@ public class NextShareActivity extends AppCompatActivity {
         }
     };
 
+    // variables that are related to uploaded image
+    private int imageCount = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -562,6 +565,9 @@ public class NextShareActivity extends AppCompatActivity {
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.d(TAG, "myRef : addValueEventListener : onDataChange");
+
+                            imageCount = getImageCount(dataSnapshot);
 
                         }
 
@@ -580,6 +586,21 @@ public class NextShareActivity extends AppCompatActivity {
             }
         };
 
+    }
+
+    private int getImageCount(DataSnapshot dataSnapshot) {
+
+        Log.d(TAG, "getImageCount : called");
+
+        int count = 0;
+        for (DataSnapshot ds : dataSnapshot
+                .child(getString(R.string.user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .getChildren()){
+            count++;
+        }
+        Log.d(TAG, "getImageCount : Counted image : "+count);
+        return count;
     }
 
     @Override
