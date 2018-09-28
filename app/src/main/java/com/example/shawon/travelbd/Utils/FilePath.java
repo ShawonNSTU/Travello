@@ -17,4 +17,6 @@ public class FilePath {
     public String SHAREit_PICTURES = ROOT_DIR + "/SHAREit/Pictures";
     public String DOWNLOAD = ROOT_DIR + "/Download";
 
+    public String FIREBASE_IMAGE_STORAGE_PATH_OF_USERS = "photos/users/";
+
 }
