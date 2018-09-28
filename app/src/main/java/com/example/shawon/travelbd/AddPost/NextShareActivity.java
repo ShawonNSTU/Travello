@@ -187,7 +187,7 @@ public class NextShareActivity extends AppCompatActivity {
 
     private void uploadPhotoOfTravelledPlace(int imageCount, String imageUrl) {
 
-
+        Log.d(TAG, "uploadPhotoOfTravelledPlace : started");
 
     }
 
