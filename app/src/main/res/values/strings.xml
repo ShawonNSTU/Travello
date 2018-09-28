@@ -68,6 +68,4 @@
     <string name="facebook_app_id">1786036838111875</string>
     <string name="facebook_login_protocol_scheme">fb1786036838111875</string>
     <string name="user_photos">User Photos</string>
-    <string name="photo_of_travelled_place">Photo Of Travelled Place</string>
-    <string name="photo_of_user">Photo Of User</string>
 </resources>
