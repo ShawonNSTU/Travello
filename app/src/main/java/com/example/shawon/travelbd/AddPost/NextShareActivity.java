@@ -179,6 +179,9 @@ public class NextShareActivity extends AppCompatActivity {
             Picasso.get().load(imageUrl).into(target);
         }
 
+        // upload the image to firebase storage
+        Log.d(TAG, "sharePost : Attempting to upload the new photo to firebase storage");
+
     }
 
     private void mSwitchCompatCheckedOnChangeListener() {
