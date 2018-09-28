@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
+import com.example.shawon.travelbd.Utils.FilePath;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -36,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -56,6 +59,8 @@ public class NextShareActivity extends AppCompatActivity {
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
+
+    private StorageReference mStorageReference;
 
     private String imageUrl = "file://";
 
@@ -141,6 +146,8 @@ public class NextShareActivity extends AppCompatActivity {
         mSwitchCompat = (SwitchCompat) findViewById(R.id.facebook_share_switch);
         mShareButton = (TextView) findViewById(R.id.tvShare);
 
+        mStorageReference = FirebaseStorage.getInstance().getReference();
+
         setupToolbar();
 
         setSelectedImage();
@@ -181,13 +188,18 @@ public class NextShareActivity extends AppCompatActivity {
 
         // upload the image to firebase storage
         Log.d(TAG, "sharePost : Attempting to upload the photo of travelled place to firebase storage");
-        uploadPhotoOfTravelledPlace(imageCount,imageUrl);
+        uploadPhotoOfTravelledPlace();
 
     }
 
-    private void uploadPhotoOfTravelledPlace(int imageCount, String imageUrl) {
+    private void uploadPhotoOfTravelledPlace() {
 
         Log.d(TAG, "uploadPhotoOfTravelledPlace : started");
+
+        FilePath filePath = new FilePath();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference storageReference = mStorageReference
+                .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "/photo" + imageCount);
 
     }
 
