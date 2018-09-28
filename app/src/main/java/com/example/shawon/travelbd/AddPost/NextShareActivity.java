@@ -180,8 +180,7 @@ public class NextShareActivity extends AppCompatActivity {
         }
 
         // upload the image to firebase storage
-        Log.d(TAG, "sharePost : Attempting to upload the new photo to firebase storage");
-
+        Log.d(TAG, "sharePost : Attempting to upload the photo of travelled place to firebase storage");
         uploadPhotoOfTravelledPlace(imageCount,imageUrl);
 
     }
