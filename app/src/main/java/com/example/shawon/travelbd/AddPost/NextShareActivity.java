@@ -182,15 +182,16 @@ public class NextShareActivity extends AppCompatActivity {
         // upload the image to firebase storage
         Log.d(TAG, "sharePost : Attempting to upload the new photo to firebase storage");
 
-        uploadPhotoOfTravelledPlace(getString(R.string.photo_of_travelled_place),imageCount,imageUrl);
+        uploadPhotoOfTravelledPlace(imageCount,imageUrl);
 
     }
 
-    private void uploadPhotoOfTravelledPlace(String string, int imageCount, String imageUrl) {
+    private void uploadPhotoOfTravelledPlace(int imageCount, String imageUrl) {
 
 
 
     }
+
 
     private void mSwitchCompatCheckedOnChangeListener() {
 
