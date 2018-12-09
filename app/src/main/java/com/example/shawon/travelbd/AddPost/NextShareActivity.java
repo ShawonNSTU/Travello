@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,11 +26,14 @@ import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.FilePath;
+import com.example.shawon.travelbd.Utils.ImageManager;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +42,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -63,6 +69,9 @@ public class NextShareActivity extends AppCompatActivity {
     private StorageReference mStorageReference;
 
     private String imageUrl = "file://";
+    private String imgUrl="";
+
+    private double mPhotoUploadProgress = 0.0;
 
     private String mSelectedLocation = "";
     private String mSelectedLocationRating = "";
@@ -201,8 +210,43 @@ public class NextShareActivity extends AppCompatActivity {
         StorageReference storageReference = mStorageReference
                 .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "/photo" + imageCount);
 
-    }
+        // convert image url to bitmap
+        Bitmap bitmap = ImageManager.getBitmap(imgUrl);
+        // convert bitmap to byte array
+        byte[] bytes = ImageManager.getBytesFromBitmap(bitmap,100);
 
+        UploadTask uploadTask = null;
+        uploadTask = storageReference.putBytes(bytes);
+
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri uri = taskSnapshot.getDownloadUrl();
+                Log.d(TAG,"uploadPhotoOfTravelledPlace : onSuccess");
+                Toast.makeText(context,"Photo successfully uploaded!",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"uploadPhotoOfTravelledPlace : onFailure");
+                Toast.makeText(context,"Photo upload failed!",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = 0.0;
+                if (taskSnapshot.getTotalByteCount() > 0){
+                    progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                }
+                if (progress - 15 > mPhotoUploadProgress){
+                    Toast.makeText(context, "Uploading... "+String.format("%.0f",progress)+"%",Toast.LENGTH_SHORT).show();
+                    mPhotoUploadProgress = progress;
+                }
+                Log.d(TAG,"uploadPhotoOfTravelledPlace : onProgress : "+progress+"% done.");
+            }
+        });
+
+    }
 
     private void mSwitchCompatCheckedOnChangeListener() {
 
@@ -525,6 +569,7 @@ public class NextShareActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ImageView mSelectedImage = (ImageView) findViewById(R.id.imageShare);
         imageUrl+= intent.getStringExtra(getString(R.string.selected_image));
+        imgUrl+= intent.getStringExtra(getString(R.string.selected_image));
         Picasso.get().load(imageUrl).resize(200,200).onlyScaleDown().centerCrop().into(mSelectedImage);
 
     }
