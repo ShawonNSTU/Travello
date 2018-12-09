@@ -26,12 +26,12 @@ public class ImageManager  {
             fis = new FileInputStream(imageFile);
             bitmap = BitmapFactory.decodeStream(fis);
         }catch (FileNotFoundException e){
-            Log.e(TAG, "getBitmap:FileNotFoundException: "+e.getMessage());
+            Log.e(TAG, "getBitmap : FileNotFoundException: "+e.getMessage());
         }finally {
             try {
                 fis.close();
-            }catch (IOException e){
-                Log.e(TAG, "getBitmap:IOException: "+e.getMessage());
+            }catch (IOException | NullPointerException e){
+                Log.e(TAG, "getBitmap : IOException | NullPointerException: "+e.getMessage());
             }
         }
         return bitmap;
@@ -46,7 +46,11 @@ public class ImageManager  {
      */
     public static byte[] getBytesFromBitmap(Bitmap bitmap, int quality){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream);
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream);
+        }catch (NullPointerException e){
+            Log.e(TAG, "getBytesFromBitmap : NullPointerException: "+e.getMessage());
+        }
         return stream.toByteArray();
     }
 
