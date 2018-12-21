@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.FilePath;
 import com.example.shawon.travelbd.Utils.ImageManager;
@@ -48,6 +51,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by SHAWON on 8/20/2018.
@@ -228,9 +234,13 @@ public class NextShareActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                Uri uri = taskSnapshot.getDownloadUrl();
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onSuccess");
                 Toast.makeText(context,"Photo successfully uploaded!",Toast.LENGTH_SHORT).show();
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                // add the new photo to 'photos' and 'user photos' node
+
+                addPhotoToDatabase(mPhotoDescription.getText().toString(),downloadUrl.toString());
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -257,6 +267,38 @@ public class NextShareActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void addPhotoToDatabase(String description, String downloadUrl) {
+
+        Log.d(TAG, "addPhotoToDatabase : adding uploaded photo to the database");
+
+        String newPhotoKey = myRef.child(context.getString(R.string.photos)).push().getKey();
+        Photo photo = new Photo();
+        photo.setCaption(description);
+        photo.setUploaded_date(getDateTime());
+        photo.setImage_url(downloadUrl);
+        photo.setPhoto_id(newPhotoKey);
+        photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        photo.setLocation(mSelectedLocation);
+        photo.setRating(Float.toString(mRating));
+        photo.setGoogle_places_rating(mSelectedLocationRating);
+        photo.setTagged_people(mTotalSelectedUserAuthIdForTag);
+
+        myRef.child(context.getString(R.string.user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(newPhotoKey).setValue(photo);
+        myRef.child(context.getString(R.string.photos))
+                .child(newPhotoKey).setValue(photo);
+
+    }
+
+    private String getDateTime() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf.format(new Date());
 
     }
 
