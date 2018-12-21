@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -88,6 +89,7 @@ public class NextShareActivity extends AppCompatActivity {
     private ImageView mTagPeopleIcon;
     private TextView mFacebook;
     private SwitchCompat mSwitchCompat;
+    private EditText mPhotoDescription;
     private TextView mShareButton;
 
     private ShareDialog mShareDialog;
@@ -153,6 +155,7 @@ public class NextShareActivity extends AppCompatActivity {
         mTagPeopleIcon = (ImageView) findViewById(R.id.tag_people_icon);
         mFacebook = (TextView) findViewById(R.id.facebook_share);
         mSwitchCompat = (SwitchCompat) findViewById(R.id.facebook_share_switch);
+        mPhotoDescription = (EditText) findViewById(R.id.description);
         mShareButton = (TextView) findViewById(R.id.tvShare);
 
         mStorageReference = FirebaseStorage.getInstance().getReference();
@@ -197,7 +200,10 @@ public class NextShareActivity extends AppCompatActivity {
 
         // upload the image to firebase storage
         Log.d(TAG, "sharePost : Attempting to upload the photo of travelled place to firebase storage");
-        uploadPhotoOfTravelledPlace();
+        if(mPhotoDescription.getText().toString().length()>0 &&
+                mSelectedLocation.length()>0 &&
+                mRating > 0.0) uploadPhotoOfTravelledPlace();
+        else Toast.makeText(this,"Please give all the specified information",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -221,19 +227,24 @@ public class NextShareActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                 Uri uri = taskSnapshot.getDownloadUrl();
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onSuccess");
                 Toast.makeText(context,"Photo successfully uploaded!",Toast.LENGTH_SHORT).show();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onFailure");
                 Toast.makeText(context,"Photo upload failed!",Toast.LENGTH_SHORT).show();
+
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
                 double progress = 0.0;
                 if (taskSnapshot.getTotalByteCount() > 0){
                     progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
@@ -243,6 +254,7 @@ public class NextShareActivity extends AppCompatActivity {
                     mPhotoUploadProgress = progress;
                 }
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onProgress : "+progress+"% done.");
+
             }
         });
 
