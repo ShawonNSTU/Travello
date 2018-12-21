@@ -291,7 +291,6 @@ public class NextShareActivity extends AppCompatActivity {
                 .child(newPhotoKey).setValue(photo);
         myRef.child(context.getString(R.string.photos))
                 .child(newPhotoKey).setValue(photo);
-
     }
 
     private String getDateTime() {
