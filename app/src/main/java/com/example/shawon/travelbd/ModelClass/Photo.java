@@ -15,13 +15,14 @@ public class Photo {
     private String user_id;
     private String location;
     private String rating;
+    private String google_places_rating;
     private List<String> tagged_user_id;
 
     public Photo() {
 
     }
 
-    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, List<String> tagged_user_id) {
+    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, String google_places_rating, List<String> tagged_user_id) {
         this.caption = caption;
         this.uploaded_date = uploaded_date;
         this.image_url = image_url;
@@ -29,6 +30,7 @@ public class Photo {
         this.user_id = user_id;
         this.location = location;
         this.rating = rating;
+        this.google_places_rating = google_places_rating;
         this.tagged_user_id = tagged_user_id;
     }
 
@@ -88,6 +90,14 @@ public class Photo {
         this.rating = rating;
     }
 
+    public String getGoogle_places_rating(){
+        return google_places_rating;
+    }
+
+    public void setGoogle_places_rating(String google_places_rating){
+        this.google_places_rating = google_places_rating;
+    }
+
     public List<String> getTagged_people() {
         return tagged_user_id;
     }
@@ -106,7 +116,8 @@ public class Photo {
                 ", user_id='" + user_id + '\'' +
                 ", location='" + location + '\'' +
                 ", rating='" + rating + '\'' +
-                ", tagged_people=" + tagged_user_id +
+                ", google_places_rating='" + google_places_rating + '\'' +
+                ", tagged_user_id=" + tagged_user_id +
                 '}';
     }
 }
