@@ -1,7 +1,5 @@
 package com.example.shawon.travelbd.ModelClass;
 
-import java.util.List;
-
 /**
  * Created by SHAWON on 9/28/2018.
  */
@@ -16,13 +14,13 @@ public class Photo {
     private String location;
     private String rating;
     private String google_places_rating;
-    private List<String> tagged_user_id;
+    private String tagged_user_id;
 
     public Photo() {
 
     }
 
-    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, String google_places_rating, List<String> tagged_user_id) {
+    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, String google_places_rating, String tagged_user_id) {
         this.caption = caption;
         this.uploaded_date = uploaded_date;
         this.image_url = image_url;
@@ -98,11 +96,11 @@ public class Photo {
         this.google_places_rating = google_places_rating;
     }
 
-    public List<String> getTagged_people() {
+    public String getTagged_people() {
         return tagged_user_id;
     }
 
-    public void setTagged_people(List<String> tagged_user_id) {
+    public void setTagged_people(String tagged_user_id) {
         this.tagged_user_id = tagged_user_id;
     }
 
@@ -117,7 +115,7 @@ public class Photo {
                 ", location='" + location + '\'' +
                 ", rating='" + rating + '\'' +
                 ", google_places_rating='" + google_places_rating + '\'' +
-                ", tagged_user_id=" + tagged_user_id +
+                ", tagged_user_id='" + tagged_user_id + '\'' +
                 '}';
     }
 }
