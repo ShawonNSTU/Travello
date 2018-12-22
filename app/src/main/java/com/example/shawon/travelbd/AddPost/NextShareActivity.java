@@ -62,17 +62,16 @@ import java.util.Locale;
 public class NextShareActivity extends AppCompatActivity {
 
     private static final String TAG = "NextShareActivity";
+    private Context context = NextShareActivity.this;
+
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int INCOMING_ACTIVITY_REQUEST_CODE = 701;
     private static final int INCOMING_ACTIVITY_SEARCH_USER_FOR_TAG_REQUEST_CODE = 702;
-    private Context context = NextShareActivity.this;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
-
     private StorageReference mStorageReference;
 
     private String imageUrl = "file://";
@@ -102,15 +101,21 @@ public class NextShareActivity extends AppCompatActivity {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             Log.d(TAG, "Target : onBitmapLoaded : Started");
+
             SharePhoto sharePhoto = new SharePhoto.Builder()
                     .setBitmap(bitmap)
                     .build();
+
             if (ShareDialog.canShow(SharePhotoContent.class)){
+
                 SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
                         .addPhoto(sharePhoto)
                         .build();
+
                 mShareDialog.show(sharePhotoContent);
+
                 Log.d(TAG, "Target : onBitmapLoaded : Finished");
+
             }
             else {
                 Log.d(TAG, "Target : onBitmapLoaded : SharePhotoContent.class does not supported.");
@@ -122,11 +127,13 @@ public class NextShareActivity extends AppCompatActivity {
         }
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+            //later code
         }
     };
+
     // variables that are related to uploaded image
     private int imageCount = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,34 +204,45 @@ public class NextShareActivity extends AppCompatActivity {
 
     private void uploadPhotoOfTravelledPlace() {
         Log.d(TAG, "uploadPhotoOfTravelledPlace : started");
+
         FilePath filePath = new FilePath();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference storageReference = mStorageReference
                 .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "/photo" + imageCount);
+
         // convert image url to bitmap
         Bitmap bitmap = ImageManager.getBitmap(imgUrl);
+
         // convert bitmap to byte array
         byte[] bytes = ImageManager.getBytesFromBitmap(bitmap,100);
+
         UploadTask uploadTask = null;
         uploadTask = storageReference.putBytes(bytes);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onSuccess");
+
                 Toast.makeText(context,"Photo successfully uploaded!",Toast.LENGTH_SHORT).show();
+
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
                 // add the new photo to 'photos' and 'user photos' node
                 addPhotoToDatabase(mPhotoDescription.getText().toString(),downloadUrl.toString());
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onFailure");
+
                 Toast.makeText(context,"Photo upload failed!",Toast.LENGTH_SHORT).show();
+
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
                 double progress = 0.0;
                 if (taskSnapshot.getTotalByteCount() > 0){
                     progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
@@ -234,14 +252,18 @@ public class NextShareActivity extends AppCompatActivity {
                     mPhotoUploadProgress = progress;
                 }
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onProgress : "+progress+"% done.");
+
             }
         });
     }
 
     private void addPhotoToDatabase(String description, String downloadUrl) {
         Log.d(TAG, "addPhotoToDatabase : adding uploaded photo to the database");
+
         String newPhotoKey = myRef.child(context.getString(R.string.photos)).push().getKey();
+
         Photo photo = new Photo();
+
         photo.setCaption(description);
         photo.setUploaded_date(getDateTime());
         photo.setImage_url(downloadUrl);
@@ -251,17 +273,22 @@ public class NextShareActivity extends AppCompatActivity {
         photo.setRating(Float.toString(mRating));
         photo.setGoogle_places_rating(mSelectedLocationRating);
         photo.setTagged_people(mTotalSelectedUserAuthIdForTag);
+
         myRef.child(context.getString(R.string.user_photos))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(newPhotoKey).setValue(photo);
         myRef.child(context.getString(R.string.photos))
                 .child(newPhotoKey).setValue(photo);
+
     }
 
     private String getDateTime() {
+        Log.d(TAG,"getDateTime : getting default date-time format");
+
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
         sdf.setTimeZone(java.util.TimeZone.getDefault());
         return sdf.format(new Date());
+
     }
 
     private void mSwitchCompatCheckedOnChangeListener() {
