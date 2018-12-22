@@ -13,6 +13,7 @@ public class StringManipulation {
             boolean found = false;
             for (char ch : charArray){
                 if (ch == ' ') found = false;
+                else if (ch == '\n') found = false;
                 else if (ch == '#'){
                     found = true;
                     stringBuilder.append(ch);
