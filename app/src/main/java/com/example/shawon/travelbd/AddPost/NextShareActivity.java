@@ -263,6 +263,7 @@ public class NextShareActivity extends AppCompatActivity {
                     Toast.makeText(context, "Uploading... "+String.format("%.0f",progress)+"%",Toast.LENGTH_SHORT).show();
                     mPhotoUploadProgress = progress;
                 }
+
                 Log.d(TAG,"uploadPhotoOfTravelledPlace : onProgress : "+progress+"% done.");
 
             }
@@ -295,10 +296,9 @@ public class NextShareActivity extends AppCompatActivity {
 
     private String getDateTime() {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setTimeZone(TimeZone.getDefault());
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
+        sdf.setTimeZone(java.util.TimeZone.getDefault());
         return sdf.format(new Date());
-
     }
 
     private void mSwitchCompatCheckedOnChangeListener() {
