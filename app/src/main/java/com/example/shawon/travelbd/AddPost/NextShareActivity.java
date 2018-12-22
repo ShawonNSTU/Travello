@@ -209,7 +209,7 @@ public class NextShareActivity extends AppCompatActivity {
         FilePath filePath = new FilePath();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference storageReference = mStorageReference
-                .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "uploaded" + "/photo" + imageCount);
+                .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "/uploaded" + "/photo" + imageCount);
 
         // convert image url to bitmap
         Bitmap bitmap = ImageManager.getBitmap(imgUrl);
