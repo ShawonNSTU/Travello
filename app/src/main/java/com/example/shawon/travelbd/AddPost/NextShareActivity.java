@@ -31,6 +31,7 @@ import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.FilePath;
 import com.example.shawon.travelbd.Utils.ImageManager;
+import com.example.shawon.travelbd.Utils.StringManipulation;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -273,6 +274,9 @@ public class NextShareActivity extends AppCompatActivity {
         photo.setRating(Float.toString(mRating));
         photo.setGoogle_places_rating(mSelectedLocationRating);
         photo.setTagged_people(mTotalSelectedUserAuthIdForTag);
+        String tags = StringManipulation.getTags(description);
+        if (!tags.equals("No Tags")) photo.setTags(tags);
+        else photo.setTags("");
 
         myRef.child(context.getString(R.string.user_photos))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
