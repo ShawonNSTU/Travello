@@ -208,7 +208,7 @@ public class NextShareActivity extends AppCompatActivity {
         FilePath filePath = new FilePath();
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference storageReference = mStorageReference
-                .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "/photo" + imageCount);
+                .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + userID + "uploaded" + "/photo" + imageCount);
 
         // convert image url to bitmap
         Bitmap bitmap = ImageManager.getBitmap(imgUrl);
@@ -276,6 +276,7 @@ public class NextShareActivity extends AppCompatActivity {
 
         myRef.child(context.getString(R.string.user_photos))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(context.getString(R.string.uploaded))
                 .child(newPhotoKey).setValue(photo);
         myRef.child(context.getString(R.string.photos))
                 .child(newPhotoKey).setValue(photo);
