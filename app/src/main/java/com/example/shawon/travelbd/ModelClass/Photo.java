@@ -15,12 +15,13 @@ public class Photo {
     private String rating;
     private String google_places_rating;
     private String tagged_user_id;
+    private String tags;
 
     public Photo() {
 
     }
 
-    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, String google_places_rating, String tagged_user_id) {
+    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, String google_places_rating, String tagged_user_id, String tags) {
         this.caption = caption;
         this.uploaded_date = uploaded_date;
         this.image_url = image_url;
@@ -30,6 +31,7 @@ public class Photo {
         this.rating = rating;
         this.google_places_rating = google_places_rating;
         this.tagged_user_id = tagged_user_id;
+        this.tags = tags;
     }
 
     public String getCaption() {
@@ -104,6 +106,14 @@ public class Photo {
         this.tagged_user_id = tagged_user_id;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +
@@ -116,6 +126,7 @@ public class Photo {
                 ", rating='" + rating + '\'' +
                 ", google_places_rating='" + google_places_rating + '\'' +
                 ", tagged_user_id='" + tagged_user_id + '\'' +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }
