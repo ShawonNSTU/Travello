@@ -711,6 +711,7 @@ public class NextShareActivity extends AppCompatActivity {
         for (DataSnapshot ds : dataSnapshot
                 .child(getString(R.string.user_photos))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(context.getString(R.string.uploaded))
                 .getChildren()){
             count++;
         }
