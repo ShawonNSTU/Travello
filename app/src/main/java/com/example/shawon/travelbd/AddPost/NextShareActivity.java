@@ -219,6 +219,7 @@ public class NextShareActivity extends AppCompatActivity {
 
         UploadTask uploadTask = null;
         uploadTask = storageReference.putBytes(bytes);
+
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -284,6 +285,20 @@ public class NextShareActivity extends AppCompatActivity {
                 .child(newPhotoKey).setValue(photo);
         myRef.child(context.getString(R.string.photos))
                 .child(newPhotoKey).setValue(photo);
+        String taggedAuthID = "";
+        for(int i=0; i<mTotalSelectedUserAuthIdForTag.length(); i++){
+            char ch = mTotalSelectedUserAuthIdForTag.charAt(i);
+            if(ch == '@'){
+                myRef.child(context.getString(R.string.user_photos))
+                        .child(taggedAuthID)
+                        .child(context.getString(R.string.tagged))
+                        .child(newPhotoKey).setValue(photo);
+                taggedAuthID = "";
+            }
+            else{
+                taggedAuthID+=ch;
+            }
+        }
     }
 
     private String getDateTime() {
