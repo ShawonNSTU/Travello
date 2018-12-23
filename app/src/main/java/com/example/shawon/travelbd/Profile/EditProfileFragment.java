@@ -371,6 +371,7 @@ public class EditProfileFragment extends Fragment {
 
         Log.d(TAG, "setupEditProfileWidget:setup "+userPersonalInfo.getUsername()+" public information");
 
+        // profile image
         mProfileImage = userPersonalInfo.getProfile_photo();
         if (!mProfileImage.isEmpty()){
             Picasso.get().load(userPersonalInfo.getProfile_photo()).into(mProfilePhoto);
@@ -379,26 +380,22 @@ public class EditProfileFragment extends Fragment {
             Picasso.get().load(R.drawable.avatar).into(mProfilePhoto);
             mProfilePhoto.setBackgroundColor(Color.TRANSPARENT);
         }
-
+        // username
         mUserNameEditText.setText(userPersonalInfo.getUsername());
-
+        // email
         mUserEmailEditText.setText(mAuth.getCurrentUser().getEmail());
-
         if (!mAuth.getCurrentUser().isEmailVerified()) {
-
             mUserEmailEditText.setEnabled(true);
             mUserEmailEditText.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
-
         }
-
         else{
             mUserEmailEditText.setEnabled(false);
         }
-
+        // gender
         mUserGender.setText(userPersonalInfo.getGender());
-
+        // phone_number
         mUserPhoneEditText.setText(userPersonalInfo.getPhone_number());
-
+        // bio
         mUserBioEditText.setText(userPersonalInfo.getBio());
     }
 
