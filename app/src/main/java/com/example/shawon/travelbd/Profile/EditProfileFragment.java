@@ -243,7 +243,9 @@ public class EditProfileFragment extends Fragment {
         Log.d(TAG, "saveEditProfileWidget:saving EditProfileWidget data to the database");
 
         if (!mProfileImage.isEmpty()){
-           Log.d(TAG, "saveEditProfileWidget:Profile Image Exists");
+            Log.d(TAG, "saveEditProfileWidget:Profile Image Exists");
+            // step 1: upload the photo to storage
+            // step 2: then 'UserPersonalInfo' node
         }
         else {
             Log.d(TAG, "saveEditProfileWidget:No User Profile Image");
