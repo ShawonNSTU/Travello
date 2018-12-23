@@ -285,6 +285,7 @@ public class NextShareActivity extends AppCompatActivity {
                 .child(newPhotoKey).setValue(photo);
         myRef.child(context.getString(R.string.photos))
                 .child(newPhotoKey).setValue(photo);
+
         String taggedAuthID = "";
         for(int i=0; i<mTotalSelectedUserAuthIdForTag.length(); i++){
             char ch = mTotalSelectedUserAuthIdForTag.charAt(i);
