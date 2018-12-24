@@ -1,6 +1,7 @@
 package com.example.shawon.travelbd.Profile;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.shawon.travelbd.AddPost.AddPostActivity;
 import com.example.shawon.travelbd.ModelClass.UserPersonalInfo;
 import com.example.shawon.travelbd.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -111,6 +113,21 @@ public class EditProfileFragment extends Fragment {
 
         mUserEmailEditTextOnClick();
 
+        changeProfilePhotoOnClick();
+
+    }
+
+    private void changeProfilePhotoOnClick() {
+        mChangeProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"changeProfilePhotoOnClick : clicked on Change Photo");
+                Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
     private void mUserEmailEditTextOnClick() {
@@ -241,15 +258,6 @@ public class EditProfileFragment extends Fragment {
 
     private void saveEditProfileWidget() {
         Log.d(TAG, "saveEditProfileWidget:saving EditProfileWidget data to the database");
-
-        if (!mProfileImage.isEmpty()){
-            Log.d(TAG, "saveEditProfileWidget:Profile Image Exists");
-            // step 1: upload the photo to storage
-            // step 2: then 'UserPersonalInfo' node
-        }
-        else {
-            Log.d(TAG, "saveEditProfileWidget:No User Profile Image");
-        }
 
         String username = mUserNameEditText.getText().toString();
         String gender = mUserGender.getText().toString();
