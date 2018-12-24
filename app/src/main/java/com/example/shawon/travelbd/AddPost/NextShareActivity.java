@@ -300,6 +300,10 @@ public class NextShareActivity extends AppCompatActivity {
                 taggedAuthID+=ch;
             }
         }
+        myRef.child(context.getString(R.string.user_public_Info))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(context.getString(R.string.posts_field))
+                .setValue(imageCount+1);
     }
 
     private String getDateTime() {
