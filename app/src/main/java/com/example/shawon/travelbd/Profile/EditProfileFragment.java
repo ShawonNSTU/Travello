@@ -125,7 +125,6 @@ public class EditProfileFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AddPostActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getActivity().startActivity(intent);
-
             }
         });
     }
