@@ -114,7 +114,6 @@ public class EditProfileFragment extends Fragment {
         mUserEmailEditTextOnClick();
 
         changeProfilePhotoOnClick();
-
     }
 
     private void changeProfilePhotoOnClick() {
