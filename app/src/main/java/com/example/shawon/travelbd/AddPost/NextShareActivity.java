@@ -173,7 +173,6 @@ public class NextShareActivity extends AppCompatActivity {
         mSwitchCompatCheckedOnChangeListener();
 
         mShareButtonOnClick();
-
     }
 
     private void mShareButtonOnClick() {
