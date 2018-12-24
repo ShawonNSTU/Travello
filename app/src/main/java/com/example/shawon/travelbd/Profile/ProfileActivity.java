@@ -227,7 +227,6 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     });
 
-
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
