@@ -50,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
 
