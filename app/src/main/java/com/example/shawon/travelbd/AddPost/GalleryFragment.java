@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.shawon.travelbd.Profile.SettingsActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.FilePath;
 import com.example.shawon.travelbd.Utils.FileSearch;
@@ -92,6 +93,15 @@ public class GalleryFragment extends Fragment {
 
         mZoomInOutOnClick();
 
+    }
+
+    private boolean isRootTask(){
+        if (((AddPostActivity)getActivity()).getTask() == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private void mZoomInOutOnClick() {
@@ -167,8 +177,13 @@ public class GalleryFragment extends Fragment {
                     TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setTextColor(getResources().getColor(R.color.white));
                     snackbar.show();
-                }else{
+                }else if(!mSelectedImage.equals("") && isRootTask()){
                     Intent intent = new Intent(getActivity(), NextShareActivity.class);
+                    intent.putExtra(getString(R.string.selected_image), mSelectedImage);
+                    startActivity(intent);
+                }
+                else if(!mSelectedImage.equals("") && !isRootTask()){
+                    Intent intent = new Intent(getActivity(), SettingsActivity.class);
                     intent.putExtra(getString(R.string.selected_image), mSelectedImage);
                     startActivity(intent);
                 }
