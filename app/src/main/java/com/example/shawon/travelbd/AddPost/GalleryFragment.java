@@ -186,6 +186,7 @@ public class GalleryFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), SettingsActivity.class);
                     intent.putExtra(getString(R.string.selected_image), mSelectedImage);
                     startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
