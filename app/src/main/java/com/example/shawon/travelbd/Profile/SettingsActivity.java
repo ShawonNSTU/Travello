@@ -3,8 +3,10 @@ package com.example.shawon.travelbd.Profile;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,13 +21,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
+import com.example.shawon.travelbd.Utils.FilePath;
+import com.example.shawon.travelbd.Utils.ImageManager;
 import com.example.shawon.travelbd.Utils.SectionsStatePagerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
@@ -46,8 +59,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference myRef;
+    private StorageReference mStorageReference;
 
     private ProgressDialog mProgessDialog;
+
+    private double mPhotoUploadProgress = 0.0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout1);
         mProgessDialog = new ProgressDialog(this);
+        mStorageReference = FirebaseStorage.getInstance().getReference();
 
         setupFragments();
 
@@ -80,6 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (intent.hasExtra(getString(R.string.selected_image))){
             String intentData = intent.getStringExtra(getString(R.string.selected_image));
             setupViewPager(sectionsStatePagerAdapter.getFragmentNumber(getString(R.string.edit_profile)));
+            uploadProfilePhotoToStorage(intentData);
         }
 
         if (intent.hasExtra("EditProfileButton")){
@@ -88,6 +108,75 @@ public class SettingsActivity extends AppCompatActivity {
             setupViewPager(sectionsStatePagerAdapter.getFragmentNumber(getString(R.string.edit_profile)));
         }
 
+    }
+
+    private void uploadProfilePhotoToStorage(String imgUrl) {
+        Log.d(TAG,"uploadProfilePhotoToStorage : started");
+
+        FilePath filePath = new FilePath();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        StorageReference storageReference = mStorageReference
+                .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + "/" + userID + "/profile_photo");
+
+        // convert image url to bitmap
+        Bitmap bitmap = ImageManager.getBitmap(imgUrl);
+
+        // convert bitmap to byte array
+        byte[] bytes = ImageManager.getBytesFromBitmap(bitmap,100);
+
+        UploadTask uploadTask = null;
+        uploadTask = storageReference.putBytes(bytes);
+
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG,"uploadProfilePhotoToStorage : onSuccess");
+
+                Toast.makeText(context,"Your profile photo successfully updated!",Toast.LENGTH_SHORT).show();
+
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                // add the profile photo to 'UserPersonalInfo' and 'UserPublicInfo' node
+                addPhotoToDatabase(downloadUrl.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"uploadProfilePhotoToStorage : onFailure");
+                Toast.makeText(context,"Sorry, an error occurred!",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                double progress = 0.0;
+                if (taskSnapshot.getTotalByteCount() > 0){
+                    progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                }
+                if (progress - 15 > mPhotoUploadProgress){
+                    Toast.makeText(context, "Processing... "+String.format("%.0f",progress)+"%",Toast.LENGTH_SHORT).show();
+                    mPhotoUploadProgress = progress;
+                }
+                Log.d(TAG,"uploadProfilePhotoToStorage : onProgress : "+progress+"% done.");
+            }
+        });
+    }
+
+    private void addPhotoToDatabase(String url) {
+        Log.d(TAG, "addPhotoToDatabase : adding profile photo to the database");
+
+        myRef.child(context.getString(R.string.user_personal_Info))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(context.getString(R.string.profile_photo))
+                .setValue(url);
+
+        myRef.child(context.getString(R.string.user_public_Info))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(context.getString(R.string.profile_photo))
+                .setValue(url);
+
+        finish();
     }
 
     private void setupFragments() {
@@ -220,8 +309,13 @@ public class SettingsActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 if (user != null) {
+
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+
+                    mDatabase = FirebaseDatabase.getInstance();
+                    myRef = mDatabase.getReference();
+
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
