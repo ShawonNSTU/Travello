@@ -78,6 +78,11 @@ public class AddPostActivity extends AppCompatActivity {
         mTabLayout.getTabAt(1).setText(getString(R.string.photo));
     }
 
+    public int getTask(){
+        Log.d(TAG,"getTask : Task is : "+getIntent().getFlags());
+        return getIntent().getFlags();
+    }
+
     /**
      * check an array of permission
      * @param permissions
