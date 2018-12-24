@@ -77,11 +77,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        if (intent.hasExtra(getString(R.string.selected_image))){
+            String intentData = intent.getStringExtra(getString(R.string.selected_image));
+            setupViewPager(sectionsStatePagerAdapter.getFragmentNumber(getString(R.string.edit_profile)));
+        }
+
         if (intent.hasExtra("EditProfileButton")){
             Log.d(TAG,"getIncomingIntent:received incoming intent from ProfileActivity");
 
-                setupViewPager(sectionsStatePagerAdapter.getFragmentNumber(getString(R.string.edit_profile)));
-
+            setupViewPager(sectionsStatePagerAdapter.getFragmentNumber(getString(R.string.edit_profile)));
         }
 
     }
