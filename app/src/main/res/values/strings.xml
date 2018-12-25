@@ -73,4 +73,5 @@
     <string name="tagged">Tagged</string>
     <string name="profile_photo">profile_photo</string>
     <string name="posts_field">posts</string>
+    <string name="hometown_field">hometown</string>
 </resources>
