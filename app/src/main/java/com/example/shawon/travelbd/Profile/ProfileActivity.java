@@ -50,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private static final int ACTIVITY_NUM = 4;
     private static final int ERROR_DIALOG_REQUEST = 8001;
-    private static final int INCOMING_ACTIVITY_REQUEST_CODE = 207;
     private Context context = ProfileActivity.this;
 
     private static final int NUM_GRID_COLUMN = 3;
@@ -72,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mTextEditProfile;
     private ImageView mEditHometown;
     private ImageView mSeeTraveledPlaces;
+    public static String mSelectedHometownLocation = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,26 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void gotoHometownLocationSelectActivity() {
         Intent intent = new Intent(context, LocationSelectFromGooglePlaces.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivityForResult(intent,INCOMING_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(TAG,"onActivityResult : Called");
-
-        if (requestCode == INCOMING_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                String selectedHometown = data.getStringExtra(getString(R.string.user_selected_location));
-                String s = "Lives in "+selectedHometown;
-                mHometown.setText(s);
-                myRef.child(getString(R.string.user_public_Info))
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child(getString(R.string.hometown_field))
-                        .setValue(selectedHometown);
-            }
-        }
+        startActivity(intent);
     }
 
     private boolean isServicesOK() {
@@ -361,6 +342,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (!hometown.isEmpty()){
             hometown = "Lives in "+userPublicInfo.getHometown();
             mHometown.setText(hometown);
+            mHometown.setTextColor(getResources().getColor(R.color.light_black));
         }
         else{
             mHometown.setText("You haven't identified your hometown yet!");
@@ -395,4 +377,17 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSelectedHometownLocation.length() > 0){
+            String s = "Lives in "+mSelectedHometownLocation;
+            mHometown.setText(s);
+            mHometown.setTextColor(getResources().getColor(R.color.light_black));
+            myRef.child(getString(R.string.user_public_Info))
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child(getString(R.string.hometown_field))
+                    .setValue(mSelectedHometownLocation);
+        }
+    }
 }
