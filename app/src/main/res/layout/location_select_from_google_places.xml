@@ -53,7 +53,6 @@
             android:id="@+id/input_search"
             android:inputType="text"
             android:maxLines="1"
-            android:hint="@string/try_your_traveled_places"
             android:background="@null"
             android:textColorHint="@color/edittext_hint_color"
             />
