@@ -128,6 +128,25 @@ public class ProfileActivity extends AppCompatActivity {
         startActivityForResult(intent,INCOMING_ACTIVITY_REQUEST_CODE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG,"onActivityResult : Called");
+
+        if (requestCode == INCOMING_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String selectedHometown = data.getStringExtra(getString(R.string.user_selected_location));
+                String s = "Lives in "+selectedHometown;
+                mHometown.setText(s);
+                myRef.child(getString(R.string.user_public_Info))
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(getString(R.string.hometown_field))
+                        .setValue(selectedHometown);
+            }
+        }
+    }
+
     private boolean isServicesOK() {
         Log.d(TAG,"isServicesOK : checking Google Play Services version");
 
