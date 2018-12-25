@@ -99,6 +99,13 @@ public class ProfileActivity extends AppCompatActivity {
         isUserLoggedInOrNot();
 
         onClickEditProfileButton();
+
+        onClickEditHometown();
+    }
+
+    private void onClickEditHometown() {
+        Log.d(TAG,"onClickEditHometown : editing user's hometown");
+        // later code
     }
 
     private void onClickEditProfileButton() {
