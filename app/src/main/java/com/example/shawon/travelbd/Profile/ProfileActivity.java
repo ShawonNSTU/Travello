@@ -137,13 +137,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.profileToolBar);
-
         setSupportActionBar(toolbar);
 
         ImageView mProfileMenu = (ImageView) findViewById(R.id.profileMenu);
-
         ImageView mProfileAddPerson = (ImageView) findViewById(R.id.profileAddPerson);
 
         mProfileMenu.setOnClickListener(new View.OnClickListener() {
@@ -161,27 +158,19 @@ public class ProfileActivity extends AppCompatActivity {
                 // later code
             }
         });
-
     }
 
     // BottomNavigationView Setup
 
     private void setupBottomNavigationView() {
-
         Log.d(TAG, "ProfileActivity setupBottomNavigationView: setting up BottomNavigationView");
 
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-
         BottomNavigationViewHelper.enableNavigation(context, bottomNavigationViewEx);
-
         Menu menu = bottomNavigationViewEx.getMenu();
-
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-
         menuItem.setChecked(true);
-
     }
 
     /*
