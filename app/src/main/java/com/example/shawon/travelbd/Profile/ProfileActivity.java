@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.Profile;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,11 +18,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.shawon.travelbd.AddPost.LocationSelectFromGooglePlaces;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.GridImageAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +49,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";
     private static final int ACTIVITY_NUM = 4;
+    private static final int ERROR_DIALOG_REQUEST = 8001;
+    private static final int INCOMING_ACTIVITY_REQUEST_CODE = 207;
     private Context context = ProfileActivity.this;
 
     private static final int NUM_GRID_COLUMN = 3;
@@ -105,7 +112,41 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void onClickEditHometown() {
         Log.d(TAG,"onClickEditHometown : editing user's hometown");
-        // later code
+        mEditHometown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isServicesOK()) {
+                    gotoHometownLocationSelectActivity();
+                }
+            }
+        });
+    }
+
+    private void gotoHometownLocationSelectActivity() {
+        Intent intent = new Intent(context, LocationSelectFromGooglePlaces.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //
+        startActivityForResult(intent,INCOMING_ACTIVITY_REQUEST_CODE);
+    }
+
+    private boolean isServicesOK() {
+        Log.d(TAG,"isServicesOK : checking Google Play Services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
+        if (available == ConnectionResult.SUCCESS) {
+            // everything is fine and the user can make map request to edit his/her hometown
+            Log.d(TAG,"isServicesOK : Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            // an error has occurred but user can resolve it
+            Log.d(TAG,"isServicesOK : an error faced but user can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(ProfileActivity.this,available,ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }
+        else {
+            Toast.makeText(context,"Sorry, you can't make map request to edit your hometown.",Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     private void onClickEditProfileButton() {
