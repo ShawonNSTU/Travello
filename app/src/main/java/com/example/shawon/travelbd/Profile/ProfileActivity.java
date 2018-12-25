@@ -63,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mNumberOfTraveledPlaces;
     private ProgressBar mProgressBar;
     private TextView mTextEditProfile;
+    private ImageView mEditHometown;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,13 +80,13 @@ public class ProfileActivity extends AppCompatActivity {
         mHometown = (TextView) findViewById(R.id.hometown);
         mNumberOfTraveledPlaces = (TextView) findViewById(R.id.numberOfTraveledPlaces);
         mProgressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
+        mEditHometown = (ImageView) findViewById(R.id.edit_hometown);
+        mTextEditProfile = (TextView) findViewById(R.id.textEditProfile);
         mProgressBar.setVisibility(View.VISIBLE);
 
         if (Build.VERSION.SDK_INT >= 21){
             mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.gray),android.graphics.PorterDuff.Mode.MULTIPLY);
         }
-
-        mTextEditProfile = (TextView) findViewById(R.id.textEditProfile);
 
         setupBottomNavigationView();
 
@@ -313,6 +314,8 @@ public class ProfileActivity extends AppCompatActivity {
             mHometown.setText("You haven't identified your hometown yet!");
             mHometown.setTextColor(getResources().getColor(R.color.gray));
         }
+
+        mEditHometown.setVisibility(View.VISIBLE);
 
         long numberOfTraveledPlaces = userPublicInfo.getNumber_of_travelled_places();
         if (numberOfTraveledPlaces > 0){
