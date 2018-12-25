@@ -386,6 +386,7 @@ public class ProfileActivity extends AppCompatActivity {
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child(getString(R.string.hometown_field))
                     .setValue(mSelectedHometownLocation);
+            mSelectedHometownLocation = "";
         }
     }
 }
