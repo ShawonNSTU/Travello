@@ -67,6 +67,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         TextWatcher,
         LocationListener {
+
     private static final String TAG = "LocationSelectActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -76,14 +77,17 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
     private Context context = LocationSelectFromGooglePlaces.this;
 
     private boolean mLocationPermissionGranted = false;
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient, mGoogleApiClientForGooglePlaces;
     private Location location;
     private Marker marker;
     private View mapView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+
     private AutoCompleteTextView mInputSearch;
     private ImageView mSaveCheck;
+
     private PlaceInfo mPlace;
     private String mGeoLocateAddress;
 
@@ -92,8 +96,10 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_select_from_google_places);
         Log.d(TAG, "onCreate : Started");
+
         mInputSearch = (AutoCompleteTextView) findViewById(R.id.input_search);
         mSaveCheck = (ImageView) findViewById(R.id.save_check);
+
         if (IsConnectedToInternet.isConnectedToInternet(context)) {
             Log.d(TAG,"IsConnectedToInternet : Success");
             getLocationPermission();
@@ -133,6 +139,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
         mInputSearch.setAdapter(mPlaceAutocompleteAdapter);
         mInputSearch.setOnItemClickListener(mAdapterOnItemClickListener);
         mInputSearch.addTextChangedListener(this);
+
         mInputSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -165,10 +172,18 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                         String placeName = mPlace.getName();
                         float placeRating = mPlace.getRating();
                         Log.d(TAG,"mSaveCheck : onClick : Location Found By Places Object : Place Name : "+placeName+" Place Ratings :"+placeRating);
-                        Intent intent = new Intent();
-                        intent.putExtra(getString(R.string.user_selected_location),placeName+"@"+placeRating);
-                        setResult(RESULT_OK,intent);
-                        finish();
+                        if(isRootTask()) {
+                            Intent intent = new Intent();
+                            intent.putExtra(getString(R.string.user_selected_location), placeName + "@" + placeRating);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                        else{
+                            Intent intent = new Intent();
+                            intent.putExtra(getString(R.string.user_selected_location),placeName);
+                            setResult(RESULT_OK,intent);
+                            finish();
+                        }
                     }catch (NullPointerException e){
                         Log.d(TAG,"mSaveCheck : onClick : NullPointerException : "+e.getMessage());
                     }
@@ -180,10 +195,18 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                     }
                     else{
                         Log.d(TAG,"mSaveCheck : onClick : Location : "+mGeoLocateAddress+" Found By Geo Locate Address");
-                        Intent intent = new Intent();
-                        intent.putExtra(getString(R.string.user_selected_location),mGeoLocateAddress+"@"+"2.2");
-                        setResult(RESULT_OK,intent);
-                        finish();
+                        if (isRootTask()) {
+                            Intent intent = new Intent();
+                            intent.putExtra(getString(R.string.user_selected_location), mGeoLocateAddress + "@" + "2.2");
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                        else{
+                            Intent intent = new Intent();
+                            intent.putExtra(getString(R.string.user_selected_location),mGeoLocateAddress);
+                            setResult(RESULT_OK,intent);
+                            finish();
+                        }
                     }
                 }
             }
@@ -406,7 +429,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        // later code
     }
 
     @Override
