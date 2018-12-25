@@ -64,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private TextView mTextEditProfile;
     private ImageView mEditHometown;
+    private ImageView mSeeTraveledPlaces;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
         mEditHometown = (ImageView) findViewById(R.id.edit_hometown);
         mTextEditProfile = (TextView) findViewById(R.id.textEditProfile);
+        mSeeTraveledPlaces = (ImageView) findViewById(R.id.see_traveled_places);
         mProgressBar.setVisibility(View.VISIBLE);
 
         if (Build.VERSION.SDK_INT >= 21){
@@ -97,7 +99,6 @@ public class ProfileActivity extends AppCompatActivity {
         isUserLoggedInOrNot();
 
         onClickEditProfileButton();
-
     }
 
     private void onClickEditProfileButton() {
@@ -118,9 +119,9 @@ public class ProfileActivity extends AppCompatActivity {
     // To Test The Grid Image View
 
     private void setupGridImages() {
+        Log.d(TAG,"setupGridImages : Setting up grid images from user uploaded and tagged photos");
 
         ArrayList<String>imageUrl = new ArrayList<>();
-
         imageUrl.add("https://78.media.tumblr.com/da2502ad2eacaa20c3db0b65235972ba/tumblr_ns1y4fQoAF1smk4d7o1_500.jpg");
         imageUrl.add("http://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Aronnak_Holiday_Cottage%2C_Rangamati10.jpg/500px-Aronnak_Holiday_Cottage%2C_Rangamati10.jpg");
         imageUrl.add("http://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ctg_foys_lake_water_2003.jpg/500px-Ctg_foys_lake_water_2003.jpg");
@@ -128,17 +129,11 @@ public class ProfileActivity extends AppCompatActivity {
         imageUrl.add("http://farm1.static.flickr.com/668/21011779476_aa76bddffb.jpg");
 
         GridView gridView = (GridView) findViewById(R.id.gridView);
-
         int rowWidth = getResources().getDisplayMetrics().widthPixels;
-
         int imageWidth = rowWidth / NUM_GRID_COLUMN;
-
         gridView.setColumnWidth(imageWidth);
-
         GridImageAdapter gridImageAdapter = new GridImageAdapter(context,R.layout.square_grid_image_view,imageUrl,"");
-
         gridView.setAdapter(gridImageAdapter);
-
     }
 
     private void setupToolbar() {
@@ -163,6 +158,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Profile Add Person onClick : Follow Person");
+                // later code
             }
         });
 
@@ -321,12 +317,12 @@ public class ProfileActivity extends AppCompatActivity {
         if (numberOfTraveledPlaces > 0){
             String textNumberOfTraveledPlaces = "Traveled to "+numberOfTraveledPlaces+" places!";
             mNumberOfTraveledPlaces.setText(textNumberOfTraveledPlaces);
+            mSeeTraveledPlaces.setVisibility(View.VISIBLE);
         }
         else{
             mNumberOfTraveledPlaces.setText("You haven't traveled any place yet!");
             mNumberOfTraveledPlaces.setTextColor(getResources().getColor(R.color.gray));
         }
-
     }
 
     @Override
