@@ -67,7 +67,6 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         TextWatcher,
         LocationListener {
-
     private static final String TAG = "LocationSelectActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -83,10 +82,8 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
     private Marker marker;
     private View mapView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
-
     private AutoCompleteTextView mInputSearch;
     private ImageView mSaveCheck;
-
     private PlaceInfo mPlace;
     private String mGeoLocateAddress;
 
@@ -105,6 +102,21 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
             Log.d(TAG,"IsConnectedToInternet : Failed");
             Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
         }
+        if(isRootTask()){
+            mInputSearch.setHint("Try your traveled places");
+        }
+        else{
+            mInputSearch.setHint("Search your hometown");
+        }
+    }
+
+    private boolean isRootTask(){
+        if(getIntent().getFlags() == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private void initWidgets() {
@@ -118,13 +130,9 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                 .build();
 
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(context,mGoogleApiClientForGooglePlaces,LAT_LNG_BOUNDS,null);
-
         mInputSearch.setAdapter(mPlaceAutocompleteAdapter);
-
         mInputSearch.setOnItemClickListener(mAdapterOnItemClickListener);
-
         mInputSearch.addTextChangedListener(this);
-
         mInputSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
