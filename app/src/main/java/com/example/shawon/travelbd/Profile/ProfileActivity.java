@@ -124,7 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void gotoHometownLocationSelectActivity() {
         Intent intent = new Intent(context, LocationSelectFromGooglePlaces.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivityForResult(intent,INCOMING_ACTIVITY_REQUEST_CODE);
     }
 
