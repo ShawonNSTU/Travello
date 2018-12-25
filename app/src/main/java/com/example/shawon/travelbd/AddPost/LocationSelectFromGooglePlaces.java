@@ -203,7 +203,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                         }
                         else{
                             Intent intent = new Intent();
-                            intent.putExtra(getString(R.string.user_selected_location),mGeoLocateAddress);
+                            intent.putExtra(getString(R.string.user_selected_location), mGeoLocateAddress);
                             setResult(RESULT_OK,intent);
                             finish();
                         }
