@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.PlaceInfo;
+import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.IsConnectedToInternet;
 import com.example.shawon.travelbd.Utils.PlaceAutocompleteAdapter;
@@ -179,9 +180,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                             finish();
                         }
                         else{
-                            Intent intent = new Intent();
-                            intent.putExtra(getString(R.string.user_selected_location),placeName);
-                            setResult(RESULT_OK,intent);
+                            ProfileActivity.mSelectedHometownLocation = placeName;
                             finish();
                         }
                     }catch (NullPointerException e){
@@ -202,9 +201,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                             finish();
                         }
                         else{
-                            Intent intent = new Intent();
-                            intent.putExtra(getString(R.string.user_selected_location), mGeoLocateAddress);
-                            setResult(RESULT_OK,intent);
+                            ProfileActivity.mSelectedHometownLocation = mGeoLocateAddress;
                             finish();
                         }
                     }
