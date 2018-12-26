@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,7 +51,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -95,6 +95,8 @@ public class NextShareActivity extends AppCompatActivity {
     private SwitchCompat mSwitchCompat;
     private EditText mPhotoDescription;
     private TextView mShareButton;
+
+    public static List<Bitmap> mSelectedLocationPhotosBitmap = new ArrayList<>();
 
     private ShareDialog mShareDialog;
 
