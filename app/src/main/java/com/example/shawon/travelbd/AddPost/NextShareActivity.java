@@ -753,4 +753,18 @@ public class NextShareActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mSelectedLocationPhotosBitmap.size() > 0){
+            showDialogOfImages(mSelectedLocationPhotosBitmap);
+            mSelectedLocationPhotosBitmap.clear();
+        }
+    }
+
+    private void showDialogOfImages(List<Bitmap> mSelectedLocationPhotosBitmap) {
+
+    }
 }
