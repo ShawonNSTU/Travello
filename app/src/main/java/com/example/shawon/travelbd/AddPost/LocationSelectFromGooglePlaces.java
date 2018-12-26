@@ -315,7 +315,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
             marker = mMap.addMarker(options);
         }
 
-        if(isRootTask()){
+        if(isRootTask() && mPlace != null){
             getPhotoMetaData(placeInfo.getId());
         }
     }
