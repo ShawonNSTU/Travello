@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -40,8 +41,13 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,6 +58,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -92,6 +100,10 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
     private PlaceInfo mPlace;
     private String mGeoLocateAddress;
 
+    private GeoDataClient geoDataClient;
+    private List<PlacePhotoMetadata> photoMetadataList;
+    private int mCurrentPhotoIndex = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +116,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
         if (IsConnectedToInternet.isConnectedToInternet(context)) {
             Log.d(TAG,"IsConnectedToInternet : Success");
             getLocationPermission();
+            geoDataClient = Places.getGeoDataClient(this,null);
         }
         else{
             Log.d(TAG,"IsConnectedToInternet : Failed");
@@ -301,6 +314,52 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             marker = mMap.addMarker(options);
         }
+
+        getPhotoMetaData(placeInfo.getId());
+    }
+
+    private void getPhotoMetaData(String placeId) {
+
+        final Task<PlacePhotoMetadataResponse> photoResponse
+                = geoDataClient.getPlacePhotos(placeId);
+
+        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                photoMetadataList = new ArrayList<>();
+                PlacePhotoMetadataResponse photos = task.getResult();
+                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                Log.d(TAG,"number of photos: "+photoMetadataBuffer.getCount());
+                if (photoMetadataBuffer.getCount()>0) {
+                    for (PlacePhotoMetadata photoMetadata : photoMetadataBuffer) {
+                        photoMetadataList.add(photoMetadataBuffer.get(0).freeze());
+                    }
+                    photoMetadataBuffer.release();
+                }
+                Log.d(TAG,"size: "+photoMetadataList.size());
+                if(photoMetadataList.size()>0){
+                    for(int i=0; i<photoMetadataList.size(); i++){
+                        mCurrentPhotoIndex = i;
+                        getPhoto(photoMetadataList.get(mCurrentPhotoIndex));
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void getPhoto(PlacePhotoMetadata placePhotoMetadata) {
+
+        Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(placePhotoMetadata);
+        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                PlacePhotoResponse photo = task.getResult();
+                Bitmap bitmap = photo.getBitmap();
+                NextShareActivity.mSelectedLocationPhotosBitmap.add(bitmap);
+            }
+        });
+
     }
 
     private void moveCamera(LatLng latlng, float zoom, String title) {
