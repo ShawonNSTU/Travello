@@ -348,7 +348,9 @@ public class ProfileActivity extends AppCompatActivity {
             mHometown.setText("You haven't identified your hometown yet!");
             mHometown.setTextColor(getResources().getColor(R.color.gray));
         }
+
         mEditHometown.setVisibility(View.VISIBLE);
+
         long numberOfTraveledPlaces = userPublicInfo.getNumber_of_travelled_places();
         if (numberOfTraveledPlaces > 0){
             String textNumberOfTraveledPlaces = "Traveled to "+numberOfTraveledPlaces+" places!";
