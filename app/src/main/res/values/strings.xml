@@ -74,4 +74,7 @@
     <string name="profile_photo">profile_photo</string>
     <string name="posts_field">posts</string>
     <string name="hometown_field">hometown</string>
+    <string name="question">Are you indicating the following places?</string>
+    <string name="previous_page">PREV</string>
+    <string name="next_page">NEXT</string>
 </resources>
