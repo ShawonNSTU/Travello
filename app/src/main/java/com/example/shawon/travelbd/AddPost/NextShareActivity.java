@@ -765,6 +765,8 @@ public class NextShareActivity extends AppCompatActivity {
     }
 
     private void showDialogOfImages(List<Bitmap> mSelectedLocationPhotosBitmap) {
-        // later code
+        Log.d(TAG,"showDialogOfImages : showing places images");
+
+
     }
 }
