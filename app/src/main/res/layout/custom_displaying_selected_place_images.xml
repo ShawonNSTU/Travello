@@ -87,7 +87,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:id="@+id/NO"
-                    android:src="@drawable/ic_close"
+                    android:src="@drawable/ic_no"
                     />
 
                 <ImageView
@@ -96,7 +96,7 @@
                     android:id="@+id/YES"
                     android:layout_toEndOf="@+id/NO"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_save_check"
+                    android:src="@drawable/ic_yes"
                     />
 
             </RelativeLayout>
