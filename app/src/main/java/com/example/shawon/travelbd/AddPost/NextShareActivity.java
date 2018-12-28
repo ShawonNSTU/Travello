@@ -805,7 +805,6 @@ public class NextShareActivity extends AppCompatActivity {
         if (mCurrentPhotoIndex < mSelectedLocationPhotosBitmap.size()) {
             Bitmap bitmap = mSelectedLocationPhotosBitmap.get(mCurrentPhotoIndex);
             Toast.makeText(context,""+mCurrentPhotoIndex+" : "+bitmap,Toast.LENGTH_LONG).show();
-            mSelectedPlaceImages.invalidate();
             mSelectedPlaceImages.setImageBitmap(bitmap);
             setButtonVisibility();
         }
