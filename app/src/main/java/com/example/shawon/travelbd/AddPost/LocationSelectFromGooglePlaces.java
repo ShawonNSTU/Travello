@@ -333,8 +333,8 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                 PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
                 Log.d(TAG,"number of photos: "+photoMetadataBuffer.getCount());
                 if (photoMetadataBuffer.getCount()>0) {
-                    for (PlacePhotoMetadata photoMetadata : photoMetadataBuffer) {
-                        photoMetadataList.add(photoMetadataBuffer.get(0).freeze());
+                    for (int i=0; i<photoMetadataBuffer.getCount(); i++) {
+                        photoMetadataList.add(photoMetadataBuffer.get(i).freeze());
                     }
                     photoMetadataBuffer.release();
                 }
