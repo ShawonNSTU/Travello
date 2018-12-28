@@ -10,11 +10,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
@@ -97,6 +99,9 @@ public class NextShareActivity extends AppCompatActivity {
     private TextView mShareButton;
 
     public static List<Bitmap> mSelectedLocationPhotosBitmap = new ArrayList<>();
+    private int mCurrentPhotoIndex = 0;
+    private ImageView mSelectedPlaceImages;
+    private TextView nextPage,previousPage;
 
     private ShareDialog mShareDialog;
 
@@ -759,14 +764,85 @@ public class NextShareActivity extends AppCompatActivity {
         super.onResume();
 
         if (mSelectedLocationPhotosBitmap.size() > 0){
-            showDialogOfImages(mSelectedLocationPhotosBitmap);
-            mSelectedLocationPhotosBitmap.clear();
+            showDialogOfImages();
         }
     }
 
-    private void showDialogOfImages(List<Bitmap> mSelectedLocationPhotosBitmap) {
+    private void showDialogOfImages() {
         Log.d(TAG,"showDialogOfImages : showing places images");
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
+        LayoutInflater inflater = this.getLayoutInflater();
+        View customLayout = inflater.inflate(R.layout.custom_displaying_selected_place_images,null);
+
+        mSelectedPlaceImages = (ImageView) customLayout.findViewById(R.id.selected_place_images);
+        nextPage = (TextView) customLayout.findViewById(R.id.next);
+        previousPage = (TextView) customLayout.findViewById(R.id.previous);
+
+        displayPhoto();
+
+        nextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentPhotoIndex++;
+                displayPhoto();
+            }
+        });
+        previousPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentPhotoIndex--;
+                displayPhoto();
+            }
+        });
+
+        builder.setView(customLayout);
+        builder.show();
+    }
+
+    private void displayPhoto() {
+        if (mCurrentPhotoIndex < mSelectedLocationPhotosBitmap.size()) {
+            Bitmap bitmap = mSelectedLocationPhotosBitmap.get(mCurrentPhotoIndex);
+            Toast.makeText(context,""+mCurrentPhotoIndex+" : "+bitmap,Toast.LENGTH_LONG).show();
+            mSelectedPlaceImages.invalidate();
+            mSelectedPlaceImages.setImageBitmap(bitmap);
+            setButtonVisibility();
+        }
+    }
+
+    private void setButtonVisibility() {
+        if(mCurrentPhotoIndex == 0 && mSelectedLocationPhotosBitmap.size() == 1){
+            nextPage.setEnabled(false);
+            nextPage.setClickable(false);
+            nextPage.setTextColor(getResources().getColor(R.color.divider));
+            previousPage.setEnabled(false);
+            previousPage.setClickable(false);
+            previousPage.setTextColor(getResources().getColor(R.color.divider));
+        }
+        else if (mCurrentPhotoIndex == 0 && mSelectedLocationPhotosBitmap.size() > 1){
+            nextPage.setEnabled(true);
+            nextPage.setClickable(true);
+            nextPage.setTextColor(getResources().getColor(R.color.black));
+            previousPage.setEnabled(false);
+            previousPage.setClickable(false);
+            previousPage.setTextColor(getResources().getColor(R.color.divider));
+        }
+        else if (mCurrentPhotoIndex == mSelectedLocationPhotosBitmap.size()-1 && mSelectedLocationPhotosBitmap.size() > 1){
+            nextPage.setEnabled(false);
+            nextPage.setClickable(false);
+            nextPage.setTextColor(getResources().getColor(R.color.divider));
+            previousPage.setEnabled(true);
+            previousPage.setClickable(true);
+            previousPage.setTextColor(getResources().getColor(R.color.black));
+        }
+        else{
+            nextPage.setEnabled(true);
+            nextPage.setClickable(true);
+            nextPage.setTextColor(getResources().getColor(R.color.black));
+            previousPage.setEnabled(true);
+            previousPage.setClickable(true);
+            previousPage.setTextColor(getResources().getColor(R.color.black));
+        }
     }
 }
