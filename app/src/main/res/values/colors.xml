@@ -17,4 +17,5 @@
     <color name="transparent">#7f333639</color>
     <color name="edittext_hint_color">#C0C0C0</color>
     <color name="light_white">#F5F5F5</color>
+    <color name="green">#2E8B57</color>
 </resources>
