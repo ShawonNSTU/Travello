@@ -340,6 +340,7 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                 }
                 Log.d(TAG,"size: "+photoMetadataList.size());
                 if(photoMetadataList.size()>0){
+                    NextShareActivity.mSelectedLocationPhotosBitmap.clear();
                     for(int i=0; i<photoMetadataList.size(); i++){
                         mCurrentPhotoIndex = i;
                         getPhoto(photoMetadataList.get(mCurrentPhotoIndex));
