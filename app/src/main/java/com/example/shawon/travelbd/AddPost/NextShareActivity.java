@@ -772,16 +772,12 @@ public class NextShareActivity extends AppCompatActivity {
         Log.d(TAG,"showDialogOfImages : showing places images");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
         LayoutInflater inflater = this.getLayoutInflater();
         View customLayout = inflater.inflate(R.layout.custom_displaying_selected_place_images,null);
-
         mSelectedPlaceImages = (ImageView) customLayout.findViewById(R.id.selected_place_images);
         nextPage = (TextView) customLayout.findViewById(R.id.next);
         previousPage = (TextView) customLayout.findViewById(R.id.previous);
-
         displayPhoto();
-
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -796,7 +792,6 @@ public class NextShareActivity extends AppCompatActivity {
                 displayPhoto();
             }
         });
-
         builder.setView(customLayout);
         builder.show();
     }
