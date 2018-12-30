@@ -98,10 +98,13 @@ public class NextShareActivity extends AppCompatActivity {
     private EditText mPhotoDescription;
     private TextView mShareButton;
 
+    // Related to the dialog of images of selected location
     public static List<Bitmap> mSelectedLocationPhotosBitmap = new ArrayList<>();
     private int mCurrentPhotoIndex = 0;
     private ImageView mSelectedPlaceImages;
     private TextView nextPage,previousPage;
+    private ImageView mNoButton,mYesButton;
+    private AlertDialog dialog;
 
     private ShareDialog mShareDialog;
 
@@ -771,13 +774,19 @@ public class NextShareActivity extends AppCompatActivity {
     private void showDialogOfImages() {
         Log.d(TAG,"showDialogOfImages : showing places images");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
         LayoutInflater inflater = this.getLayoutInflater();
         View customLayout = inflater.inflate(R.layout.custom_displaying_selected_place_images,null);
+
         mSelectedPlaceImages = (ImageView) customLayout.findViewById(R.id.selected_place_images);
         nextPage = (TextView) customLayout.findViewById(R.id.next);
         previousPage = (TextView) customLayout.findViewById(R.id.previous);
+        mNoButton = (ImageView) customLayout.findViewById(R.id.NO);
+        mYesButton = (ImageView) customLayout.findViewById(R.id.YES);
+
         displayPhoto();
+
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -785,6 +794,7 @@ public class NextShareActivity extends AppCompatActivity {
                 displayPhoto();
             }
         });
+
         previousPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -792,8 +802,40 @@ public class NextShareActivity extends AppCompatActivity {
                 displayPhoto();
             }
         });
+
+        mNoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mSelectedLocation = "";
+                mAddLocation.setText(mSelectedLocation);
+                mLocationIcon.setColorFilter(null);
+
+                if (dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
+
+                Toast.makeText(context,"Please select the location correctly.",Toast.LENGTH_SHORT).show();
+
+                mSelectedLocationPhotosBitmap.clear();
+            }
+        });
+
+        mYesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                }
+
+                mSelectedLocationPhotosBitmap.clear();
+            }
+        });
+
         builder.setView(customLayout);
-        builder.show();
+        dialog = builder.show();
+        dialog.setCancelable(false);
     }
 
     private void displayPhoto() {
@@ -813,6 +855,8 @@ public class NextShareActivity extends AppCompatActivity {
             previousPage.setEnabled(false);
             previousPage.setClickable(false);
             previousPage.setTextColor(getResources().getColor(R.color.divider));
+            mNoButton.setVisibility(View.VISIBLE);
+            mYesButton.setVisibility(View.VISIBLE);
         }
         else if (mCurrentPhotoIndex == 0 && mSelectedLocationPhotosBitmap.size() > 1){
             nextPage.setEnabled(true);
@@ -821,6 +865,8 @@ public class NextShareActivity extends AppCompatActivity {
             previousPage.setEnabled(false);
             previousPage.setClickable(false);
             previousPage.setTextColor(getResources().getColor(R.color.divider));
+            mNoButton.setVisibility(View.INVISIBLE);
+            mYesButton.setVisibility(View.INVISIBLE);
         }
         else if (mCurrentPhotoIndex == mSelectedLocationPhotosBitmap.size()-1 && mSelectedLocationPhotosBitmap.size() > 1){
             nextPage.setEnabled(false);
@@ -829,6 +875,8 @@ public class NextShareActivity extends AppCompatActivity {
             previousPage.setEnabled(true);
             previousPage.setClickable(true);
             previousPage.setTextColor(getResources().getColor(R.color.black));
+            mNoButton.setVisibility(View.VISIBLE);
+            mYesButton.setVisibility(View.VISIBLE);
         }
         else{
             nextPage.setEnabled(true);
@@ -837,6 +885,8 @@ public class NextShareActivity extends AppCompatActivity {
             previousPage.setEnabled(true);
             previousPage.setClickable(true);
             previousPage.setTextColor(getResources().getColor(R.color.black));
+            mNoButton.setVisibility(View.INVISIBLE);
+            mYesButton.setVisibility(View.INVISIBLE);
         }
     }
 }
