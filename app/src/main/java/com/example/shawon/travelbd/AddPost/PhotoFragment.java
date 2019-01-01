@@ -98,6 +98,7 @@ public class PhotoFragment extends Fragment {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             Log.d(TAG, "Camera:PictureCallback:Handling the picture that was taken");
+
             // getting bitmap of the captured photo
             bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
         }
