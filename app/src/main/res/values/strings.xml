@@ -77,4 +77,5 @@
     <string name="question">Are you indicating the following places?</string>
     <string name="previous_page">PREV</string>
     <string name="next_page">NEXT</string>
+    <string name="captured_image_bitmap">Captured Image Bitmap</string>
 </resources>
