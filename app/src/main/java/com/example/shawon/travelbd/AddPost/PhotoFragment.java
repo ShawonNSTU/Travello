@@ -66,6 +66,8 @@ public class PhotoFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nextButtonHandler : onClicked.");
+
                 if(bitmap != null){
                     Toast.makeText(getActivity(),""+bitmap,Toast.LENGTH_SHORT).show();
                 }
