@@ -808,7 +808,7 @@ public class NextShareActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 mSelectedLocation = "";
-                mAddLocation.setText(mSelectedLocation);
+                mAddLocation.setText(getString(R.string.add_location));
                 mLocationIcon.setColorFilter(null);
 
                 if (dialog != null && dialog.isShowing()){
