@@ -106,6 +106,8 @@ public class NextShareActivity extends AppCompatActivity {
     private ImageView mNoButton,mYesButton;
     private AlertDialog dialog;
 
+    private Bitmap mCapturedImageBitmap = null;
+
     private ShareDialog mShareDialog;
 
     private Target target = new Target() {
@@ -151,7 +153,6 @@ public class NextShareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_next_share);
 
         Log.d(TAG,"NextShareActivity onCreate : Started");
-        Log.d(TAG,"onCreate : Selected Image from GalleryFragment: "+getIntent().getStringExtra(getString(R.string.selected_image)));
 
         mShareDialog = new ShareDialog(this);
         mAddLocation = (TextView) findViewById(R.id.add_location);
@@ -220,11 +221,18 @@ public class NextShareActivity extends AppCompatActivity {
         StorageReference storageReference = mStorageReference
                 .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + "/" + userID + "/uploaded" + "/photo" + imageCount);
 
-        // convert image url to bitmap
-        Bitmap bitmap = ImageManager.getBitmap(imgUrl);
+        byte[] bytes;
 
-        // convert bitmap to byte array
-        byte[] bytes = ImageManager.getBytesFromBitmap(bitmap,100);
+        if(mCapturedImageBitmap == null){
+            // convert the image url to bitmap (coming from Gallery Fragment)
+            Bitmap bitmap = ImageManager.getBitmap(imgUrl);
+            // convert the bitmap to byte array
+            bytes = ImageManager.getBytesFromBitmap(bitmap,100);
+        }
+        else{
+            // convert bitmap to byte array (coming from Photo Fragment)
+            bytes = ImageManager.getBytesFromBitmap(mCapturedImageBitmap,100);
+        }
 
         UploadTask uploadTask = null;
         uploadTask = storageReference.putBytes(bytes);
@@ -636,18 +644,28 @@ public class NextShareActivity extends AppCompatActivity {
     }
 
     /**
-     * gets the image url from the incoming intent and displays the chosen image
+     * gets the image from the incoming intent and displays the chosen image
      */
     private void setSelectedImage() {
 
         Log.d(TAG,"setSelectedImage:setting up the image that was selected from gallery or captured by camera");
 
-        Intent intent = getIntent();
         ImageView mSelectedImage = (ImageView) findViewById(R.id.imageShare);
-        imageUrl+= intent.getStringExtra(getString(R.string.selected_image));
-        imgUrl+= intent.getStringExtra(getString(R.string.selected_image));
-        Picasso.get().load(imageUrl).resize(200,200).onlyScaleDown().centerCrop().into(mSelectedImage);
 
+        Intent intent = getIntent();
+
+        // coming from Gallery Fragment
+        if (intent.hasExtra(getString(R.string.selected_image))) {
+            imageUrl += intent.getStringExtra(getString(R.string.selected_image));
+            imgUrl += intent.getStringExtra(getString(R.string.selected_image));
+            Picasso.get().load(imageUrl).resize(200, 200).onlyScaleDown().centerCrop().into(mSelectedImage);
+        }
+
+        // coming from Photo Fragment
+        else if(intent.hasExtra(getString(R.string.captured_image_bitmap))){
+            mCapturedImageBitmap = intent.getParcelableExtra(getString(R.string.captured_image_bitmap));
+            mSelectedImage.setImageBitmap(mCapturedImageBitmap);
+        }
     }
 
     private void setupToolbar() {
@@ -660,8 +678,6 @@ public class NextShareActivity extends AppCompatActivity {
 
         ImageView mBackArrow = (ImageView) findViewById(R.id.backArrow);
 
-        TextView mShareButton = (TextView) findViewById(R.id.tvShare);
-
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -669,16 +685,6 @@ public class NextShareActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        mShareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Share Button onClick : Sharing the post by uploading data to database.");
-
-                // upload the image to database
-            }
-        });
-
     }
 
     /*
