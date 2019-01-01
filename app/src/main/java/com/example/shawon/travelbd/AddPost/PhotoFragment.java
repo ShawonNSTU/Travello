@@ -1,5 +1,7 @@
 package com.example.shawon.travelbd.AddPost;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.ShowCamera;
@@ -28,6 +32,7 @@ public class PhotoFragment extends Fragment {
     ShowCamera showCamera;
 
     private ImageView mCaptureButton;
+    private Bitmap bitmap = null;
 
     @Nullable
     @Override
@@ -49,6 +54,26 @@ public class PhotoFragment extends Fragment {
         capturePhoto();
 
         closeButtonHandler();
+
+        nextButtonHandler();
+
+    }
+
+    private void nextButtonHandler() {
+
+        TextView nextButton = (TextView) getView().findViewById(R.id.tvNext);
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bitmap != null){
+                    Toast.makeText(getActivity(),""+bitmap,Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getActivity(),"No image captured.",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
@@ -73,6 +98,8 @@ public class PhotoFragment extends Fragment {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             Log.d(TAG, "Camera:PictureCallback:Handling the picture that was taken");
+            // getting bitmap of the captured photo
+            bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
         }
     };
 
