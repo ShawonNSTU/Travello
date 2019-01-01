@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.AddPost;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -69,10 +70,14 @@ public class PhotoFragment extends Fragment {
                 Log.d(TAG,"nextButtonHandler : onClicked.");
 
                 if(bitmap != null){
-                    Toast.makeText(getActivity(),""+bitmap,Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,"nextButtonHandler : onClicked : Bitmap : "+bitmap);
+
+                    Intent intent = new Intent(getActivity(), NextShareActivity.class);
+                    intent.putExtra(getString(R.string.captured_image_bitmap), bitmap);
+                    startActivity(intent);
                 }
                 else{
-                    Toast.makeText(getActivity(),"No image captured.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Sorry, you have not captured any photo!",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -103,6 +108,22 @@ public class PhotoFragment extends Fragment {
 
             // getting bitmap of the captured photo
             bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
+
+            // reducing the size of bitmap
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            float bitmapRatio = (float)width / (float) height;
+            if (bitmapRatio > 1){
+                width = 600;
+                height = (int) (width/bitmapRatio);
+            }
+            else {
+                height = 600;
+                width = (int) (height*bitmapRatio);
+            }
+
+            // getting the bitmap with new height and width
+            bitmap = Bitmap.createScaledBitmap(bitmap,width,height,true);
         }
     };
 
