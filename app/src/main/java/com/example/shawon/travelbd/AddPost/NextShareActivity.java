@@ -818,6 +818,8 @@ public class NextShareActivity extends AppCompatActivity {
                 Toast.makeText(context,"Please select the location correctly.",Toast.LENGTH_SHORT).show();
 
                 mSelectedLocationPhotosBitmap.clear();
+
+                mCurrentPhotoIndex = 0;
             }
         });
 
@@ -830,6 +832,8 @@ public class NextShareActivity extends AppCompatActivity {
                 }
 
                 mSelectedLocationPhotosBitmap.clear();
+
+                mCurrentPhotoIndex = 0;
             }
         });
 
