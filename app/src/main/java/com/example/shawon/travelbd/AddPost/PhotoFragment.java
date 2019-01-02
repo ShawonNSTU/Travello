@@ -153,7 +153,7 @@ public class PhotoFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG,"onClick:capturePhoto");
 
-                if (camera != null){
+                if (camera != null && bitmap == null){
                     camera.takePicture(null,null,mPictureCallback);
                 }
             }
