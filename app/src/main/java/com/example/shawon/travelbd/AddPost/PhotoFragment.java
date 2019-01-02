@@ -307,7 +307,7 @@ public class PhotoFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        //
     }
 
     @Override
