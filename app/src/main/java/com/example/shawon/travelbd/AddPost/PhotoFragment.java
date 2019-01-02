@@ -58,10 +58,11 @@ public class PhotoFragment extends Fragment implements
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
-    private boolean mLocationPermissionGranted = false;
-
     private GoogleApiClient mGoogleApiClient;
     private Location location;
+
+    private boolean mLocationPermissionGranted = false;
+    private String mGeoAddress = "";
 
     @Nullable
     @Override
@@ -95,7 +96,9 @@ public class PhotoFragment extends Fragment implements
 
     private void getLocationPermission() {
         Log.d(TAG,"getLocationPermission : Getting location permissions");
+
         String[] permissions = {FINE_LOCATION,COARSE_LOCATION};
+
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionGranted = true;
@@ -157,18 +160,30 @@ public class PhotoFragment extends Fragment implements
             return;
         }
 
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
-        android.location.Address address = getAddress(lat,lng);
-        Toast.makeText(getActivity(),""+address.getAddressLine(0),Toast.LENGTH_SHORT).show();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        // getting geo-address of that location
+        android.location.Address address = getAddress(latitude,longitude);
+        if (address.toString() == null){
+            mGeoAddress = "";
+        }
+        else {
+            mGeoAddress = address.getAddressLine(0);
+        }
+        Toast.makeText(getActivity(),""+mGeoAddress,Toast.LENGTH_LONG).show();
     }
 
     public android.location.Address getAddress(double latitude, double longitude){
+        Log.d(TAG,"Getting geo-address of the location");
+
         Geocoder geocoder;
         List<android.location.Address> addresses;
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
         try {
-            addresses = geocoder.getFromLocation(latitude,longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            addresses = geocoder.getFromLocation(latitude,longitude, 1);
+            // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             return addresses.get(0);
         } catch (IOException e) {
             e.printStackTrace();
@@ -247,7 +262,7 @@ public class PhotoFragment extends Fragment implements
      * Place the camera by SurfaceView and SurfaceHolder
      */
     private void showCameraSurface() {
-        Log.d(TAG,"showCameraSurface:Preparing the surface for showing camera");
+        Log.d(TAG,"showCameraSurface : Preparing the surface for showing camera");
 
         try {
             camera = Camera.open();
@@ -267,7 +282,7 @@ public class PhotoFragment extends Fragment implements
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"onClick:capturePhoto");
+                Log.d(TAG,"onClick : capturePhoto");
 
                 if (camera != null && bitmap == null){
                     camera.takePicture(null,null,mPictureCallback);
@@ -307,11 +322,12 @@ public class PhotoFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //
+        // later code
     }
 
     @Override
     public void onLocationChanged(Location mLocation) {
+        // getting updated location
         location = mLocation;
     }
 
