@@ -1,13 +1,19 @@
 package com.example.shawon.travelbd.AddPost;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +24,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
+import com.example.shawon.travelbd.Utils.IsConnectedToInternet;
 import com.example.shawon.travelbd.Utils.ShowCamera;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by SHAWON on 8/11/2018.
  */
 
-public class PhotoFragment extends Fragment {
+public class PhotoFragment extends Fragment implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private static final String TAG = "Photo Fragment";
 
@@ -34,6 +53,15 @@ public class PhotoFragment extends Fragment {
 
     private ImageView mCaptureButton;
     private Bitmap bitmap = null;
+
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+
+    private boolean mLocationPermissionGranted = false;
+
+    private GoogleApiClient mGoogleApiClient;
+    private Location location;
 
     @Nullable
     @Override
@@ -52,12 +80,100 @@ public class PhotoFragment extends Fragment {
 
         mCaptureButton.setColorFilter(getActivity().getResources().getColor(R.color.divider));
 
+        if (IsConnectedToInternet.isConnectedToInternet(getActivity())) {
+            Log.d(TAG,"IsConnectedToInternet : Success");
+            getLocationPermission();
+        }
+
         capturePhoto();
 
         closeButtonHandler();
 
         nextButtonHandler();
 
+    }
+
+    private void getLocationPermission() {
+        Log.d(TAG,"getLocationPermission : Getting location permissions");
+        String[] permissions = {FINE_LOCATION,COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+                buildGoogleApiClient();
+            }
+            else {
+                ActivityCompat.requestPermissions(getActivity(),permissions,LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }
+        else {
+            ActivityCompat.requestPermissions(getActivity(),permissions,LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG,"onRequestPermissionsResult : Called");
+
+        mLocationPermissionGranted = false;
+
+        switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0){
+                    for (int i=0; i<grantResults.length; i++){
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionGranted = false;
+                        }
+                        else {
+                            mLocationPermissionGranted = true;
+                            break;
+                        }
+                    }
+                    if (mLocationPermissionGranted) {
+                        Log.d(TAG,"onRequestPermissionsResult : Permission Granted");
+                        buildGoogleApiClient();
+                    }
+                    else{
+                        Log.d(TAG,"onRequestPermissionsResult : Permission Failed");
+                    }
+                }
+            }
+        }
+    }
+
+    private synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private void getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation : Getting the devices current location");
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        android.location.Address address = getAddress(lat,lng);
+        Toast.makeText(getActivity(),""+address.getAddressLine(0),Toast.LENGTH_SHORT).show();
+    }
+
+    public android.location.Address getAddress(double latitude, double longitude){
+        Geocoder geocoder;
+        List<android.location.Address> addresses;
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(latitude,longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            return addresses.get(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void nextButtonHandler() {
@@ -161,9 +277,55 @@ public class PhotoFragment extends Fragment {
     }
 
     @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        try {
+            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (location != null) {
+                Log.d(TAG,"mGoogleApiClient : onConnected : Location Found");
+                getDeviceLocation();
+            }
+            else {
+                LocationRequest mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(1000);
+                mLocationRequest.setFastestInterval(1000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
+                if(location != null){
+                    Log.d(TAG,"mGoogleApiClient : onConnected : Location Found");
+                    getDeviceLocation();
+                }
+            }
+        }catch (SecurityException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location mLocation) {
+        location = mLocation;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         showCameraSurface();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null){
+            mGoogleApiClient.disconnect();
+        }
+    }
 }
