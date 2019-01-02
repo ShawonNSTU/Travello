@@ -43,6 +43,7 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
 
         Camera.Size mSize = null;
 
+        // getting max picture size according to the users phone
         try {
             for (Camera.Size size : sizes){
                 mSize = size;
@@ -53,7 +54,7 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
 
         Log.d(TAG,"Supported All Picture Size: "+sizes);
 
-        Log.d(TAG,"Supported Specific Picture Size For Capturing Photo: "+mSize);
+        Log.d(TAG,"Supported Max Picture Size For Capturing Photo: "+mSize);
 
         if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE){
 
@@ -78,8 +79,14 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
 
         }
 
+        // set max picture size according to the users phone
         if (mSize != null){
             parameters.setPictureSize(mSize.width,mSize.height);
+        }
+
+        // set auto focus
+        if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         }
 
         try {
