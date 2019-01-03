@@ -2,6 +2,7 @@ package com.example.shawon.travelbd.SearchDestinationPlaces;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -10,17 +11,31 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
+import com.example.shawon.travelbd.Utils.IsConnectedToInternet;
+import com.example.shawon.travelbd.Utils.PlaceAutocompleteAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 /**
  * Created by SHAWON on 1/3/2019.
  */
 
-public class SearchDestinationPlacesActivity extends AppCompatActivity {
+public class SearchDestinationPlacesActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "SearchDestinationPlaces";
     private Context context = SearchDestinationPlacesActivity.this;
+
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,136));
+    private GoogleApiClient mGoogleApiClientForGooglePlaces;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +46,25 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity {
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(mToolbar);
+
+        if (IsConnectedToInternet.isConnectedToInternet(context)){
+            buildGoogleApiClient();
+        }
+        else {
+            Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void buildGoogleApiClient() {
+
+        mGoogleApiClientForGooglePlaces = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(context,mGoogleApiClientForGooglePlaces,LAT_LNG_BOUNDS,null);
     }
 
     @Override
@@ -48,6 +82,31 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity {
         EditText textSearch = ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
         textSearch.setTextColor(getResources().getColor(R.color.light_black));
         textSearch.setTextSize(18);
+        SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchAutoComplete.setAdapter(mPlaceAutocompleteAdapter);
         return true;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClientForGooglePlaces.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClientForGooglePlaces != null){
+            mGoogleApiClientForGooglePlaces.disconnect();
+        }
     }
 }
