@@ -79,4 +79,6 @@
     <string name="next_page">NEXT</string>
     <string name="captured_image_bitmap">Captured Image Bitmap</string>
     <string name="search_destination_places">Search Destination Places</string>
+    <string name="search">Search</string>
+    <string name="where_do_you_want_to_go">Where do you want to go?</string>
 </resources>
