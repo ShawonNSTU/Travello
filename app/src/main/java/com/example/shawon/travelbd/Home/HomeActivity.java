@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.shawon.travelbd.Login.LoginActivity;
+import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
@@ -44,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //facebook SDK initialize when a user opens the application
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_home);
         Log.d(TAG,"HomeActivity onCreate: Starting.");
@@ -52,11 +54,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         mToolbar = (Toolbar) findViewById(R.id.tabs);
-
-        cameraFragment = (ImageView) findViewById(R.id.camera_fragment);
-
         setSupportActionBar(mToolbar);
 
+        cameraFragment = (ImageView) findViewById(R.id.camera_fragment);
         cameraFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,11 +68,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setupViewPagerListener();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
-
-        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
-
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
-
         mToggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,18 +79,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setupViewPager();
 
         isUserLoggedInOrNot();
-
     }
 
     private void setupViewPagerListener() {
+        Log.d(TAG,"Setting Up ViewPagerListener");
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                // No need to code
             }
-
             @Override
             public void onPageSelected(int position) {
                 if (position == 1){         // Position 1 means Camera Fragment
@@ -103,76 +100,60 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     getSupportActionBar().show();
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                // No need to code
             }
         });
-
     }
 
     // adding Home and Camera pager in Home Activity with viewpager
-
     private void setupViewPager() {
+        Log.d(TAG,"Adding Home and Camera pager with viewpager");
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         sectionsPagerAdapter.addFragment(new HomeFragment());
-
         sectionsPagerAdapter.addFragment(new CameraFragment());
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
-
         viewPager.setAdapter(sectionsPagerAdapter);
-
     }
 
     // BottomNavigationView Setup
-
     private void setupBottomNavigationView() {
-
         Log.d(TAG,"HomeActivity setupBottomNavigationView: setting up BottomNavigationView");
 
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-
         BottomNavigationViewHelper.enableNavigation(context, bottomNavigationViewEx);
-
         Menu menu = bottomNavigationViewEx.getMenu();
-
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-
         menuItem.setChecked(true);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (mToggle.onOptionsItemSelected(item)){
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    // Handle navigation view item clicks here
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        // Handle navigation view item clicks here.
+        Log.d(TAG,"onNavigationItemSelected : handling navigation view item click");
 
         int id = item.getItemId();
 
         if (id == R.id.nav_profile){
-
+            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+        }
+        else if(id == R.id.nav_search_destination_places){
+            // later code
         }
         else if (id == R.id.nav_sign_out){
-
-        }
-        else if (id == R.id.nav_settings){
-
+            mAuth.signOut();
+            finish();
         }
 
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
@@ -207,10 +188,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
      * if null then go to the LoginActivity for Signing in.
      * @param user
      */
-
     private void checkCurrentUser(FirebaseUser user){
-
-        Log.d(TAG, "HomeActivity checkCurrentUser: checking if user is logged in or not.");
+        Log.d(TAG, "checkCurrentUser: checking if user is logged in or not.");
 
         if(user == null){
             Intent intent = new Intent(context, LoginActivity.class);
@@ -220,9 +199,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // This method is to check whether user logged in or not.
-
     private void isUserLoggedInOrNot() {
-
         Log.d(TAG,"HomeActivity : isUserLoggedInOrNot()");
 
         mAuth = FirebaseAuth.getInstance();
@@ -243,10 +220,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 //check if the user is logged in or not. if not then go to the LoginActivity.
                 checkCurrentUser(user);
-
             }
         };
-
     }
 
     @Override
@@ -262,5 +237,4 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
 }
