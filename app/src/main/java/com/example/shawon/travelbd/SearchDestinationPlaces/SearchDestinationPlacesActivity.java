@@ -22,6 +22,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("");
         setContentView(R.layout.activity_search_destination_places);
         Log.d(TAG,"onCreate: Starting.");
 
