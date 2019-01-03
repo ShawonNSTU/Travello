@@ -27,6 +27,5 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(getString(R.string.search_destination_places));
     }
 }
