@@ -35,7 +35,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
 
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,136));
     private GoogleApiClient mGoogleApiClientForGooglePlaces;
-    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         textSearch.setTextColor(getResources().getColor(R.color.light_black));
         textSearch.setTextSize(18);
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchAutoComplete.setAdapter(mPlaceAutocompleteAdapter);
+        if (mPlaceAutocompleteAdapter != null) searchAutoComplete.setAdapter(mPlaceAutocompleteAdapter);
         return true;
     }
 
