@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
+import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlacesActivity;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
 import com.facebook.FacebookSdk;
@@ -149,7 +150,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
         }
         else if(id == R.id.nav_search_destination_places){
-            // later code
+            startActivity(new Intent(HomeActivity.this, SearchDestinationPlacesActivity.class));
         }
         else if (id == R.id.nav_sign_out){
             mAuth.signOut();
