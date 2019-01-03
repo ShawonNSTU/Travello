@@ -35,12 +35,16 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG,"Adding the menu.");
+        Log.d(TAG,"Adding the menu resource file.");
 
         getMenuInflater().inflate(R.menu.search_destination_places_toolbar_menu,menu);
+
+        //getting the search view of the menu...
         SearchView searchView = (SearchView) menu.findItem(R.id.search_destination_places).getActionView();
         searchView.setIconified(false);
         searchView.setQueryHint(Html.fromHtml("<small>"+getString(R.string.where_do_you_want_to_go)+"</small>"));
+
+        //getting edit text of the search view to change it's text properties...
         EditText textSearch = ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
         textSearch.setTextColor(getResources().getColor(R.color.light_black));
         textSearch.setTextSize(18);
