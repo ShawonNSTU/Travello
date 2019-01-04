@@ -10,6 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +21,11 @@ import com.example.shawon.travelbd.Utils.IsConnectedToInternet;
 import com.example.shawon.travelbd.Utils.PlaceAutocompleteAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -90,10 +98,13 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         textSearch.setTextColor(getResources().getColor(R.color.light_black));
         textSearch.setTextSize(18);
 
-        // getting the AutoCompleteSuggestion feature of the search view to add the adapter...
+        // getting the AutoCompleteSuggestion object of the search view to add the adapter...
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)searchView
                 .findViewById(android.support.v7.appcompat.R.id.search_src_text);
         if (isGoogleApiClientConnected) searchAutoComplete.setAdapter(mPlaceAutocompleteAdapter);
+
+        // Listen to search view item on click event...
+        searchAutoComplete.setOnItemClickListener(mAdapterOnItemClickListener);
 
         return true;
     }
@@ -121,4 +132,42 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             mGoogleApiClientForGooglePlaces.disconnect();
         }
     }
+
+    /*
+        --------------------------- Place Autocomplete Adapter OnItemCLickListener -----------------------
+     */
+
+    private AdapterView.OnItemClickListener mAdapterOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d(TAG,"Place Autocomplete Adapter: OnItemClickListener : Listened");
+
+            // hide the keyboard...
+            InputMethodManager in = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            in.hideSoftInputFromWindow(SearchDestinationPlacesActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager
+                    .HIDE_NOT_ALWAYS);
+
+            final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(position);
+            final String placeId = item.getPlaceId();
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClientForGooglePlaces, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(@NonNull PlaceBuffer places) {
+            if(!places.getStatus().isSuccess()){
+                Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());
+                Toast.makeText(context,"Sorry, Please try again!",Toast.LENGTH_SHORT).show();
+                places.release();
+                return;
+            }
+            final Place place = places.get(0);
+            Toast.makeText(context,""+place.getName(),Toast.LENGTH_LONG).show();
+            places.release();
+        }
+    };
 }
