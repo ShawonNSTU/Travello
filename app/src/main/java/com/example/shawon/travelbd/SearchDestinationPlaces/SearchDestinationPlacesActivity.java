@@ -168,9 +168,9 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 return;
             }
             final Place place = places.get(0);
-            places.release();
             Toast.makeText(context,"Latitude : "+String.valueOf(place.getLatLng().latitude)+" Longitude : "+String.
                     valueOf(place.getLatLng().longitude),Toast.LENGTH_LONG).show();
+            places.release();
             // go to an activity with Latitude & Longitude...
         }
     };
