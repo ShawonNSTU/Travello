@@ -147,9 +147,11 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             in.hideSoftInputFromWindow(SearchDestinationPlacesActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager
                     .HIDE_NOT_ALWAYS);
 
+            // get selected item...
             final AutocompletePrediction item = mPlaceAutocompleteAdapter.getItem(position);
             final String placeId = item.getPlaceId();
 
+            // get details of the selected place using place id...
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
                     .getPlaceById(mGoogleApiClientForGooglePlaces, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
@@ -166,8 +168,9 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 return;
             }
             final Place place = places.get(0);
-            Toast.makeText(context,""+place.getName(),Toast.LENGTH_LONG).show();
             places.release();
+            Toast.makeText(context,"Latitude : "+place.getLatLng().latitude+" Longitude : "+place.
+                    getLatLng().longitude,Toast.LENGTH_LONG).show();
         }
     };
 }
