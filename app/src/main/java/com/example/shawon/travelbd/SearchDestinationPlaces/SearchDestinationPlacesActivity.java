@@ -298,6 +298,8 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         try {
             addresses = geocoder.getFromLocation(latlng.latitude,latlng.longitude, 1);
             // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            TextView textView = (TextView) findViewById(R.id.current_location_text);
+            textView.setText(getString(R.string.current_location_text));
             mCurrentLocation.setText(addresses.get(0).getLocality());
         } catch (IOException e) {
             e.printStackTrace();
