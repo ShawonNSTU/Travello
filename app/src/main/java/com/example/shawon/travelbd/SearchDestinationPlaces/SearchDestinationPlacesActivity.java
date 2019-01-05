@@ -52,11 +52,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -88,14 +85,12 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     private static final float DEFAULT_ZOOM = 17f;
     private boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
-    private Marker marker;
     private View mapView;
     private Location location;
-    private String mGeoLocationAddressLocality;
 
     private GeoDataClient geoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
-    PlacePhotoMetadata photoMetadataList;
+    private PlacePhotoMetadata mSinglePhotoMetadata;
 
     private TextView mCurrentLocation;
     private ImageView mCurrentLocationImage;
@@ -107,30 +102,33 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         super.onCreate(savedInstanceState);
         setTitle("");
         if(IsConnectedToInternet.isConnectedToInternet(context)) {
+            Log.d(TAG,"Setting activity_search_destination_places layout view");
             setContentView(R.layout.activity_search_destination_places);
             isConnectedToInternet = true;
         }
-
         else {
-            setContentView(R.layout.no_internet_connection);
+            Log.d(TAG,"Setting no_internet_connection_view layout");
+            setContentView(R.layout.no_internet_connection_view);
             isConnectedToInternet = false;
         }
+
         Log.d(TAG,"onCreate : Started.");
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(mToolbar);
+
         if(isConnectedToInternet) {
             mCurrentLocation = (TextView) findViewById(R.id.current_location);
             mCurrentLocationImage = (ImageView) findViewById(R.id.current_location_image);
-
             if (IsConnectedToInternet.isConnectedToInternet(context)) {
                 Log.d(TAG, "IsConnectedToInternet : Success");
-                buildGoogleApiClient();
-                isGoogleApiClientConnected = true;
                 getLocationPermission();
                 geoDataClient = Places.getGeoDataClient(this, null);
                 mPlaceDetectionClient = Places.getPlaceDetectionClient(context, null);
-            } else {
+                buildGoogleApiClient();
+                isGoogleApiClientConnected = true;
+            }
+            else {
                 Log.d(TAG, "IsConnectedToInternet : Failed");
                 isGoogleApiClientConnected = false;
                 Toast.makeText(context, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
@@ -244,21 +242,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         return true;
     }
 
-    private void moveCamera(LatLng latlng, float zoom, String title) {
-        Log.d(TAG,"moveCamera : Moving the camera to: latitude: "+latlng.latitude+" , longitude: "+latlng.longitude);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,zoom));
-
-        if (marker != null) marker.remove();
-
-        if (!title.equals("My Location")){
-            MarkerOptions options = new MarkerOptions()
-                    .position(latlng)
-                    .title(title)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            marker = mMap.addMarker(options);
-        }
-        getGeoLocationLocality(latlng);
+    private void getPlaceID() {
         try {
             Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
             placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
@@ -266,8 +250,6 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
                     PlaceLikelihoodBufferResponse places = task.getResult();
                     PlaceLikelihood placeLikelihood = places.get(0);
-                    Toast.makeText(context,""+placeLikelihood.getPlace().getId()+" "+placeLikelihood.getPlace().getName(),
-                            Toast.LENGTH_LONG).show();
                     getPhotoMetaData(placeLikelihood.getPlace().getId());
                     places.release();
                 }
@@ -279,9 +261,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
 
     private void getPhotoMetaData(String placeId) {
 
-        final Task<PlacePhotoMetadataResponse> photoResponse
-                = geoDataClient.getPlacePhotos(placeId);
-
+        final Task<PlacePhotoMetadataResponse> photoResponse = geoDataClient.getPlacePhotos(placeId);
         photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
             public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
@@ -289,16 +269,15 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
                 Log.d(TAG,"number of photos: "+photoMetadataBuffer.getCount());
                 if (photoMetadataBuffer.getCount()>0) {
-                    photoMetadataList = photoMetadataBuffer.get(0).freeze();
+                    mSinglePhotoMetadata = photoMetadataBuffer.get(0).freeze();
+                    getPhoto(mSinglePhotoMetadata);
                     photoMetadataBuffer.release();
                 }
-                getPhoto(photoMetadataList);
             }
         });
     }
 
     private void getPhoto(PlacePhotoMetadata placePhotoMetadata) {
-
         Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(placePhotoMetadata);
         photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
             @Override
@@ -313,25 +292,25 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
 
     private void getGeoLocationLocality(LatLng latlng) {
         Log.d(TAG,"Getting Locality of the location");
-
         Geocoder geocoder;
         List<android.location.Address> addresses;
         geocoder = new Geocoder(context, Locale.getDefault());
-
         try {
             addresses = geocoder.getFromLocation(latlng.latitude,latlng.longitude, 1);
             // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            mGeoLocationAddressLocality = addresses.get(0).getLocality();
-            mCurrentLocation.setText(mGeoLocationAddressLocality);
+            mCurrentLocation.setText(addresses.get(0).getLocality());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void getDeviceLocation() {
-        Log.d(TAG, "getDeviceLocation : Getting the devices current location");
+        Log.d(TAG, "getDeviceLocation : Getting the devices current location, move camera, getPlaceID and placePhoto.");
 
-        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM, "My Location");
+        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+        getGeoLocationLocality(latLng);
+        getPlaceID();
         if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -346,11 +325,12 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             layoutParms.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
             layoutParms.setMargins(0,0,20,120);
         }
-
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG,"Trying to get current location.");
+
         try {
             location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
@@ -434,10 +414,8 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 return;
             }
             final Place place = places.get(0);
-            Toast.makeText(context,"Latitude : "+String.valueOf(place.getLatLng().latitude)+" Longitude : "+String.
-                    valueOf(place.getLatLng().longitude),Toast.LENGTH_LONG).show();
-            places.release();
             // go to an activity with Latitude & Longitude...
+            places.release();
         }
     };
 
@@ -448,7 +426,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG,"onMapReady : Map is ready");
+        Log.d(TAG,"onMapReady : GoogleMap is ready");
         mMap = googleMap;
     }
 }
