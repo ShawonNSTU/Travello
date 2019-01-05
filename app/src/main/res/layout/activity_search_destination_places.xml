@@ -68,7 +68,8 @@
                 android:layout_height="80dp"
                 android:id="@+id/current_location_image"
                 android:layout_alignParentEnd="true"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/current_location_image"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
