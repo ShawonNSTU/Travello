@@ -1,9 +1,16 @@
 package com.example.shawon.travelbd.SearchDestinationPlaces;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +21,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.R;
@@ -23,28 +33,72 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by SHAWON on 1/3/2019.
  */
 
 public class SearchDestinationPlacesActivity extends AppCompatActivity implements
+        OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private static final String TAG = "SearchDestinationPlaces";
     private Context context = SearchDestinationPlacesActivity.this;
 
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,136));
-    private GoogleApiClient mGoogleApiClientForGooglePlaces;
+    private GoogleApiClient mGoogleApiClientForGooglePlaces,mGoogleApiClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private boolean isGoogleApiClientConnected;
+
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private static final float DEFAULT_ZOOM = 17f;
+    private boolean mLocationPermissionGranted = false;
+    private GoogleMap mMap;
+    private Marker marker;
+    private View mapView;
+    private Location location;
+    private String mGeoLocationAddressLocality;
+
+    private GeoDataClient geoDataClient;
+    private PlaceDetectionClient mPlaceDetectionClient;
+    PlacePhotoMetadata photoMetadataList;
+
+    private TextView mCurrentLocation;
+    private ImageView mCurrentLocationImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,15 +110,86 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(mToolbar);
 
+        mCurrentLocation = (TextView) findViewById(R.id.current_location);
+        mCurrentLocationImage = (ImageView) findViewById(R.id.current_location_image);
+
         if (IsConnectedToInternet.isConnectedToInternet(context)){
             Log.d(TAG,"IsConnectedToInternet : Success");
             buildGoogleApiClient();
             isGoogleApiClientConnected = true;
+            getLocationPermission();
+            geoDataClient = Places.getGeoDataClient(this,null);
+            mPlaceDetectionClient = Places.getPlaceDetectionClient(context,null);
         }
         else {
             Log.d(TAG,"IsConnectedToInternet : Failed");
             isGoogleApiClientConnected = false;
             Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void initMap() {
+        Log.d(TAG,"initMap : Initializing the map");
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView_current_location);
+        mapFragment.getMapAsync(SearchDestinationPlacesActivity.this);
+        mapView = mapFragment.getView();
+    }
+
+    private synchronized void buildGoogleApiClientForCurrentLocation() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private void getLocationPermission() {
+        Log.d(TAG,"getLocationPermission : Getting location permissions");
+
+        String[] permissions = {FINE_LOCATION,COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+                initMap();
+                buildGoogleApiClientForCurrentLocation();
+            }
+            else {
+                ActivityCompat.requestPermissions(this,permissions,LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }
+        else {
+            ActivityCompat.requestPermissions(this,permissions,LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG,"onRequestPermissionsResult : Called");
+
+        mLocationPermissionGranted = false;
+        switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0){
+                    for (int i=0; i<grantResults.length; i++){
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionGranted = false;
+                        }
+                        else {
+                            mLocationPermissionGranted = true;
+                            break;
+                        }
+                    }
+                    if (mLocationPermissionGranted) {
+                        Log.d(TAG,"onRequestPermissionsResult : Permission Granted");
+                        initMap();
+                        buildGoogleApiClientForCurrentLocation();
+                    }
+                    else{
+                        Log.d(TAG,"onRequestPermissionsResult : Permission Failed");
+                    }
+                }
+            }
         }
     }
 
@@ -109,13 +234,142 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         return true;
     }
 
+    private void moveCamera(LatLng latlng, float zoom, String title) {
+        Log.d(TAG,"moveCamera : Moving the camera to: latitude: "+latlng.latitude+" , longitude: "+latlng.longitude);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,zoom));
+
+        if (marker != null) marker.remove();
+
+        if (!title.equals("My Location")){
+            MarkerOptions options = new MarkerOptions()
+                    .position(latlng)
+                    .title(title)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            marker = mMap.addMarker(options);
+        }
+        getGeoLocationLocality(latlng);
+        try {
+            Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
+            placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+                    PlaceLikelihoodBufferResponse places = task.getResult();
+                    PlaceLikelihood placeLikelihood = places.get(0);
+                    Toast.makeText(context,""+placeLikelihood.getPlace().getId()+" "+placeLikelihood.getPlace().getName(),
+                            Toast.LENGTH_LONG).show();
+                    getPhotoMetaData(placeLikelihood.getPlace().getId());
+                    places.release();
+                }
+            });
+        }catch (SecurityException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getPhotoMetaData(String placeId) {
+
+        final Task<PlacePhotoMetadataResponse> photoResponse
+                = geoDataClient.getPlacePhotos(placeId);
+
+        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                PlacePhotoMetadataResponse photos = task.getResult();
+                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                Log.d(TAG,"number of photos: "+photoMetadataBuffer.getCount());
+                if (photoMetadataBuffer.getCount()>0) {
+                    photoMetadataList = photoMetadataBuffer.get(0).freeze();
+                    photoMetadataBuffer.release();
+                }
+                getPhoto(photoMetadataList);
+            }
+        });
+    }
+
+    private void getPhoto(PlacePhotoMetadata placePhotoMetadata) {
+
+        Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(placePhotoMetadata);
+        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                PlacePhotoResponse photo = task.getResult();
+                Bitmap bitmap = photo.getBitmap();
+                mCurrentLocationImage.setImageBitmap(bitmap);
+            }
+        });
+
+    }
+
+    private void getGeoLocationLocality(LatLng latlng) {
+        Log.d(TAG,"Getting Locality of the location");
+
+        Geocoder geocoder;
+        List<android.location.Address> addresses;
+        geocoder = new Geocoder(context, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latlng.latitude,latlng.longitude, 1);
+            // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            mGeoLocationAddressLocality = addresses.get(0).getLocality();
+            mCurrentLocation.setText(mGeoLocationAddressLocality);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation : Getting the devices current location");
+
+        moveCamera(new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM, "My Location");
+        if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
+            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            RelativeLayout.LayoutParams layoutParms = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+            layoutParms.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
+            layoutParms.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
+            layoutParms.setMargins(0,0,20,120);
+        }
+
+    }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        // later code
+        try {
+            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (location != null) {
+                Log.d(TAG,"mGoogleApiClient : onConnected : Location Found");
+                getDeviceLocation();
+            }
+            else {
+                LocationRequest mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(1000);
+                mLocationRequest.setFastestInterval(1000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
+                if (location == null) {
+                    Log.d(TAG, "mGoogleApiClient : onConnected : Location is null");
+                    Toast.makeText(context, "Unable to get current location. Please turn on your location.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d(TAG,"mGoogleApiClient : onConnected : Location Found");
+                    getDeviceLocation();
+                }
+            }
+        }catch (SecurityException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
         mGoogleApiClientForGooglePlaces.connect();
     }
 
@@ -127,7 +381,9 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     @Override
     protected void onStop() {
         super.onStop();
-
+        if (mGoogleApiClient != null){
+            mGoogleApiClient.disconnect();
+        }
         if (mGoogleApiClientForGooglePlaces != null){
             mGoogleApiClientForGooglePlaces.disconnect();
         }
@@ -174,4 +430,15 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             // go to an activity with Latitude & Longitude...
         }
     };
+
+    @Override
+    public void onLocationChanged(Location mLocation) {
+        location = mLocation;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG,"onMapReady : Map is ready");
+        mMap = googleMap;
+    }
 }
