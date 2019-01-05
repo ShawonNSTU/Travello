@@ -100,31 +100,41 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     private TextView mCurrentLocation;
     private ImageView mCurrentLocationImage;
 
+    private boolean isConnectedToInternet = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("");
-        setContentView(R.layout.activity_search_destination_places);
+        if(IsConnectedToInternet.isConnectedToInternet(context)) {
+            setContentView(R.layout.activity_search_destination_places);
+            isConnectedToInternet = true;
+        }
+
+        else {
+            setContentView(R.layout.no_internet_connection);
+            isConnectedToInternet = false;
+        }
         Log.d(TAG,"onCreate : Started.");
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(mToolbar);
+        if(isConnectedToInternet) {
+            mCurrentLocation = (TextView) findViewById(R.id.current_location);
+            mCurrentLocationImage = (ImageView) findViewById(R.id.current_location_image);
 
-        mCurrentLocation = (TextView) findViewById(R.id.current_location);
-        mCurrentLocationImage = (ImageView) findViewById(R.id.current_location_image);
-
-        if (IsConnectedToInternet.isConnectedToInternet(context)){
-            Log.d(TAG,"IsConnectedToInternet : Success");
-            buildGoogleApiClient();
-            isGoogleApiClientConnected = true;
-            getLocationPermission();
-            geoDataClient = Places.getGeoDataClient(this,null);
-            mPlaceDetectionClient = Places.getPlaceDetectionClient(context,null);
-        }
-        else {
-            Log.d(TAG,"IsConnectedToInternet : Failed");
-            isGoogleApiClientConnected = false;
-            Toast.makeText(context,"Please check your internet connection.",Toast.LENGTH_SHORT).show();
+            if (IsConnectedToInternet.isConnectedToInternet(context)) {
+                Log.d(TAG, "IsConnectedToInternet : Success");
+                buildGoogleApiClient();
+                isGoogleApiClientConnected = true;
+                getLocationPermission();
+                geoDataClient = Places.getGeoDataClient(this, null);
+                mPlaceDetectionClient = Places.getPlaceDetectionClient(context, null);
+            } else {
+                Log.d(TAG, "IsConnectedToInternet : Failed");
+                isGoogleApiClientConnected = false;
+                Toast.makeText(context, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
