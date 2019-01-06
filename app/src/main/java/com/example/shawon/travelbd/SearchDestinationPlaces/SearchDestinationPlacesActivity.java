@@ -77,13 +77,12 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,136));
     private GoogleApiClient mGoogleApiClientForGooglePlaces,mGoogleApiClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
-    private boolean isGoogleApiClientConnected;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private static final float DEFAULT_ZOOM = 17f;
-    private boolean mLocationPermissionGranted = false;
+    private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private View mapView;
     private Location location;
@@ -95,7 +94,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     private TextView mCurrentLocation;
     private ImageView mCurrentLocationImage;
 
-    private boolean isConnectedToInternet = false;
+    private boolean isConnectedToInternet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,24 +119,16 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         if(isConnectedToInternet) {
             mCurrentLocation = (TextView) findViewById(R.id.current_location);
             mCurrentLocationImage = (ImageView) findViewById(R.id.current_location_image);
-            if (IsConnectedToInternet.isConnectedToInternet(context)) {
-                Log.d(TAG, "IsConnectedToInternet : Success");
-                getLocationPermission();
-                geoDataClient = Places.getGeoDataClient(this, null);
-                mPlaceDetectionClient = Places.getPlaceDetectionClient(context, null);
-                buildGoogleApiClient();
-                isGoogleApiClientConnected = true;
-            }
-            else {
-                Log.d(TAG, "IsConnectedToInternet : Failed");
-                isGoogleApiClientConnected = false;
-                Toast.makeText(context, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
-            }
+            getLocationPermission();
+            geoDataClient = Places.getGeoDataClient(this, null);
+            mPlaceDetectionClient = Places.getPlaceDetectionClient(context, null);
+            buildGoogleApiClient();
         }
     }
 
     private void initMap() {
         Log.d(TAG,"initMap : Initializing the map");
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView_current_location);
         mapFragment.getMapAsync(SearchDestinationPlacesActivity.this);
         mapView = mapFragment.getView();
@@ -153,7 +144,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     }
 
     private void getLocationPermission() {
-        Log.d(TAG,"getLocationPermission : Getting location permissions");
+        Log.d(TAG,"getLocationPermission : Getting location permissions...");
 
         String[] permissions = {FINE_LOCATION,COARSE_LOCATION};
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -175,7 +166,6 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG,"onRequestPermissionsResult : Called");
 
-        mLocationPermissionGranted = false;
         switch (requestCode){
             case LOCATION_PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0){
@@ -234,7 +224,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
         // getting the AutoCompleteSuggestion object of the search view to add the adapter...
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)searchView
                 .findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        if (isGoogleApiClientConnected) searchAutoComplete.setAdapter(mPlaceAutocompleteAdapter);
+        if (isConnectedToInternet) searchAutoComplete.setAdapter(mPlaceAutocompleteAdapter);
 
         // Listen to search view item on click event...
         searchAutoComplete.setOnItemClickListener(mAdapterOnItemClickListener);
@@ -243,6 +233,8 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     }
 
     private void getPlaceID() {
+        Log.d(TAG,"getPlaceID : Getting placeID of the Current Location.");
+
         try {
             Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
             placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
@@ -250,6 +242,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
                     PlaceLikelihoodBufferResponse places = task.getResult();
                     PlaceLikelihood placeLikelihood = places.get(0);
+                    // request for getting place photo based on the place ID...
                     getPhotoMetaData(placeLikelihood.getPlace().getId());
                     places.release();
                 }
@@ -260,6 +253,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     }
 
     private void getPhotoMetaData(String placeId) {
+        Log.d(TAG,"getPhotoMetaData : Getting photoMetadataBuffer...");
 
         final Task<PlacePhotoMetadataResponse> photoResponse = geoDataClient.getPlacePhotos(placeId);
         photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
@@ -267,9 +261,10 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
                 PlacePhotoMetadataResponse photos = task.getResult();
                 PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                Log.d(TAG,"number of photos: "+photoMetadataBuffer.getCount());
+                Log.d(TAG,"number of photos in photoMetadataBuffer : "+photoMetadataBuffer.getCount());
                 if (photoMetadataBuffer.getCount()>0) {
                     mSinglePhotoMetadata = photoMetadataBuffer.get(0).freeze();
+                    // get a single photo from SinglePhotoMetaData...
                     getPhoto(mSinglePhotoMetadata);
                     photoMetadataBuffer.release();
                 }
@@ -278,6 +273,8 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     }
 
     private void getPhoto(PlacePhotoMetadata placePhotoMetadata) {
+        Log.d(TAG,"getPhoto : Getting a photo from SinglePhotoMetaData.");
+
         Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(placePhotoMetadata);
         photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
             @Override
@@ -287,19 +284,20 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 mCurrentLocationImage.setImageBitmap(bitmap);
             }
         });
-
     }
 
     private void getGeoLocationLocality(LatLng latlng) {
-        Log.d(TAG,"Getting Locality of the location");
+        Log.d(TAG,"Getting Locality or available city name of the location.");
+
         Geocoder geocoder;
-        List<android.location.Address> addresses;
         geocoder = new Geocoder(context, Locale.getDefault());
+        List<android.location.Address> addresses;
         try {
             addresses = geocoder.getFromLocation(latlng.latitude,latlng.longitude, 1);
             // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            TextView textView = (TextView) findViewById(R.id.current_location_text);
-            textView.setText(getString(R.string.current_location_text));
+
+            TextView mCurrentLocationText = (TextView) findViewById(R.id.current_location_text);
+            mCurrentLocationText.setText(getString(R.string.current_location_text));
             mCurrentLocation.setText(addresses.get(0).getLocality());
         } catch (IOException e) {
             e.printStackTrace();
@@ -307,19 +305,23 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
     }
 
     private void getDeviceLocation() {
-        Log.d(TAG, "getDeviceLocation : Getting the devices current location, move camera, getPlaceID and placePhoto.");
+        Log.d(TAG, "getDeviceLocation : Getting the devices current location, move camera, getPlaceID and placePhoto...");
 
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+
+        // get city from the latitude and longitude...
         getGeoLocationLocality(latLng);
+
+        // get place ID based on Current Location...
         getPlaceID();
+
         if (ActivityCompat.checkSelfPermission(this, FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
         if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
             View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
             RelativeLayout.LayoutParams layoutParms = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
@@ -331,7 +333,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG,"Trying to get current location.");
+        Log.d(TAG,"GoogleApiClient is Connected : Trying to get current location.");
 
         try {
             location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -347,7 +349,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
                 if (location == null) {
                     Log.d(TAG, "mGoogleApiClient : onConnected : Location is null");
-                    Toast.makeText(context, "Unable to get current location. Please turn on your location.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Unable to get current location. Please turn on your location!", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Log.d(TAG,"mGoogleApiClient : onConnected : Location Found");
