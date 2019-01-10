@@ -50,6 +50,7 @@
         <activity android:name=".AddPost.LocationSelectFromGooglePlaces"/>
         <activity android:name=".AddPost.SearchUserForTagActivity"/>
         <activity android:name=".SearchDestinationPlaces.SearchDestinationPlacesActivity"/>
+        <activity android:name=".SearchDestinationPlaces.NearbyPlacesActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
