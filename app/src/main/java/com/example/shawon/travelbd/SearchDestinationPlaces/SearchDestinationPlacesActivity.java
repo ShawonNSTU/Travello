@@ -2,6 +2,7 @@ package com.example.shawon.travelbd.SearchDestinationPlaces;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Geocoder;
@@ -419,6 +420,7 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             }
             final Place place = places.get(0);
             // go to an activity with Latitude & Longitude...
+            startActivity(new Intent(context,NearbyPlacesActivity.class));
             places.release();
         }
     };
