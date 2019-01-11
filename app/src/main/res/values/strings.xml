@@ -83,4 +83,16 @@
     <string name="where_do_you_want_to_go">Where do you want to go?</string>
     <string name="current_location">Maijdee</string>
     <string name="current_location_text">Current location</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="coffee_shop">Coffee Shops</string>
+    <string name="parks">Parks</string>
+    <string name="attractions">Attractions</string>
+    <string name="movie_theater">Movie Theaters</string>
+    <string name="shopping_mall">Shopping Malls</string>
+    <string name="hotels">Hotels</string>
+    <string name="atms">ATMs</string>
+    <string name="hospitals">Hospitals</string>
+    <string name="bus_station">Bus Stations</string>
+    <string name="travel_agency">Travel Agencies</string>
+
 </resources>
