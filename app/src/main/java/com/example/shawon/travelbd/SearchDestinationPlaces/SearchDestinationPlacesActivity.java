@@ -419,8 +419,18 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
                 return;
             }
             final Place place = places.get(0);
-            // go to an activity with Latitude & Longitude...
-            startActivity(new Intent(context,NearbyPlacesActivity.class));
+            // go to an activity with latitude, longitude, place id & place name...
+            String bundle = place.getId();
+            bundle+="|";
+            bundle+=place.getName();
+            bundle+="|";
+            LatLng latLng = place.getLatLng();
+            bundle+=String.valueOf(latLng.latitude);
+            bundle+="|";
+            bundle+=String.valueOf(latLng.longitude);
+            Intent intent = new Intent(context, NearbyPlacesActivity.class);
+            intent.putExtra(getString(R.string.bundle), bundle);
+            startActivity(intent);
             places.release();
         }
     };
