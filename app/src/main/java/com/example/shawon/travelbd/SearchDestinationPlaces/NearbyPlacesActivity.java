@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.example.shawon.travelbd.R;
 
@@ -31,16 +32,29 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nearby_places);
         Log.d(TAG,"onCreate : Started");
 
+        // Collapsing Toolbar Layout...
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapseAppbar);
 
+        // Set Toolbar for back arrow on it...
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back));
 
+        // back arrow onClick
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Back Arrow : onClick");
+                finish();
+            }
+        });
+
         // get bundle from previous activity...
         if (getIntent().hasExtra(getString(R.string.bundle))){
+            Log.d(TAG,"Getting Bundle from previous activities AdapterOnItemClick.");
+
             String getIntent = getIntent().getStringExtra(getString(R.string.bundle));
             if(getIntent.length() != 0){
                 int line = 0;
