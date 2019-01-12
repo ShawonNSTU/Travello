@@ -24,6 +24,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="225dp"
+                android:id="@+id/selected_place_image"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
@@ -60,6 +61,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_restaurants"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -91,6 +93,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_coffee_shop"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -129,6 +132,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_parks"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -160,6 +164,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_attractions"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -198,6 +203,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_movie_theater"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -212,7 +218,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                            android:src="@drawable/movie_theater"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -229,6 +235,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_shopping_mall"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -243,7 +250,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                            android:src="@drawable/shopping_mall"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -267,6 +274,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_hotels"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -281,7 +289,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                            android:src="@drawable/hotel"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -298,6 +306,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_atms"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -312,7 +321,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                            android:src="@drawable/atm"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -336,6 +345,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_hospitals"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -350,7 +360,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                            android:src="@drawable/hospital"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -367,6 +377,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="143dp"
                     android:layout_height="143dp"
+                    android:id="@+id/nearby_bus_stations"
                     android:layout_weight="5"
                     app:cardElevation="4dp"
                     android:layout_margin="10dp"
@@ -381,7 +392,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                            android:src="@drawable/bus_station"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -397,34 +408,35 @@
             </LinearLayout>
 
             <android.support.v7.widget.CardView
-                    android:layout_width="159dp"
-                    android:layout_height="159dp"
-                    app:cardElevation="4dp"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="2dp">
+                android:layout_width="159dp"
+                android:layout_height="159dp"
+                android:id="@+id/nearby_travel_agency"
+                app:cardElevation="4dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="2dp">
 
-                    <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="130dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/travel_agency"/>
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="130dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/current_location_image"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:text="@string/travel_agency"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="25dp"
-                            android:text="@string/travel_agency"
-                            android:textColor="@color/black"
-                            android:gravity="center"
-                            />
+                </LinearLayout>
 
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
