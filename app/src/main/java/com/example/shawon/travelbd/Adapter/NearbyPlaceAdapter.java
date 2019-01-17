@@ -31,7 +31,7 @@ public class NearbyPlaceAdapter extends RecyclerView.Adapter<NearbyPlaceAdapter.
     @Override
     public NearbyPlaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.nearby_restaurants_cardview,null);
+        View view = inflater.inflate(R.layout.nearby_place_cardview,null);
         return new NearbyPlaceViewHolder(view);
     }
 
