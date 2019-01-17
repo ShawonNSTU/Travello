@@ -9,6 +9,10 @@ public class NearbyPlacesInfo {
     private String nearby_place_name;
     private String nearby_place_image;
 
+    public NearbyPlacesInfo() {
+
+    }
+
     public NearbyPlacesInfo(String nearby_place_name, String nearby_place_image) {
         this.nearby_place_name = nearby_place_name;
         this.nearby_place_image = nearby_place_image;
@@ -20,5 +24,13 @@ public class NearbyPlacesInfo {
 
     public String getNearby_place_image() {
         return nearby_place_image;
+    }
+
+    public void setNearby_place_name(String nearby_place_name) {
+        this.nearby_place_name = nearby_place_name;
+    }
+
+    public void setNearby_place_image(String nearby_place_image) {
+        this.nearby_place_image = nearby_place_image;
     }
 }
