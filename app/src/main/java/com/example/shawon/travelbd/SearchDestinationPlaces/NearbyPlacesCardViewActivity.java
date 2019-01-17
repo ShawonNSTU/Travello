@@ -22,12 +22,12 @@ public class NearbyPlacesCardViewActivity extends AppCompatActivity{
     private static final String TAG = "NearbyPlacesCardView";
     private Context context = NearbyPlacesCardViewActivity.this;
 
-    List<NearbyPlacesInfo> nearbyPlacesInfoList;
+    private List<NearbyPlacesInfo> nearbyPlacesInfoList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearby_restaurants);
+        setContentView(R.layout.activity_nearby_places_card_view);
         Log.d(TAG,"onCreate : Started");
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.nearby_places_recyclerView);
