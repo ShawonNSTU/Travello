@@ -15,7 +15,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="230dp"
                 android:scaleType="centerCrop"
                 android:id="@+id/nearby_place_image"/>
 
@@ -24,9 +24,12 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/nearby_place_name"
                 android:layout_alignBottom="@+id/nearby_place_image"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginBottom="15dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
 
         </RelativeLayout>
 
