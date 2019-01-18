@@ -37,10 +37,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
     private GeoDataClient geoDataClient;
 
     // for selected location...
-    String placeID = "";
-    String latitude = "";
-    String longitude = "";
-    String placeName = "";
+    private String placeID = "";
+    private String latitude = "";
+    private String longitude = "";
+    private String placeName = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +50,6 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
         if (IsConnectedToInternet.isConnectedToInternet(context)) {
             geoDataClient = Places.getGeoDataClient(this, null);
-            nearbyResturantsOnClick();
         }
 
         // Collapsing Toolbar Layout...
@@ -101,18 +100,45 @@ public class NearbyPlacesActivity extends AppCompatActivity {
                 collapsingToolbarLayout.setTitle(placeName);
                 if (IsConnectedToInternet.isConnectedToInternet(context)){
                     getPhotoMetaData(placeID);
+                    nearbyRestaurantsOnClick();
+                    nearbyCoffeeShopsOnClick();
                 }
             }
         }
     }
 
-    private void nearbyResturantsOnClick() {
+    private void nearbyCoffeeShopsOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_coffee_shop);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "cafe";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
+    private void nearbyRestaurantsOnClick() {
 
         CardView cardView = (CardView) findViewById(R.id.nearby_restaurants);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context,NearbyPlacesCardViewActivity.class));
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "restaurant";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
             }
         });
 
