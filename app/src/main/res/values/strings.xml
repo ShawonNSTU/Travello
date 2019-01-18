@@ -96,5 +96,6 @@
     <string name="travel_agency">Travel Agencies</string>
     <string name="bundle">Bundle</string>
     <string name="explore_nearby">Explore Nearby</string>
+    <string name="place_types">Place Types</string>
 
 </resources>
