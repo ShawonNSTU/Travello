@@ -107,18 +107,20 @@ public class NearbyPlacesActivity extends AppCompatActivity {
                     nearbyMovieTheatersOnClick();
                     nearbyShoppingMallOnClick();
                     nearbyHotelsOnClick();
-                    nearbyAtmsOnClick();
+                    nearbyATMsOnClick();
                 }
             }
         }
     }
 
-    private void nearbyAtmsOnClick() {
+    private void nearbyATMsOnClick() {
 
         CardView cardView = (CardView) findViewById(R.id.nearby_atms);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyATMs : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "atm";
@@ -137,6 +139,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyHotels : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "lodging";
@@ -155,6 +159,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyShoppingMall : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "shopping_mall";
@@ -173,6 +179,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyMovieTheaters : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "movie_theater";
@@ -191,6 +199,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyAttractions : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "natural_feature";
@@ -209,6 +219,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyParks : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "park";
@@ -227,6 +239,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyCoffeeShops : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "cafe";
@@ -245,6 +259,8 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"nearbyRestaurants : OnClicked");
+
                 String lat = String.valueOf(latitude);
                 String lng = String.valueOf(longitude);
                 String type = "restaurant";
