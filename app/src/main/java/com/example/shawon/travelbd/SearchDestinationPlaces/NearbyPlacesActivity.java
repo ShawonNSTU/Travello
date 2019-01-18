@@ -102,9 +102,123 @@ public class NearbyPlacesActivity extends AppCompatActivity {
                     getPhotoMetaData(placeID);
                     nearbyRestaurantsOnClick();
                     nearbyCoffeeShopsOnClick();
+                    nearbyParksOnClick();
+                    nearbyAttractionsOnClick();
+                    nearbyMovieTheatersOnClick();
+                    nearbyShoppingMallOnClick();
+                    nearbyHotelsOnClick();
+                    nearbyAtmsOnClick();
                 }
             }
         }
+    }
+
+    private void nearbyAtmsOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_atms);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "atm";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void nearbyHotelsOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_hotels);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "lodging";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void nearbyShoppingMallOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_shopping_mall);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "shopping_mall";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void nearbyMovieTheatersOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_movie_theater);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "movie_theater";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void nearbyAttractionsOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_attractions);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "natural_feature";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void nearbyParksOnClick() {
+
+        CardView cardView = (CardView) findViewById(R.id.nearby_parks);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "park";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void nearbyCoffeeShopsOnClick() {
@@ -122,7 +236,6 @@ public class NearbyPlacesActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
     }
 
