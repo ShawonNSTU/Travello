@@ -45,6 +45,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity{
         double longitude = 0.0;
         String placeTypes = "";
 
+        // Get lat, lng & placeType from previous activity...
         if (getIntent().hasExtra(getString(R.string.place_types))) {
             String getIntent = getIntent().getStringExtra(getString(R.string.place_types));
             if (getIntent.length() != 0) {
@@ -68,6 +69,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity{
             }
         }
 
+        // Setting the url...
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("location="+latitude+","+longitude);
         googlePlacesUrl.append("&radius="+7000);
@@ -75,6 +77,8 @@ public class NearbyPlacesMapActivity extends AppCompatActivity{
         googlePlacesUrl.append("&sensor=true");
         googlePlacesUrl.append("&key=AIzaSyCl-djuKzjuj3TN6UVJNcob0PlpB4IwIs4");
         String url = googlePlacesUrl.toString();
+        Log.d(TAG,"getNearbyPlaces : URL : "+url);
+
         mService.getNearByPlaces(url)
             .enqueue(new Callback<NearbyPlaces>() {
                 @Override
