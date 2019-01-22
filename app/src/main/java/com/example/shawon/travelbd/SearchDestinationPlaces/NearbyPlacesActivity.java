@@ -113,8 +113,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Nearby ATMs
+     */
     private void nearbyATMsOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_atms);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,8 +135,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Hotels
+     */
     private void nearbyHotelsOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_hotels);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,8 +157,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Shopping Malls
+     */
     private void nearbyShoppingMallOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_shopping_mall);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,8 +179,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Movie Theaters
+     */
     private void nearbyMovieTheatersOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_movie_theater);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,8 +201,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Attractions
+     */
     private void nearbyAttractionsOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_attractions);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,8 +223,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Parks
+     */
     private void nearbyParksOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_parks);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,8 +245,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Coffee Shops
+     */
     private void nearbyCoffeeShopsOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_coffee_shop);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,8 +267,10 @@ public class NearbyPlacesActivity extends AppCompatActivity {
 
     }
 
+    /*
+    Nearby Restaurants
+     */
     private void nearbyRestaurantsOnClick() {
-
         CardView cardView = (CardView) findViewById(R.id.nearby_restaurants);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
