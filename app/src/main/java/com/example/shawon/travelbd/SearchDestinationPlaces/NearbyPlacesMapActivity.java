@@ -129,7 +129,6 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng,DEFAULT_ZOOM));
                         MarkerOptions markerOption = new MarkerOptions();
                         markerOption.position(latlng);
-                        markerOption.title("");
                         markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
                         mMap.addMarker(markerOption);
 
@@ -140,13 +139,28 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             double lng = Double.parseDouble(googlePlaces.getGeometry().getLocation().getLng());
                             LatLng latLng = new LatLng(lat,lng);
                             String placeName = googlePlaces.getName();
+                            String placeRating = googlePlaces.getRating();
 
-                            if(placeTypes.equals("restaurant")) {
+                            if(placeTypes.equals("restaurant")
+                                    ||placeTypes.equals("cafe")
+                                    ||placeTypes.equals("park")
+                                    ||placeTypes.equals("natural_feature")
+                                    ||placeTypes.equals("movie_theater")
+                                    ||placeTypes.equals("shopping_mall")
+                                    ||placeTypes.equals("lodging")) {
                                 MarkerOptions markerOptions = new MarkerOptions();
                                 markerOptions.position(latLng);
                                 markerOptions.title(placeName);
+                                markerOptions.snippet("Rating : "+placeRating+"/5");
                                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                                mMap.addMarker(markerOptions);
+                                mMap.addMarker(markerOptions).showInfoWindow();
+                            }
+                            else if(placeTypes.equals("atm")){
+                                mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(placeName)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                                        .showInfoWindow();
                             }
                         }
                     }
