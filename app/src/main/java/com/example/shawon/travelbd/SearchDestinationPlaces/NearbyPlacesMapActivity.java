@@ -140,6 +140,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             LatLng latLng = new LatLng(lat,lng);
                             String placeName = googlePlaces.getName();
                             String placeRating = googlePlaces.getRating();
+                            if (placeRating == null) placeRating = "2.5";
 
                             if(placeTypes.equals("restaurant")
                                     ||placeTypes.equals("cafe")
