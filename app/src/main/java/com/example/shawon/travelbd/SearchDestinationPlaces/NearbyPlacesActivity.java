@@ -108,9 +108,75 @@ public class NearbyPlacesActivity extends AppCompatActivity {
                     nearbyShoppingMallOnClick();
                     nearbyHotelsOnClick();
                     nearbyATMsOnClick();
+                    nearbyHospitalsOnClick();
+                    nearbyBusStationsOnClick();
+                    nearbyTravelAgenciesOnClick();
                 }
             }
         }
+    }
+
+    /*
+    Nearby Travel Agencies
+     */
+    private void nearbyTravelAgenciesOnClick(){
+        CardView cardView = (CardView) findViewById(R.id.nearby_travel_agency);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"nearbyTravelAgencies : OnClicked");
+
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "travel_agency";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /*
+    Nearby Bus Stations
+     */
+    private void nearbyBusStationsOnClick(){
+        CardView cardView = (CardView) findViewById(R.id.nearby_bus_stations);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"nearbyBusStations : OnClicked");
+
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "bus_station";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /*
+    Nearby Hospitals
+     */
+    private void nearbyHospitalsOnClick(){
+        CardView cardView = (CardView) findViewById(R.id.nearby_hospitals);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"nearbyHospitals : OnClicked");
+
+                String lat = String.valueOf(latitude);
+                String lng = String.valueOf(longitude);
+                String type = "hospital";
+                String S = lat+"|"+lng+"|"+type;
+                Intent intent = new Intent(context,NearbyPlacesMapActivity.class);
+                intent.putExtra(getString(R.string.place_types),S);
+                startActivity(intent);
+            }
+        });
     }
 
     /*
