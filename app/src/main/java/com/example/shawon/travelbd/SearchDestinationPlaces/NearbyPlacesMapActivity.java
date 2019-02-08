@@ -148,7 +148,9 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                                     ||placeTypes.equals("natural_feature")
                                     ||placeTypes.equals("movie_theater")
                                     ||placeTypes.equals("shopping_mall")
-                                    ||placeTypes.equals("lodging")) {
+                                    ||placeTypes.equals("lodging")
+                                    ||placeTypes.equals("travel_agency")
+                                    ||placeTypes.equals("hospital")) {
                                 MarkerOptions markerOptions = new MarkerOptions();
                                 markerOptions.position(latLng);
                                 markerOptions.title(placeName);
@@ -156,7 +158,8 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                                 mMap.addMarker(markerOptions).showInfoWindow();
                             }
-                            else if(placeTypes.equals("atm")){
+                            else if(placeTypes.equals("atm")
+                                    ||placeTypes.equals("bus_station")){
                                 mMap.addMarker(new MarkerOptions()
                                 .position(latLng)
                                 .title(placeName)
