@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
@@ -164,14 +165,18 @@ public class PhotoFragment extends Fragment implements
         double longitude = location.getLongitude();
 
         // getting geo-address of that location
-        android.location.Address address = getAddress(latitude,longitude);
-        if (address.toString() == null){
-            mGeoAddress = "";
+        try{
+            Address address = getAddress(latitude,longitude);
+            if (address.toString() == null){
+                mGeoAddress = "";
+            }
+            else {
+                mGeoAddress = address.getAddressLine(0);
+            }
+            Toast.makeText(getActivity(),""+mGeoAddress,Toast.LENGTH_LONG).show();
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
-        else {
-            mGeoAddress = address.getAddressLine(0);
-        }
-        Toast.makeText(getActivity(),""+mGeoAddress,Toast.LENGTH_LONG).show();
     }
 
     public android.location.Address getAddress(double latitude, double longitude){
