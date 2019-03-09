@@ -140,32 +140,15 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             LatLng latLng = new LatLng(lat,lng);
                             String placeName = googlePlaces.getName();
                             String placeRating = googlePlaces.getRating();
+                            String la = String.valueOf(latLng.latitude);
+                            String lo = String.valueOf(latLng.longitude);
                             if (placeRating == null) placeRating = "2.5";
-
-                            if(placeTypes.equals("restaurant")
-                                    ||placeTypes.equals("cafe")
-                                    ||placeTypes.equals("park")
-                                    ||placeTypes.equals("natural_feature")
-                                    ||placeTypes.equals("movie_theater")
-                                    ||placeTypes.equals("shopping_mall")
-                                    ||placeTypes.equals("lodging")
-                                    ||placeTypes.equals("travel_agency")
-                                    ||placeTypes.equals("hospital")) {
-                                MarkerOptions markerOptions = new MarkerOptions();
-                                markerOptions.position(latLng);
-                                markerOptions.title(placeName);
-                                markerOptions.snippet("Rating : "+placeRating+"/5");
-                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                                mMap.addMarker(markerOptions).showInfoWindow();
-                            }
-                            else if(placeTypes.equals("atm")
-                                    ||placeTypes.equals("bus_station")){
-                                mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title(placeName)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
-                                        .showInfoWindow();
-                            }
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(latLng);
+                            markerOptions.title(placeName);
+                            markerOptions.snippet("Rating : "+placeRating+"/5"+"\n"+"Latitude : "+la+"\n"+"Longitude : "+lo);
+                            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                            mMap.addMarker(markerOptions).showInfoWindow();
                         }
                     }
                 }
