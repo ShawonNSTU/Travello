@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.AddPost.LocationSelectFromGooglePlaces;
+import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
@@ -101,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        setupGridImages();
+        setupGridView();
 
         isUserLoggedInOrNot();
 
@@ -165,23 +167,37 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     // To Test The Grid Image View
+    private void setupGridView(){
+        Log.d(TAG,"setupGridView : Setting up grid view from user uploaded photos");
+        final ArrayList<Photo> photos = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(getString(R.string.user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(getString(R.string.uploaded));
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    photos.add(singleSnapshot.getValue(Photo.class));
+                }
+                GridView gridView = (GridView) findViewById(R.id.gridView);
+                int rowWidth = getResources().getDisplayMetrics().widthPixels;
+                int imageWidth = rowWidth / NUM_GRID_COLUMN;
+                gridView.setColumnWidth(imageWidth);
+                ArrayList<String> imageUrls = new ArrayList<String>();
+                for(int i=0; i<photos.size(); i++){
+                    imageUrls.add(photos.get(i).getImage_url());
+                }
+                GridImageAdapter gridImageAdapter = new GridImageAdapter(context,R.layout.square_grid_image_view,imageUrls,"");
+                gridView.setAdapter(gridImageAdapter);
+            }
 
-    private void setupGridImages() {
-        Log.d(TAG,"setupGridImages : Setting up grid images from user uploaded and tagged photos");
-
-        ArrayList<String>imageUrl = new ArrayList<>();
-        imageUrl.add("https://78.media.tumblr.com/da2502ad2eacaa20c3db0b65235972ba/tumblr_ns1y4fQoAF1smk4d7o1_500.jpg");
-        imageUrl.add("http://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Aronnak_Holiday_Cottage%2C_Rangamati10.jpg/500px-Aronnak_Holiday_Cottage%2C_Rangamati10.jpg");
-        imageUrl.add("http://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ctg_foys_lake_water_2003.jpg/500px-Ctg_foys_lake_water_2003.jpg");
-        imageUrl.add("https://homelandtourismbd.files.wordpress.com/2016/07/tumblr_ntu9revosc1smk4d7o1_500.jpg?w=640");
-        imageUrl.add("http://farm1.static.flickr.com/668/21011779476_aa76bddffb.jpg");
-
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-        int rowWidth = getResources().getDisplayMetrics().widthPixels;
-        int imageWidth = rowWidth / NUM_GRID_COLUMN;
-        gridView.setColumnWidth(imageWidth);
-        GridImageAdapter gridImageAdapter = new GridImageAdapter(context,R.layout.square_grid_image_view,imageUrl,"");
-        gridView.setAdapter(gridImageAdapter);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // later code...
+            }
+        });
     }
 
     private void setupToolbar() {
