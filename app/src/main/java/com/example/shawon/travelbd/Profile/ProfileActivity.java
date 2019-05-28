@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,6 +27,7 @@ import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.GridImageAdapter;
+import com.example.shawon.travelbd.Utils.ViewPostFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
@@ -191,6 +193,12 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 GridImageAdapter gridImageAdapter = new GridImageAdapter(context,R.layout.square_grid_image_view,imageUrls,"");
                 gridView.setAdapter(gridImageAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // onGridImageSelected(photos.get(position));
+                    }
+                });
             }
 
             @Override
@@ -198,6 +206,16 @@ public class ProfileActivity extends AppCompatActivity {
                 // later code...
             }
         });
+    }
+
+    private void onGridImageSelected(Photo photo) {
+        ViewPostFragment f = new ViewPostFragment();
+        Bundle b = new Bundle();
+        b.putString(getString(R.string.photo_string),photo.toString());
+        f.setArguments(b);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,f)
+                .commit();
     }
 
     private void setupToolbar() {
