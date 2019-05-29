@@ -1,10 +1,13 @@
 package com.example.shawon.travelbd.ModelClass;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by SHAWON on 9/28/2018.
  */
 
-public class Photo {
+public class Photo implements Parcelable {
 
     private String caption;
     private String uploaded_date;
@@ -33,6 +36,31 @@ public class Photo {
         this.tagged_user_id = tagged_user_id;
         this.tags = tags;
     }
+
+    protected Photo(Parcel in) {
+        caption = in.readString();
+        uploaded_date = in.readString();
+        image_url = in.readString();
+        photo_id = in.readString();
+        user_id = in.readString();
+        location = in.readString();
+        rating = in.readString();
+        google_places_rating = in.readString();
+        tagged_user_id = in.readString();
+        tags = in.readString();
+    }
+
+    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel in) {
+            return new Photo(in);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 
     public String getCaption() {
         return caption;
@@ -128,5 +156,24 @@ public class Photo {
                 ", tagged_user_id='" + tagged_user_id + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(caption);
+        dest.writeString(uploaded_date);
+        dest.writeString(image_url);
+        dest.writeString(photo_id);
+        dest.writeString(user_id);
+        dest.writeString(location);
+        dest.writeString(rating);
+        dest.writeString(google_places_rating);
+        dest.writeString(tagged_user_id);
+        dest.writeString(tags);
     }
 }
