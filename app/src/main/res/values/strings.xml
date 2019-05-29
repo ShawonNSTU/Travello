@@ -97,5 +97,7 @@
     <string name="bundle">Bundle</string>
     <string name="explore_nearby">Explore Nearby</string>
     <string name="place_types">Place Types</string>
-
+    <string name="profile_fragment">Profile</string>
+    <string name="view_post_fragment">ViewPostFragment</string>
+    <string name="activity_number">activity_number</string>
 </resources>
