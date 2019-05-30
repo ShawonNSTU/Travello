@@ -1,6 +1,7 @@
 package com.example.shawon.travelbd.Utils;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,7 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shawon.travelbd.ModelClass.Photo;
+import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
 
@@ -37,6 +47,12 @@ public class ViewPostFragment extends Fragment {
         setArguments(new Bundle());
     }
 
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+
     //widgets
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
@@ -46,6 +62,7 @@ public class ViewPostFragment extends Fragment {
     //vars
     private Photo mPhoto;
     private int mActivityNumber = 0;
+    private UserPublicInfo mUserPublicInfo;
 
     @Nullable
     @Override
@@ -77,10 +94,34 @@ public class ViewPostFragment extends Fragment {
             Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage() );
         }
 
+        isUserLoggedInOrNot();
         setupBottomNavigationView();
-        setupWidgets();
+        getPhotoDetails();
 
         return view;
+    }
+
+    private void getPhotoDetails(){
+        Log.d(TAG, "getPhotoDetails: retrieving photo details.");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(getString(R.string.user_public_Info))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(mPhoto.getUser_id());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    mUserPublicInfo = singleSnapshot.getValue(UserPublicInfo.class);
+                }
+                setupWidgets();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled.");
+            }
+        });
     }
 
     private void setupWidgets(){
@@ -90,6 +131,8 @@ public class ViewPostFragment extends Fragment {
         }else{
             mTimestamp.setText("TODAY");
         }
+        Picasso.get().load(mUserPublicInfo.getProfile_photo()).into(mProfileImage);
+        mUsername.setText(mUserPublicInfo.getUsername());
     }
 
     /**
@@ -157,5 +200,44 @@ public class ViewPostFragment extends Fragment {
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(mActivityNumber);
         menuItem.setChecked(true);
+    }
+
+    // This method is to check whether user logged in or not.
+    private void isUserLoggedInOrNot() {
+        Log.d(TAG,"ViewPostFragment : isUserLoggedInOrNot()");
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }
