@@ -53,6 +53,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -326,8 +327,8 @@ public class NextShareActivity extends AppCompatActivity {
     private String getDateTime() {
         Log.d(TAG,"getDateTime : getting default date-time format");
 
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
-        sdf.setTimeZone(java.util.TimeZone.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd't'HH:mm:ss'z'", Locale.CANADA);
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("Canada/Pacific"));
         return sdf.format(new Date());
 
     }
