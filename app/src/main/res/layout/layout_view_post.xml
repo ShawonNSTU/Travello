@@ -135,13 +135,91 @@
                     android:layout_below="@+id/image_likes"
                     android:layout_marginTop="10dp"/>
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_caption"
+                    android:id="@+id/location"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="-5dp">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/location_icon"
+                        android:src="@drawable/ic_location"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Noakhali"
+                        android:id="@+id/location_text"
+                        android:textColor="@color/next"
+                        android:textSize="16sp"
+                        android:layout_toEndOf="@+id/location_icon"
+                        android:layout_marginStart="5dp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/location"
+                    android:id="@+id/userRating"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rated as "
+                        android:id="@+id/rating_text"
+                        android:textColor="@color/light_black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3.5"
+                        android:textColor="@color/black"
+                        android:textStyle="bold|italic"
+                        android:textSize="16sp"
+                        android:layout_toEndOf="@+id/rating_text"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/userRating"
+                    android:id="@+id/googleRating"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Google rating "
+                        android:id="@+id/google_rating_text"
+                        android:textColor="@color/light_black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.5"
+                        android:textColor="@color/black"
+                        android:textStyle="bold|italic"
+                        android:textSize="16sp"
+                        android:layout_toEndOf="@+id/google_rating_text"/>
+
+                </RelativeLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all 3 comments"
                     android:textColor="@color/gray"
                     android:textSize="16sp"
-                    android:layout_below="@+id/image_caption"
+                    android:layout_below="@+id/googleRating"
                     android:id="@+id/image_comments_link"
                     android:layout_marginTop="10dp"/>
 
