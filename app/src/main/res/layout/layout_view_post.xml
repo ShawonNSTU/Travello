@@ -23,8 +23,8 @@
                     android:layout_height="25dp"
                     android:id="@+id/profile_photo"
                     android:layout_marginTop="20dp"
-                    app:civ_border_color="@color/black"
-                    app:civ_border_width="0.5dp"
+                    app:civ_border_color="@color/light_black"
+                    app:civ_border_width="0.3dp"
                     android:layout_marginLeft="25dp"
                     android:layout_centerVertical="true"
                     android:src="@drawable/avatar"/>
