@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/postToolbar"
+        android:id="@+id/postViewToolbar"
         android:background="@drawable/white_gray_border_bottom">
 
         <RelativeLayout
@@ -32,11 +32,12 @@
                 android:layout_marginLeft="30dp"
                 android:text="Photo"
                 android:textColor="@color/black"
-                android:id="@+id/tvBackLavel"/>
+                android:id="@+id/tvBackLabel"/>
 
         </RelativeLayout>
 
-        </android.support.v7.widget.Toolbar>
+    </android.support.v7.widget.Toolbar>
+
     </android.support.design.widget.AppBarLayout>
 
     </merge>
