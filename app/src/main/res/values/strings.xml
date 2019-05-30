@@ -100,4 +100,5 @@
     <string name="profile_fragment">Profile</string>
     <string name="view_post_fragment">ViewPostFragment</string>
     <string name="activity_number">activity_number</string>
+    <string name="field_user_id">user_id</string>
 </resources>
