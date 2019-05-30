@@ -133,6 +133,10 @@ public class ViewPostFragment extends Fragment {
         }
         Picasso.get().load(mUserPublicInfo.getProfile_photo()).into(mProfileImage);
         mUsername.setText(mUserPublicInfo.getUsername());
+        mLocation.setText(mPhoto.getLocation());
+        mUserRating.setText(mPhoto.getRating());
+        mGoogleRating.setText(mPhoto.getGoogle_places_rating());
+        mCaption.setText(mPhoto.getCaption());
     }
 
     /**
