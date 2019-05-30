@@ -13,13 +13,14 @@ public class UserPublicInfo {
     private long following;
     private String profile_photo;
     private long number_of_travelled_places;
+    private String user_id;
 
     public UserPublicInfo() {
 
     }
 
     public UserPublicInfo(String username, String hometown, long posts, long followers, long following,
-                          String profile_photo, long number_of_travelled_places) {
+                          String profile_photo, long number_of_travelled_places, String user_id) {
         this.username = username;
         this.hometown = hometown;
         this.posts = posts;
@@ -27,6 +28,7 @@ public class UserPublicInfo {
         this.following = following;
         this.profile_photo = profile_photo;
         this.number_of_travelled_places = number_of_travelled_places;
+        this.user_id = user_id;
     }
 
     public String getUsername() {
@@ -83,6 +85,14 @@ public class UserPublicInfo {
 
     public void setNumber_of_travelled_places(long number_of_travelled_places) {
         this.number_of_travelled_places = number_of_travelled_places;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     @Override
