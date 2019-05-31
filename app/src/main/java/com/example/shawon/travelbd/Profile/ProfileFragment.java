@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.AddPost.LocationSelectFromGooglePlaces;
+import com.example.shawon.travelbd.ModelClass.Like;
 import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
@@ -43,6 +44,9 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -201,7 +205,43 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    photos.add(singleSnapshot.getValue(Photo.class));
+                    // photos.add(singleSnapshot.getValue(Photo.class));
+                    Photo photo = new Photo();
+                    Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
+
+                    photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
+
+                    photo.setUploaded_date(objectMap.get(getString(R.string.field_uploaded_date)).toString());
+
+                    photo.setImage_url(objectMap.get(getString(R.string.field_image_url)).toString());
+
+                    photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+
+                    photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+
+                    photo.setLocation(objectMap.get(getString(R.string.field_location)).toString());
+
+                    photo.setRating(objectMap.get(getString(R.string.field_rating)).toString());
+
+                    photo.setGoogle_places_rating(objectMap.get(getString(R.string.field_google_places_rating)).toString());
+
+                    try{
+                        photo.setTagged_people(objectMap.get(getString(R.string.field_tagged_user_id)).toString());
+                    }catch (RuntimeException e){
+                        e.printStackTrace();
+                    }
+
+                    photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
+
+                    List<Like> likesList = new ArrayList<Like>();
+                    for (DataSnapshot dSnapshot : singleSnapshot
+                            .child(getString(R.string.field_likes)).getChildren()){
+                        Like like = new Like();
+                        like.setUser_id(dSnapshot.getValue(Like.class).getUser_id());
+                        likesList.add(like);
+                    }
+                    photo.setLikes(likesList);
+                    photos.add(photo);
                 }
                 int rowWidth = getResources().getDisplayMetrics().widthPixels;
                 int imageWidth = rowWidth / NUM_GRID_COLUMN;
