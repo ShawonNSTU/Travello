@@ -14,12 +14,14 @@ public class UserPersonalInfo {
     private String bio;
     private String profile_photo;
     private String password;
+    private String user_id;
 
     public UserPersonalInfo() {
 
     }
 
-    public UserPersonalInfo(String username, String email, int is_user_email_verified, String gender, String phone_number, String bio, String profile_photo, String password) {
+    public UserPersonalInfo(String username, String email, int is_user_email_verified, String gender, String phone_number, String bio,
+                            String profile_photo, String password, String user_id) {
         this.username = username;
         this.email = email;
         this.is_user_email_verified = is_user_email_verified;
@@ -28,6 +30,7 @@ public class UserPersonalInfo {
         this.bio = bio;
         this.profile_photo = profile_photo;
         this.password = password;
+        this.user_id = user_id;
     }
 
     public String getUsername() {
@@ -92,6 +95,14 @@ public class UserPersonalInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     @Override
