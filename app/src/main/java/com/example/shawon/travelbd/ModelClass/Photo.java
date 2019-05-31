@@ -3,6 +3,8 @@ package com.example.shawon.travelbd.ModelClass;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by SHAWON on 9/28/2018.
  */
@@ -19,12 +21,15 @@ public class Photo implements Parcelable {
     private String google_places_rating;
     private String tagged_user_id;
     private String tags;
+    private List<Like> likes;
 
     public Photo() {
 
     }
 
-    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating, String google_places_rating, String tagged_user_id, String tags) {
+    public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating,
+                 String google_places_rating, String tagged_user_id, String tags,
+                 List<Like> likes) {
         this.caption = caption;
         this.uploaded_date = uploaded_date;
         this.image_url = image_url;
@@ -35,6 +40,7 @@ public class Photo implements Parcelable {
         this.google_places_rating = google_places_rating;
         this.tagged_user_id = tagged_user_id;
         this.tags = tags;
+        this.likes = likes;
     }
 
     protected Photo(Parcel in) {
@@ -140,6 +146,14 @@ public class Photo implements Parcelable {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
     }
 
     @Override
