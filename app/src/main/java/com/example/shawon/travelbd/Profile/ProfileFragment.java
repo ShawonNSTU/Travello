@@ -113,9 +113,9 @@ public class ProfileFragment extends Fragment {
 
         setupToolbar();
 
-        setupGridView();
-
         isUserLoggedInOrNot();
+
+        setupGridView();
 
         onClickEditProfileButton();
 
