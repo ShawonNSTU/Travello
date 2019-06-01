@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.AddPost.LocationSelectFromGooglePlaces;
+import com.example.shawon.travelbd.ModelClass.Comment;
 import com.example.shawon.travelbd.ModelClass.Like;
 import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
@@ -232,6 +233,18 @@ public class ProfileFragment extends Fragment {
                     }
 
                     photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
+
+                    ArrayList<Comment> comments = new ArrayList<Comment>();
+                    for (DataSnapshot dSnapshot : singleSnapshot
+                            .child(getString(R.string.field_comments)).getChildren()){
+                        Comment comment = new Comment();
+                        comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
+                        comment.setComment(dSnapshot.getValue(Comment.class).getComment());
+                        comment.setDate_created(dSnapshot.getValue(Comment.class).getDate_created());
+                        comments.add(comment);
+                    }
+
+                    photo.setComments(comments);
 
                     List<Like> likesList = new ArrayList<Like>();
                     for (DataSnapshot dSnapshot : singleSnapshot
