@@ -9,7 +9,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/comment_profile_image"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="7dp"
         android:layout_marginLeft="15dp"
         android:src="@drawable/test_dp"
         app:civ_border_color="@color/gray"
@@ -25,7 +25,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp">
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
