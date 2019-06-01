@@ -22,6 +22,7 @@ public class Photo implements Parcelable {
     private String tagged_user_id;
     private String tags;
     private List<Like> likes;
+    private List<Comment> comments;
 
     public Photo() {
 
@@ -29,7 +30,7 @@ public class Photo implements Parcelable {
 
     public Photo(String caption, String uploaded_date, String image_url, String photo_id, String user_id, String location, String rating,
                  String google_places_rating, String tagged_user_id, String tags,
-                 List<Like> likes) {
+                 List<Like> likes, List<Comment> comments) {
         this.caption = caption;
         this.uploaded_date = uploaded_date;
         this.image_url = image_url;
@@ -41,6 +42,7 @@ public class Photo implements Parcelable {
         this.tagged_user_id = tagged_user_id;
         this.tags = tags;
         this.likes = likes;
+        this.comments = comments;
     }
 
     protected Photo(Parcel in) {
@@ -154,6 +156,14 @@ public class Photo implements Parcelable {
 
     public void setLikes(List<Like> likes) {
         this.likes = likes;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
