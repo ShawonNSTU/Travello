@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.Utils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shawon.travelbd.ModelClass.Comment;
 import com.example.shawon.travelbd.ModelClass.Like;
 import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.ModelClass.UserPersonalInfo;
@@ -33,9 +35,13 @@ import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -45,6 +51,11 @@ import java.util.TimeZone;
 public class ViewPostFragment extends Fragment {
 
     private static final String TAG = "ViewPostFragment";
+
+    public interface OnCommentThreadSelectedListener{
+        void onCommentThreadSelectedListener(Photo photo);
+    }
+    OnCommentThreadSelectedListener mOnCommentThreadSelectedListener;
 
     public ViewPostFragment(){
         super();
@@ -60,8 +71,8 @@ public class ViewPostFragment extends Fragment {
     //widgets
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
-    private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLocation, mUserRating, mGoogleRating,mLikes;
-    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mSpeechBubble, mProfileImage;
+    private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLocation, mUserRating, mGoogleRating,mLikes,mComments;
+    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mComment, mProfileImage;
 
     //vars
     private Photo mPhoto;
@@ -93,17 +104,79 @@ public class ViewPostFragment extends Fragment {
         mLocation = (TextView) view.findViewById(R.id.location_text);
         mUserRating = (TextView) view.findViewById(R.id.userRatingNumber);
         mGoogleRating = (TextView) view.findViewById(R.id.googleRatingNumber);
-        mSpeechBubble = (ImageView) view.findViewById(R.id.speech_bubble);
+        mComment = (ImageView) view.findViewById(R.id.speech_bubble);
+        mComments = (TextView) view.findViewById(R.id.image_comments_link);
 
         mHeart = new Heart(mHeartWhite,mHeartRed);
         mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
 
         try{
-            mPhoto = getPhotoFromBundle();
-            Picasso.get().load(mPhoto.getImage_url()).into(mPostImage);
+            Picasso.get().load(getPhotoFromBundle().getImage_url()).into(mPostImage);
             mActivityNumber = getActivityNumFromBundle();
-            getPhotoDetails();
-            getLikesString();
+
+            String photo_id = getPhotoFromBundle().getPhoto_id();
+
+            Query query = FirebaseDatabase.getInstance().getReference()
+                    .child(getString(R.string.photos))
+                    .orderByChild(getString(R.string.field_photo_id))
+                    .equalTo(photo_id);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                        Photo newPhoto = new Photo();
+                        Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
+
+                        newPhoto.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
+
+                        newPhoto.setUploaded_date(objectMap.get(getString(R.string.field_uploaded_date)).toString());
+
+                        newPhoto.setImage_url(objectMap.get(getString(R.string.field_image_url)).toString());
+
+                        newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+
+                        newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+
+                        newPhoto.setLocation(objectMap.get(getString(R.string.field_location)).toString());
+
+                        newPhoto.setRating(objectMap.get(getString(R.string.field_rating)).toString());
+
+                        newPhoto.setGoogle_places_rating(objectMap.get(getString(R.string.field_google_places_rating)).toString());
+
+                        try{
+                            newPhoto.setTagged_people(objectMap.get(getString(R.string.field_tagged_user_id)).toString());
+                        }catch (RuntimeException e){
+                            e.printStackTrace();
+                        }
+
+                        newPhoto.setTags(objectMap.get(getString(R.string.field_tags)).toString());
+
+                        List<Comment> comments = new ArrayList<Comment>();
+                        for (DataSnapshot dSnapshot : singleSnapshot
+                                .child(getString(R.string.field_comments)).getChildren()){
+                            Comment comment = new Comment();
+                            comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
+                            comment.setComment(dSnapshot.getValue(Comment.class).getComment());
+                            comment.setDate_created(dSnapshot.getValue(Comment.class).getDate_created());
+                            comments.add(comment);
+                        }
+
+                        newPhoto.setComments(comments);
+
+                        mPhoto = newPhoto;
+
+                        getPhotoDetails();
+                        getLikesString();
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "onCancelled: query cancelled.");
+                }
+            });
 
         }catch (NullPointerException e){
             Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage() );
@@ -113,6 +186,16 @@ public class ViewPostFragment extends Fragment {
         setupBottomNavigationView();
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            mOnCommentThreadSelectedListener = (OnCommentThreadSelectedListener) getActivity();
+        }catch (ClassCastException e){
+            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
+        }
     }
 
     private void getLikesString(){
@@ -331,6 +414,38 @@ public class ViewPostFragment extends Fragment {
         mUserRating.setText(mPhoto.getRating());
         mGoogleRating.setText(mPhoto.getGoogle_places_rating());
         mCaption.setText(mPhoto.getCaption());
+
+        if(mPhoto.getComments().size() > 0){
+            mComments.setText("View all " + mPhoto.getComments().size() + " comments");
+        }else{
+            mComments.setText("");
+        }
+
+        mComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to comments thread");
+
+                mOnCommentThreadSelectedListener.onCommentThreadSelectedListener(mPhoto);
+
+            }
+        });
+
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        mComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                mOnCommentThreadSelectedListener.onCommentThreadSelectedListener(mPhoto);
+            }
+        });
 
         if(mLikedByCurrentUser){
             mHeartWhite.setVisibility(View.GONE);
