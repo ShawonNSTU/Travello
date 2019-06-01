@@ -42,15 +42,15 @@
             android:padding="2dp"
             android:background="@null"
             android:layout_marginRight="40dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:hint="Add a comment..."
             android:textSize="14sp"
             android:id="@+id/comment"/>
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_save_check"
             android:id="@+id/ivPostComment"
