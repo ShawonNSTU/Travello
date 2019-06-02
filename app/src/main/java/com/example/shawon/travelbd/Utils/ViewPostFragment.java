@@ -83,6 +83,7 @@ public class ViewPostFragment extends Fragment {
     private Boolean mLikedByCurrentUser;
     private StringBuilder mUsers;
     private String mLikesString = "";
+    private UserPersonalInfo mCurrentUser;
 
     @Nullable
     @Override
@@ -110,6 +111,13 @@ public class ViewPostFragment extends Fragment {
         mHeart = new Heart(mHeartWhite,mHeartRed);
         mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
 
+        isUserLoggedInOrNot();
+        setupBottomNavigationView();
+
+        return view;
+    }
+
+    private void init(){
         try{
             Picasso.get().load(getPhotoFromBundle().getImage_url()).into(mPostImage);
             mActivityNumber = getActivityNumFromBundle();
@@ -165,8 +173,8 @@ public class ViewPostFragment extends Fragment {
 
                         mPhoto = newPhoto;
 
+                        getCurrentUser();
                         getPhotoDetails();
-                        getLikesString();
 
                     }
 
@@ -181,11 +189,14 @@ public class ViewPostFragment extends Fragment {
         }catch (NullPointerException e){
             Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage() );
         }
+    }
 
-        isUserLoggedInOrNot();
-        setupBottomNavigationView();
-
-        return view;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isAdded()){
+            init();
+        }
     }
 
     @Override
@@ -230,7 +241,7 @@ public class ViewPostFragment extends Fragment {
 
                             String[] splitUsers = mUsers.toString().split(",");
 
-                            if(mUsers.toString().contains(mUserPublicInfo.getUsername() + ",")){
+                            if(mUsers.toString().contains(mCurrentUser.getUsername() + ",")){
                                 mLikedByCurrentUser = true;
                             }else{
                                 mLikedByCurrentUser = false;
@@ -284,6 +295,28 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
+    }
+
+    private void getCurrentUser(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(getString(R.string.user_personal_Info))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    mCurrentUser = singleSnapshot.getValue(UserPersonalInfo.class);
+                }
+                getLikesString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled.");
+            }
+        });
     }
 
     public class GestureListener extends GestureDetector.SimpleOnGestureListener{
