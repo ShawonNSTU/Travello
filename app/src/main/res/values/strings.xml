@@ -119,5 +119,7 @@
     <string name="view_profile_fragment">View Profile Fragment</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
+    <string name="dbname_following">following</string>
+    <string name="dbname_followers">followers</string>
 
 </resources>
