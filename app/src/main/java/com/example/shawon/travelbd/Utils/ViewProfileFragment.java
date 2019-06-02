@@ -109,7 +109,7 @@ public class ViewProfileFragment extends Fragment{
             init();
         }catch (NullPointerException e){
             Log.e(TAG, "onCreateView: NullPointerException: "  + e.getMessage() );
-            Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Something went wrong!", Toast.LENGTH_SHORT).show();
             getActivity().getSupportFragmentManager().popBackStack();
         }
 
