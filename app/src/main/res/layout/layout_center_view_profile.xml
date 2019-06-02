@@ -23,7 +23,6 @@
                 android:orientation="horizontal"
                 android:weightSum="100">
 
-
                 <RelativeLayout
                     android:layout_marginTop="30dp"
                     android:layout_width="0dp"
@@ -39,7 +38,6 @@
                         app:civ_border_color="@color/gray"
                         app:civ_border_width="0.5dp"
                         />
-
 
                 </RelativeLayout>
 
@@ -74,59 +72,22 @@
                     android:textSize="13sp"
                     android:textStyle="bold"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-
                 <TextView
                     android:id="@+id/hometown"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="13sp"/>
 
-                    <ImageView
-                        android:id="@+id/edit_hometown"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_edit_icon"
-                        android:visibility="invisible"
-                        />
-
-                </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
                 <TextView
                     android:id="@+id/numberOfTraveledPlaces"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:textColor="@color/example"
                     android:textSize="13sp"
                     />
-
-                <ImageView
-                    android:id="@+id/see_traveled_places"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_expand_more"
-                    android:visibility="invisible"
-                    />
-                </LinearLayout>
 
             </LinearLayout>
 
