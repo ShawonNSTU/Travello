@@ -21,7 +21,8 @@ import com.example.shawon.travelbd.Utils.ViewProfileFragment;
 
 public class ProfileActivity extends AppCompatActivity implements
         ProfileFragment.OnGridImageSelectedListener,
-        ViewPostFragment.OnCommentThreadSelectedListener {
+        ViewPostFragment.OnCommentThreadSelectedListener,
+        ViewProfileFragment.OnGridImageSelectedListener {
 
     private static final String TAG = "ProfileActivity";
     private Context mContext = ProfileActivity.this;
