@@ -477,18 +477,6 @@ public class ViewProfileFragment extends Fragment{
             mProfileImage.setBackgroundColor(Color.TRANSPARENT);
         }
 
-        mTvPosts.setText(String.valueOf(userPublicInfo.getPosts()));
-
-        if (userPublicInfo.getFollowers() > 9){
-            String textNumberFollowers = "    "+userPublicInfo.getFollowers();
-            mTvFollowers.setText(textNumberFollowers);
-        }
-        else {
-            mTvFollowers.setText(String.valueOf(userPublicInfo.getFollowers()));
-        }
-
-        mTvFollowing.setText(String.valueOf(userPublicInfo.getFollowing()));
-
         mUserName.setText(userPublicInfo.getUsername());
 
         String hometown = userPublicInfo.getHometown();
