@@ -71,7 +71,7 @@ public class ViewProfileFragment extends Fragment{
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
 
-    private TextView mProfileName,mTvPosts,mTvFollowers,mTvFollowing,mUserName,mHometown,mNumberOfTraveledPlaces,mTextEditProfile;
+    private TextView mProfileName,mTvPosts,mTvFollowers,mTvFollowing,mUserName,mHometown,mNumberOfTraveledPlaces;
     private ImageView mEditHometown,mSeeTraveledPlaces,mProfileMenu,mProfileAddPerson;
     private CircleImageView mProfileImage;
     private ProgressBar mProgressBar;
@@ -97,7 +97,6 @@ public class ViewProfileFragment extends Fragment{
         mNumberOfTraveledPlaces = (TextView) view.findViewById(R.id.numberOfTraveledPlaces);
         mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
         mEditHometown = (ImageView) view.findViewById(R.id.edit_hometown);
-        mTextEditProfile = (TextView) view.findViewById(R.id.textEditProfile);
         mSeeTraveledPlaces = (ImageView) view.findViewById(R.id.see_traveled_places);
         mProfileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         mProfileAddPerson = (ImageView) view.findViewById(R.id.profileAddPerson);
@@ -242,7 +241,7 @@ public class ViewProfileFragment extends Fragment{
     @Override
     public void onAttach(Context context) {
         try{
-            mOnGridImageSelectedListener = (ViewProfileFragment.OnGridImageSelectedListener) getActivity();
+            mOnGridImageSelectedListener = (OnGridImageSelectedListener) getActivity();
         }catch (ClassCastException e){
             Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
         }
