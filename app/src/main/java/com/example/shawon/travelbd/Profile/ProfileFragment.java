@@ -89,6 +89,10 @@ public class ProfileFragment extends Fragment {
     private BottomNavigationViewEx bottomNavigationViewEx;
     private GridView gridView;
 
+    private int mFollowersCount = 0;
+    private int mFollowingCount = 0;
+    private int mPostsCount = 0;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -120,6 +124,10 @@ public class ProfileFragment extends Fragment {
 
         isUserLoggedInOrNot();
 
+        getFollowingCount();
+        getFollowersCount();
+        getPostsCount();
+
         setupGridView();
 
         onClickEditProfileButton();
@@ -127,6 +135,82 @@ public class ProfileFragment extends Fragment {
         onClickEditHometown();
 
         return view;
+    }
+
+    private void getFollowersCount(){
+        mFollowersCount = 0;
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child(getString(R.string.dbname_followers))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found follower:" + singleSnapshot.getValue());
+                    mFollowersCount++;
+                }
+                if (mFollowersCount > 9){
+                    String textNumberFollowers = "    "+mFollowersCount;
+                    mTvFollowers.setText(textNumberFollowers);
+                }
+                else {
+                    mTvFollowers.setText(String.valueOf(mFollowersCount));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getFollowingCount(){
+        mFollowingCount = 0;
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child(getString(R.string.dbname_following))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found following user:" + singleSnapshot.getValue());
+                    mFollowingCount++;
+                }
+                mTvFollowing.setText(String.valueOf(mFollowingCount));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getPostsCount(){
+        mPostsCount = 0;
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child(getString(R.string.user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(getString(R.string.uploaded));
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found post:" + singleSnapshot.getValue());
+                    mPostsCount++;
+                }
+                mTvPosts.setText(String.valueOf(mPostsCount));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -210,29 +294,29 @@ public class ProfileFragment extends Fragment {
                     Photo photo = new Photo();
                     Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
-                    photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
+                    try {
+                        photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
 
-                    photo.setUploaded_date(objectMap.get(getString(R.string.field_uploaded_date)).toString());
+                        photo.setUploaded_date(objectMap.get(getString(R.string.field_uploaded_date)).toString());
 
-                    photo.setImage_url(objectMap.get(getString(R.string.field_image_url)).toString());
+                        photo.setImage_url(objectMap.get(getString(R.string.field_image_url)).toString());
 
-                    photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+                        photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
 
-                    photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+                        photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
 
-                    photo.setLocation(objectMap.get(getString(R.string.field_location)).toString());
+                        photo.setLocation(objectMap.get(getString(R.string.field_location)).toString());
 
-                    photo.setRating(objectMap.get(getString(R.string.field_rating)).toString());
+                        photo.setRating(objectMap.get(getString(R.string.field_rating)).toString());
 
-                    photo.setGoogle_places_rating(objectMap.get(getString(R.string.field_google_places_rating)).toString());
+                        photo.setGoogle_places_rating(objectMap.get(getString(R.string.field_google_places_rating)).toString());
 
-                    try{
                         photo.setTagged_people(objectMap.get(getString(R.string.field_tagged_user_id)).toString());
-                    }catch (RuntimeException e){
+
+                        photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
+                    } catch (RuntimeException e){
                         e.printStackTrace();
                     }
-
-                    photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
 
                     ArrayList<Comment> comments = new ArrayList<Comment>();
                     for (DataSnapshot dSnapshot : singleSnapshot
@@ -412,18 +496,6 @@ public class ProfileFragment extends Fragment {
             Picasso.get().load(R.drawable.avatar).into(mProfileImage);
             mProfileImage.setBackgroundColor(Color.TRANSPARENT);
         }
-
-        mTvPosts.setText(String.valueOf(userPublicInfo.getPosts()));
-
-        if (userPublicInfo.getFollowers() > 9){
-            String textNumberFollowers = "    "+userPublicInfo.getFollowers();
-            mTvFollowers.setText(textNumberFollowers);
-        }
-        else {
-            mTvFollowers.setText(String.valueOf(userPublicInfo.getFollowers()));
-        }
-
-        mTvFollowing.setText(String.valueOf(userPublicInfo.getFollowing()));
 
         mUserName.setText(userPublicInfo.getUsername());
 
