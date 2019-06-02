@@ -1,6 +1,5 @@
 package com.example.shawon.travelbd.Utils;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,17 +22,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.shawon.travelbd.AddPost.LocationSelectFromGooglePlaces;
 import com.example.shawon.travelbd.ModelClass.Comment;
 import com.example.shawon.travelbd.ModelClass.Like;
 import com.example.shawon.travelbd.ModelClass.Photo;
+import com.example.shawon.travelbd.ModelClass.UserPersonalInfo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
+import com.example.shawon.travelbd.ModelClass.UserSettings;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
-import com.example.shawon.travelbd.Profile.ProfileFragment;
 import com.example.shawon.travelbd.Profile.SettingsActivity;
 import com.example.shawon.travelbd.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -59,37 +56,32 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ViewProfileFragment extends Fragment{
 
     private static final String TAG = "ViewProfileFragment";
+
     public interface OnGridImageSelectedListener{
         void onGridImageSelected(Photo photo, int activityNumber);
     }
-    ProfileFragment.OnGridImageSelectedListener mOnGridImageSelectedListener;
+    OnGridImageSelectedListener mOnGridImageSelectedListener;
+
     private static final int NUM_GRID_COLUMN = 3;
     private static final int ACTIVITY_NUM = 4;
-    private static final int ERROR_DIALOG_REQUEST = 8001;
 
+    //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
 
-    private TextView mProfileName;
+    private TextView mProfileName,mTvPosts,mTvFollowers,mTvFollowing,mUserName,mHometown,mNumberOfTraveledPlaces,mTextEditProfile;
+    private ImageView mEditHometown,mSeeTraveledPlaces,mProfileMenu,mProfileAddPerson;
     private CircleImageView mProfileImage;
-    private TextView mTvPosts;
-    private TextView mTvFollowers;
-    private TextView mTvFollowing;
-    private TextView mUserName;
-    private TextView mHometown;
-    private TextView mNumberOfTraveledPlaces;
     private ProgressBar mProgressBar;
-    private TextView mTextEditProfile;
-    private ImageView mEditHometown;
-    private ImageView mSeeTraveledPlaces;
-    private ImageView mProfileMenu;
-    private ImageView mProfileAddPerson;
     private Toolbar toolbar;
-    public static String mSelectedHometownLocation = "";
     private BottomNavigationViewEx bottomNavigationViewEx;
     private GridView gridView;
+    private Context mContext;
+
+    //vars
+    private UserPersonalInfo mUser;
 
     @Nullable
     @Override
@@ -113,102 +105,69 @@ public class ViewProfileFragment extends Fragment{
         bottomNavigationViewEx = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
         mProgressBar.setVisibility(View.VISIBLE);
+        mContext = getActivity();
+
         if (Build.VERSION.SDK_INT >= 21){
             mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.gray),android.graphics.PorterDuff.Mode.MULTIPLY);
         }
+
+        try{
+            mUser = getUserFromBundle();
+            init();
+        }catch (NullPointerException e){
+            Log.e(TAG, "onCreateView: NullPointerException: "  + e.getMessage() );
+            Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
+
         setupBottomNavigationView();
 
         setupToolbar();
 
         isUserLoggedInOrNot();
 
-        setupGridView();
-
-        onClickEditProfileButton();
-
-        onClickEditHometown();
-
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        try{
-            mOnGridImageSelectedListener = (ProfileFragment.OnGridImageSelectedListener) getActivity();
-        }catch (ClassCastException e){
-            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
-        }
-        super.onAttach(context);
-    }
+    private void init() {
 
-    private void onClickEditHometown() {
-        Log.d(TAG,"onClickEditHometown : editing user's hometown");
-        mEditHometown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isServicesOK()) {
-                    gotoHometownLocationSelectActivity();
-                }
-            }
-        });
-    }
-
-    private void gotoHometownLocationSelectActivity() {
-        Intent intent = new Intent(getActivity(), LocationSelectFromGooglePlaces.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    private boolean isServicesOK() {
-        Log.d(TAG,"isServicesOK : checking Google Play Services version");
-
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
-        if (available == ConnectionResult.SUCCESS) {
-            // everything is fine and the user can make map request to edit his/her hometown
-            Log.d(TAG,"isServicesOK : Google Play Services is working");
-            return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            // an error has occurred but user can resolve it
-            Log.d(TAG,"isServicesOK : an error faced but user can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(),available,ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }
-        else {
-            Toast.makeText(getActivity(),"Sorry, you can't make map request to edit your hometown.",Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
-
-    private void onClickEditProfileButton() {
-
-        mTextEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClickEditProfileButton:navigating to "+getString(R.string.edit_profile)+" Fragment");
-
-                Intent intent = new Intent(getActivity(),SettingsActivity.class);
-                intent.putExtra("EditProfileButton","ProfileActivity");
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    // To Test The Grid Image View
-    private void setupGridView(){
-        Log.d(TAG,"setupGridView : Setting up grid view from user uploaded photos");
-        final ArrayList<Photo> photos = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference
-                .child(getString(R.string.user_photos))
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(getString(R.string.uploaded));
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        //set the profile widgets
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
+        Query query1 = reference1.child(getString(R.string.user_public_Info))
+                .orderByChild(getString(R.string.field_user_id)).equalTo(mUser.getUser_id());
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    // photos.add(singleSnapshot.getValue(Photo.class));
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(UserPublicInfo.class).toString());
+
+                    UserSettings settings = new UserSettings();
+                    settings.setUserPersonalInfo(mUser);
+                    settings.setUserPublicInfo(singleSnapshot.getValue(UserPublicInfo.class));
+                    setupProfileWidget(settings);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //get the users profile photos
+
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference();
+        Query query2 = reference2
+                .child(getString(R.string.user_photos))
+                .child(mUser.getUser_id())
+                .child(getString(R.string.uploaded));
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<Photo> photos = new ArrayList<Photo>();
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+
                     Photo photo = new Photo();
                     Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
@@ -258,151 +217,64 @@ public class ViewProfileFragment extends Fragment{
                     photo.setLikes(likesList);
                     photos.add(photo);
                 }
-                int rowWidth = getResources().getDisplayMetrics().widthPixels;
-                int imageWidth = rowWidth / NUM_GRID_COLUMN;
-                gridView.setColumnWidth(imageWidth);
-                ArrayList<String> imageUrls = new ArrayList<String>();
-                for(int i=0; i<photos.size(); i++){
-                    imageUrls.add(photos.get(i).getImage_url());
-                }
-                GridImageAdapter gridImageAdapter = new GridImageAdapter(getActivity(),R.layout.square_grid_image_view,imageUrls,"");
-                gridView.setAdapter(gridImageAdapter);
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mOnGridImageSelectedListener.onGridImageSelected(photos.get(position), ACTIVITY_NUM);
-                    }
-                });
+                setupImageGrid(photos);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // later code...
-            }
-        });
-    }
-    private void setupToolbar() {
-        ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
-
-        mProfileMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Profile Menu onClick : Account Settings");
-                startActivity(new Intent(getActivity(),SettingsActivity.class));
+                Log.d(TAG, "onCancelled: query cancelled.");
             }
         });
 
-        mProfileAddPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Profile Add Person onClick : Follow Person");
-                // later code
-            }
-        });
     }
 
-    // BottomNavigationView Setup
+    private UserPersonalInfo getUserFromBundle(){
+        Log.d(TAG, "getUserFromBundle: arguments: " + getArguments());
 
-    private void setupBottomNavigationView() {
-        Log.d(TAG, "ProfileActivity setupBottomNavigationView: setting up BottomNavigationView");
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(getActivity(), bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
-    }
-
-    /*
-        --------------------------------- Firebase ----------------------------------
-     */
-
-    // This method is to check whether user logged in or not.
-
-    private void isUserLoggedInOrNot() {
-
-        Log.d(TAG,"Profile Activity : isUserLoggedInOrNot()");
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-
-                    mDatabase = FirebaseDatabase.getInstance();
-                    myRef = mDatabase.getReference();
-
-                    myRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            // retrieve user's all information from the database
-                            retrieveUserInformation(dataSnapshot,user.getUid());
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-
-            }
-        };
-
-    }
-
-    private void retrieveUserInformation(DataSnapshot dataSnapshot, String uid) {
-
-        Log.d(TAG, "retrieveUserInformation:retrieving user info from the database");
-
-        for (DataSnapshot ds : dataSnapshot.getChildren()){
-
-            // User Public Info
-            if (ds.getKey().equals(getString(R.string.user_public_Info))){
-                Log.d(TAG, "retrieveUserPublicInformation: "+ds);
-                try{
-                    UserPublicInfo userPublicInfo = new UserPublicInfo();
-
-                    userPublicInfo.setUsername(ds.child(uid).getValue(UserPublicInfo.class).getUsername());
-
-                    userPublicInfo.setHometown(ds.child(uid).getValue(UserPublicInfo.class).getHometown());
-
-                    userPublicInfo.setPosts(ds.child(uid).getValue(UserPublicInfo.class).getPosts());
-
-                    userPublicInfo.setFollowers(ds.child(uid).getValue(UserPublicInfo.class).getFollowers());
-
-                    userPublicInfo.setFollowing(ds.child(uid).getValue(UserPublicInfo.class).getFollowing());
-
-                    userPublicInfo.setProfile_photo(ds.child(uid).getValue(UserPublicInfo.class).getProfile_photo());
-
-                    userPublicInfo.setNumber_of_travelled_places(ds.child(uid).getValue(UserPublicInfo.class).getNumber_of_travelled_places());
-
-                    Log.d(TAG, "retrieveUserPublicInformation:retrieving user public info: "+userPublicInfo.toString());
-
-                    setupTopProfileWidget(userPublicInfo);
-
-                }catch (NullPointerException e){
-                    Log.e(TAG, "retrieveUserPublicInformation:NullPointerException: "+e.getMessage());
-                }
-            }
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            return bundle.getParcelable(getString(R.string.intent_user));
+        }else{
+            return null;
         }
-        mProgressBar.setVisibility(View.GONE);
     }
 
-    private void setupTopProfileWidget(UserPublicInfo userPublicInfo) {
+    @Override
+    public void onAttach(Context context) {
+        try{
+            mOnGridImageSelectedListener = (ViewProfileFragment.OnGridImageSelectedListener) getActivity();
+        }catch (ClassCastException e){
+            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
+        }
+        super.onAttach(context);
+    }
 
-        Log.d(TAG, "setupTopProfileWidget:setup "+userPublicInfo.getUsername()+" public information");
+    private void setupImageGrid(final ArrayList<Photo> photos){
+        //setup our image grid
+        int gridWidth = getResources().getDisplayMetrics().widthPixels;
+        int imageWidth = gridWidth/NUM_GRID_COLUMN;
+        gridView.setColumnWidth(imageWidth);
+
+        ArrayList<String> imgUrls = new ArrayList<String>();
+        for(int i = 0; i < photos.size(); i++){
+            imgUrls.add(photos.get(i).getImage_url());
+        }
+        GridImageAdapter adapter = new GridImageAdapter(getActivity(),R.layout.square_grid_image_view,imgUrls,"");
+        gridView.setAdapter(adapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mOnGridImageSelectedListener.onGridImageSelected(photos.get(position), ACTIVITY_NUM);
+            }
+        });
+    }
+
+    private void setupProfileWidget(UserSettings userSettings) {
+
+        Log.d(TAG, "setupTopProfileWidget:setup "+userSettings.getUserPublicInfo()+" public information");
+
+        UserPublicInfo userPublicInfo = userSettings.getUserPublicInfo();
 
         mProfileName.setText(userPublicInfo.getUsername());
 
@@ -452,6 +324,71 @@ public class ViewProfileFragment extends Fragment{
             mNumberOfTraveledPlaces.setText("You haven't traveled any place yet!");
             mNumberOfTraveledPlaces.setTextColor(getResources().getColor(R.color.gray));
         }
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    private void setupToolbar() {
+        ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
+
+        mProfileMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Profile Menu onClick : Account Settings");
+                startActivity(new Intent(getActivity(),SettingsActivity.class));
+            }
+        });
+
+        mProfileAddPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Profile Add Person onClick : Follow Person");
+                // later code
+            }
+        });
+    }
+
+    // BottomNavigationView Setup
+
+    private void setupBottomNavigationView() {
+        Log.d(TAG, "ProfileActivity setupBottomNavigationView: setting up BottomNavigationView");
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(getActivity(), bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
+    }
+
+    /*
+        --------------------------------- Firebase ----------------------------------
+     */
+
+    // This method is to check whether user logged in or not.
+
+    private void isUserLoggedInOrNot() {
+
+        Log.d(TAG,"View Profile Fragment : isUserLoggedInOrNot()");
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+        myRef = mDatabase.getReference();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+
+            }
+        };
+
     }
 
     @Override
@@ -465,21 +402,6 @@ public class ViewProfileFragment extends Fragment{
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mSelectedHometownLocation.length() > 0){
-            String s = "Lives in "+mSelectedHometownLocation;
-            mHometown.setText(s);
-            mHometown.setTextColor(getResources().getColor(R.color.light_black));
-            myRef.child(getString(R.string.user_public_Info))
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .child(getString(R.string.hometown_field))
-                    .setValue(mSelectedHometownLocation);
-            mSelectedHometownLocation = "";
         }
     }
 
