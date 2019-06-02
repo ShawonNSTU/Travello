@@ -1,10 +1,13 @@
 package com.example.shawon.travelbd.ModelClass;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by SHAWON on 7/28/2018.
  */
 
-public class UserPersonalInfo {
+public class UserPersonalInfo implements Parcelable {
 
     private String username;
     private String email;
@@ -32,6 +35,30 @@ public class UserPersonalInfo {
         this.password = password;
         this.user_id = user_id;
     }
+
+    protected UserPersonalInfo(Parcel in) {
+        username = in.readString();
+        email = in.readString();
+        is_user_email_verified = in.readInt();
+        gender = in.readString();
+        phone_number = in.readString();
+        bio = in.readString();
+        profile_photo = in.readString();
+        password = in.readString();
+        user_id = in.readString();
+    }
+
+    public static final Creator<UserPersonalInfo> CREATOR = new Creator<UserPersonalInfo>() {
+        @Override
+        public UserPersonalInfo createFromParcel(Parcel in) {
+            return new UserPersonalInfo(in);
+        }
+
+        @Override
+        public UserPersonalInfo[] newArray(int size) {
+            return new UserPersonalInfo[size];
+        }
+    };
 
     public String getUsername() {
         return username;
@@ -117,5 +144,23 @@ public class UserPersonalInfo {
                 ", profile_photo='" + profile_photo + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(username);
+        dest.writeString(email);
+        dest.writeInt(is_user_email_verified);
+        dest.writeString(gender);
+        dest.writeString(phone_number);
+        dest.writeString(bio);
+        dest.writeString(profile_photo);
+        dest.writeString(password);
+        dest.writeString(user_id);
     }
 }
