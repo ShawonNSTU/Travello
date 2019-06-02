@@ -1,7 +1,6 @@
 package com.example.shawon.travelbd.Utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +27,6 @@ import com.example.shawon.travelbd.ModelClass.UserPersonalInfo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.ModelClass.UserSettings;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
-import com.example.shawon.travelbd.Profile.SettingsActivity;
 import com.example.shawon.travelbd.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -72,7 +69,6 @@ public class ViewProfileFragment extends Fragment{
     private DatabaseReference myRef;
 
     private TextView mProfileName,mTvPosts,mTvFollowers,mTvFollowing,mUserName,mHometown,mNumberOfTraveledPlaces;
-    private ImageView mEditHometown,mSeeTraveledPlaces,mProfileMenu,mProfileAddPerson;
     private CircleImageView mProfileImage;
     private ProgressBar mProgressBar;
     private Toolbar toolbar;
@@ -96,15 +92,13 @@ public class ViewProfileFragment extends Fragment{
         mHometown = (TextView) view.findViewById(R.id.hometown);
         mNumberOfTraveledPlaces = (TextView) view.findViewById(R.id.numberOfTraveledPlaces);
         mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
-        mEditHometown = (ImageView) view.findViewById(R.id.edit_hometown);
-        mSeeTraveledPlaces = (ImageView) view.findViewById(R.id.see_traveled_places);
-        mProfileMenu = (ImageView) view.findViewById(R.id.profileMenu);
-        mProfileAddPerson = (ImageView) view.findViewById(R.id.profileAddPerson);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         bottomNavigationViewEx = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
         mProgressBar.setVisibility(View.VISIBLE);
         mContext = getActivity();
+
+        ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
 
         if (Build.VERSION.SDK_INT >= 21){
             mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.gray),android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -120,8 +114,6 @@ public class ViewProfileFragment extends Fragment{
         }
 
         setupBottomNavigationView();
-
-        setupToolbar();
 
         isUserLoggedInOrNot();
 
@@ -311,39 +303,16 @@ public class ViewProfileFragment extends Fragment{
             mHometown.setTextColor(getResources().getColor(R.color.gray));
         }
 
-        mEditHometown.setVisibility(View.VISIBLE);
-
         long numberOfTraveledPlaces = userPublicInfo.getNumber_of_travelled_places();
         if (numberOfTraveledPlaces > 0){
             String textNumberOfTraveledPlaces = "Traveled to "+numberOfTraveledPlaces+" places!";
             mNumberOfTraveledPlaces.setText(textNumberOfTraveledPlaces);
-            mSeeTraveledPlaces.setVisibility(View.VISIBLE);
         }
         else{
             mNumberOfTraveledPlaces.setText("You haven't traveled any place yet!");
             mNumberOfTraveledPlaces.setTextColor(getResources().getColor(R.color.gray));
         }
         mProgressBar.setVisibility(View.GONE);
-    }
-
-    private void setupToolbar() {
-        ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
-
-        mProfileMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Profile Menu onClick : Account Settings");
-                startActivity(new Intent(getActivity(),SettingsActivity.class));
-            }
-        });
-
-        mProfileAddPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Profile Add Person onClick : Follow Person");
-                // later code
-            }
-        });
     }
 
     // BottomNavigationView Setup
