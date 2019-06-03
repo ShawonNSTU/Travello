@@ -314,8 +314,9 @@ public class ProfileFragment extends Fragment {
                         photo.setTagged_people(objectMap.get(getString(R.string.field_tagged_user_id)).toString());
 
                         photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
+
                     } catch (RuntimeException e){
-                        e.printStackTrace();
+                        Log.e(TAG,""+e.getMessage());
                     }
 
                     ArrayList<Comment> comments = new ArrayList<Comment>();
