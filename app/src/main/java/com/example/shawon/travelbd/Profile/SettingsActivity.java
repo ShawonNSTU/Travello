@@ -73,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         Log.d(TAG, "SettingsActivity onCreate: Starting.");
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager_container);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout1);
         mProgessDialog = new ProgressDialog(this);
         mStorageReference = FirebaseStorage.getInstance().getReference();
