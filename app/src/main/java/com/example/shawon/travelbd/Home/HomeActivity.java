@@ -16,11 +16,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.ModelClass.Photo;
-import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlacesActivity;
@@ -47,6 +48,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    //widgets
+    private ViewPager mViewPager;
+    private FrameLayout mFrameLayout;
+    private RelativeLayout mRelativeLayout;
+
+    private static final int HOME_FRAGMENT = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +62,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_home);
         Log.d(TAG,"HomeActivity onCreate: Starting.");
+
+        mViewPager = (ViewPager) findViewById(R.id.viewpager_container);
+        mFrameLayout = (FrameLayout) findViewById(R.id.container);
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.relLayoutParent);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view_home_page);
         navigationView.setNavigationItemSelectedListener(this);
@@ -65,8 +77,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         cameraFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewPager viewPager = (ViewPager) findViewById(R.id.container);
-                viewPager.setCurrentItem(1);    // Slide to the next viewpager
+                mViewPager.setCurrentItem(1);    // Slide to the next viewpager
             }
         });
 
@@ -86,13 +97,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         isUserLoggedInOrNot();
     }
 
-    public void onCommentThreadSelected(Photo photo, UserPublicInfo settings){
+    public void onCommentThreadSelected(Photo photo,String callingActivity){
         Log.d(TAG, "onCommentThreadSelected: selected a coemment thread");
 
         ViewCommentsFragment fragment  = new ViewCommentsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(getString(R.string.bundle_photo), photo);
-        args.putParcelable(getString(R.string.bundle_user_account_settings), settings);
+        args.putParcelable(getString(R.string.photo), photo);
+        args.putString(getString(R.string.home_activity), getString(R.string.home_activity));
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -102,12 +113,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void hideLayout(){
+        Log.d(TAG, "hideLayout: hiding layout");
+        mRelativeLayout.setVisibility(View.GONE);
+        mFrameLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void showLayout(){
+        Log.d(TAG, "hideLayout: showing layout");
+        mRelativeLayout.setVisibility(View.VISIBLE);
+        mFrameLayout.setVisibility(View.GONE);
+    }
+
     private void setupViewPagerListener() {
         Log.d(TAG,"Setting Up ViewPagerListener");
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 // No need to code
@@ -135,8 +156,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         sectionsPagerAdapter.addFragment(new HomeFragment());
         sectionsPagerAdapter.addFragment(new CameraFragment());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        mViewPager.setAdapter(sectionsPagerAdapter);
     }
 
     // BottomNavigationView Setup
@@ -185,6 +205,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        if(mFrameLayout.getVisibility() == View.VISIBLE){
+            showLayout();
+        }
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
@@ -249,6 +272,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        mViewPager.setCurrentItem(HOME_FRAGMENT);
     }
 
     @Override
