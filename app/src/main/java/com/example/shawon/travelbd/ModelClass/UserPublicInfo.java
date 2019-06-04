@@ -1,10 +1,13 @@
 package com.example.shawon.travelbd.ModelClass;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by SHAWON on 7/29/2018.
  */
 
-public class UserPublicInfo {
+public class UserPublicInfo implements Parcelable {
 
     private String username;
     private String hometown;
@@ -30,6 +33,29 @@ public class UserPublicInfo {
         this.number_of_travelled_places = number_of_travelled_places;
         this.user_id = user_id;
     }
+
+    protected UserPublicInfo(Parcel in) {
+        username = in.readString();
+        hometown = in.readString();
+        posts = in.readLong();
+        followers = in.readLong();
+        following = in.readLong();
+        profile_photo = in.readString();
+        number_of_travelled_places = in.readLong();
+        user_id = in.readString();
+    }
+
+    public static final Creator<UserPublicInfo> CREATOR = new Creator<UserPublicInfo>() {
+        @Override
+        public UserPublicInfo createFromParcel(Parcel in) {
+            return new UserPublicInfo(in);
+        }
+
+        @Override
+        public UserPublicInfo[] newArray(int size) {
+            return new UserPublicInfo[size];
+        }
+    };
 
     public String getUsername() {
         return username;
@@ -106,5 +132,22 @@ public class UserPublicInfo {
                 ", profile_photo='" + profile_photo + '\'' +
                 ", number_of_travelled_places=" + number_of_travelled_places +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(username);
+        dest.writeString(hometown);
+        dest.writeLong(posts);
+        dest.writeLong(followers);
+        dest.writeLong(following);
+        dest.writeString(profile_photo);
+        dest.writeLong(number_of_travelled_places);
+        dest.writeString(user_id);
     }
 }
