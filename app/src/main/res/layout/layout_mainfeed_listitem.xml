@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/relLayout1">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/profile_photo"
+                    android:layout_marginTop="20dp"
+                    app:civ_border_color="@color/light_black"
+                    app:civ_border_width="0.3dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/avatar"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="emptiness.shawon"
+                    android:layout_toRightOf="@+id/profile_photo"
+                    android:layout_marginLeft="15dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/username"
+                    android:textColor="@color/black"
+                    />
+
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_ellipces"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/ivEllipses"/>
+
+            </RelativeLayout>
+
+            <com.example.shawon.travelbd.Utils.SquareImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/post_image"
+                android:layout_below="@id/relLayout1"
+                android:scaleType="centerCrop"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/relLayout2"
+                android:layout_below="@+id/post_image"
+                android:background="@color/white">
+
+                <RelativeLayout
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/heartLayout"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:id="@+id/image_heart_red"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/ic_heart_red"
+                        android:visibility="invisible"/>
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:id="@+id/image_heart"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/ic_heart_white"
+                        android:visibility="visible"/>
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:id="@+id/speech_bubble"
+                    android:layout_toRightOf="@+id/heartLayout"
+                    android:src="@drawable/ic_speech_bubble"
+                    android:visibility="visible"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/relLayout3"
+                android:layout_below="@+id/relLayout2"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="5dp"
+                android:layout_marginBottom="50dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Liked by Nur, Moshiur, Santho and 30 others"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/image_likes"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="emptiness.shawon moutains #earthporn #mountains"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/image_caption"
+                    android:layout_below="@+id/image_likes"
+                    android:layout_marginTop="10dp"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/image_caption"
+                    android:id="@+id/location"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="-5dp">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/location_icon"
+                        android:src="@drawable/ic_location"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Noakhali"
+                        android:id="@+id/location_text"
+                        android:textColor="@color/next"
+                        android:textSize="16sp"
+                        android:layout_toEndOf="@+id/location_icon"
+                        android:layout_marginStart="5dp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/location"
+                    android:id="@+id/userRating"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rated as "
+                        android:id="@+id/rating_text"
+                        android:textColor="@color/light_black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3.5"
+                        android:textColor="@color/black"
+                        android:textStyle="bold|italic"
+                        android:textSize="16sp"
+                        android:id="@+id/userRatingNumber"
+                        android:layout_toEndOf="@+id/rating_text"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/userRating"
+                    android:id="@+id/googleRating"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Google rating "
+                        android:id="@+id/google_rating_text"
+                        android:textColor="@color/light_black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.5"
+                        android:textColor="@color/black"
+                        android:textStyle="bold|italic"
+                        android:textSize="16sp"
+                        android:id="@+id/googleRatingNumber"
+                        android:layout_toEndOf="@+id/google_rating_text"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View all 3 comments"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp"
+                    android:layout_below="@+id/googleRating"
+                    android:id="@+id/image_comments_link"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 DAYS AGO"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp"
+                    android:layout_below="@+id/image_comments_link"
+                    android:id="@+id/image_time_posted"
+                    android:layout_marginTop="10dp"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+</RelativeLayout>
