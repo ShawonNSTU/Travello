@@ -26,6 +26,7 @@ import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlacesActivity;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
+import com.example.shawon.travelbd.Utils.MainfeedListAdapter;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
 import com.example.shawon.travelbd.Utils.ViewCommentsFragment;
 import com.facebook.FacebookSdk;
@@ -33,7 +34,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        MainfeedListAdapter.OnLoadMoreItemsListener{
+
+    @Override
+    public void onLoadMoreItems() {
+        Log.d(TAG, "onLoadMoreItems: displaying more photos");
+        HomeFragment fragment = (HomeFragment)getSupportFragmentManager()
+                .findFragmentByTag("android:switcher:" + R.id.viewpager_container + ":" + mViewPager.getCurrentItem());
+        if(fragment != null){
+            fragment.displayMorePhotos();
+        }
+    }
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
