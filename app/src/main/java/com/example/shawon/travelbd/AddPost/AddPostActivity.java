@@ -65,7 +65,7 @@ public class AddPostActivity extends AppCompatActivity {
 
         sectionsPagerAdapter.addFragment(new PhotoFragment());          // Fragment Number 1
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager_container);
 
         mViewPager.setAdapter(sectionsPagerAdapter);
 
