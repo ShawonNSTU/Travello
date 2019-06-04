@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.shawon.travelbd.Home.HomeActivity;
 import com.example.shawon.travelbd.ModelClass.Comment;
 import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.R;
@@ -114,7 +115,14 @@ public class ViewCommentsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating back");
-                getActivity().getSupportFragmentManager().popBackStack();
+
+                if(getCallingActivityFromBundle().equals(getString(R.string.home_activity))){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    ((HomeActivity)getActivity()).showLayout();
+                }else{
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+
             }
         });
     }
@@ -160,6 +168,21 @@ public class ViewCommentsFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd't'HH:mm:ss'z'", Locale.CANADA);
         sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));
         return sdf.format(new Date());
+    }
+
+    /**
+     * retrieve the photo from the incoming bundle from profileActivity interface
+     * @return
+     */
+    private String getCallingActivityFromBundle(){
+        Log.d(TAG, "getPhotoFromBundle: arguments: " + getArguments());
+
+        Bundle bundle = this.getArguments();
+        if(bundle != null) {
+            return bundle.getString(getString(R.string.home_activity));
+        }else{
+            return null;
+        }
     }
 
     /**
