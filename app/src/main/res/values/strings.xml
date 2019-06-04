@@ -121,5 +121,8 @@
     <string name="unfollow">Unfollow</string>
     <string name="dbname_following">following</string>
     <string name="dbname_followers">followers</string>
+    <string name="bundle_photo">bundle_photo</string>
+    <string name="bundle_user_account_settings">bundle_user_account_settings</string>
+    <string name="home_activity">Home Activity</string>
 
 </resources>
