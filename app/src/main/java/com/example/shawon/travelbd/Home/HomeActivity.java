@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,11 +19,14 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.shawon.travelbd.Login.LoginActivity;
+import com.example.shawon.travelbd.ModelClass.Photo;
+import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlacesActivity;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
+import com.example.shawon.travelbd.Utils.ViewCommentsFragment;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -80,6 +84,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setupViewPager();
 
         isUserLoggedInOrNot();
+    }
+
+    public void onCommentThreadSelected(Photo photo, UserPublicInfo settings){
+        Log.d(TAG, "onCommentThreadSelected: selected a coemment thread");
+
+        ViewCommentsFragment fragment  = new ViewCommentsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.bundle_photo), photo);
+        args.putParcelable(getString(R.string.bundle_user_account_settings), settings);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(getString(R.string.view_comments_fragment));
+        transaction.commit();
+
     }
 
     private void setupViewPagerListener() {
