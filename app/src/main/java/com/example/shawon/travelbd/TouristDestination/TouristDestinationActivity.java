@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.DistrictModel;
@@ -29,6 +30,8 @@ public class TouristDestinationActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseRecyclerAdapter<DistrictModel, DistrictViewHolder> adapter;
 
+    private ImageView mBackArrow;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +40,20 @@ public class TouristDestinationActivity extends AppCompatActivity {
         mDatabaseDistrict = FirebaseDatabase.getInstance().getReference().child("district");
         recyclerView = (RecyclerView) findViewById(R.id.recycler_menu);
         recyclerView.setHasFixedSize(true);
+        mBackArrow = (ImageView) findViewById(R.id.backArrow);
 
         // Recycler view with GridLayout...
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // Here 2 is number of columns...
 
         loadMenu();
+
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     private void loadMenu() {
