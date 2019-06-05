@@ -5,6 +5,10 @@
         android:icon="@mipmap/baseline_person_black_24dp"
         android:title="@string/profile_name"/>
 
+    <item android:id="@+id/nav_tourist_destination"
+        android:icon="@drawable/ic_tourist_destination"
+        android:title="@string/tourist_destination"/>
+
     <item android:id="@+id/nav_search_destination_places"
         android:icon="@drawable/ic_search"
         android:title="@string/search_destination_places"/>
