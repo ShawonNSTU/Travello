@@ -25,6 +25,7 @@ import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlacesActivity;
+import com.example.shawon.travelbd.TouristDestination.TouristDestinationActivity;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.MainfeedListAdapter;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
@@ -208,6 +209,9 @@ public class HomeActivity extends AppCompatActivity implements
         else if (id == R.id.nav_sign_out){
             mAuth.signOut();
             finish();
+        }
+        else if (id == R.id.nav_tourist_destination){
+            startActivity(new Intent(HomeActivity.this, TouristDestinationActivity.class));
         }
 
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
