@@ -266,7 +266,9 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
                 viewHolder.setItemClickListener(new RecyclerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(mContext,""+adapter.getRef(position).getKey(),Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(mContext, PlaceDetailsActivity.class);
+                        intent.putExtra("PlaceID", adapter.getRef(position).getKey());
+                        startActivity(intent);
                     }
                 });
 
