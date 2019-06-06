@@ -35,7 +35,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:tint="#ffffff"
-            android:src="@drawable/ic_save_check"
+            android:src="@drawable/ic_sum"
             />
 
     </RelativeLayout>
