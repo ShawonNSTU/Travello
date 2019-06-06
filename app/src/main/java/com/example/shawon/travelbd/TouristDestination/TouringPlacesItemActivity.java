@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -48,7 +48,6 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
 
     // ...
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private DatabaseReference mDatabaseTouringPlaces;
     private String districtID = "";
     private Context mContext;
@@ -74,8 +73,8 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_touring_places);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        // Recycler view with GridLayout...
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // Here 2 is number of columns...
 
         mContext = TouringPlacesItemActivity.this;
         mBackArrow = (ImageView) findViewById(R.id.backArrow);
@@ -190,8 +189,8 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
 
     private void uploadImage() {
 
-        if(mImageUri != null && !TextUtils.isEmpty(Name.getText().toString()) && !TextUtils.isEmpty(Description.getText().toString())
-                && !TextUtils.isEmpty(Location.getText().toString())){
+        if(mImageUri != null && !TextUtils.isEmpty(Name.getText().toString())
+                && !TextUtils.isEmpty(Description.getText().toString())){
 
             final ProgressDialog mProgress = new ProgressDialog(this);
             mProgress.show();
