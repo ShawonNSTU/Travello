@@ -191,8 +191,7 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
     private void uploadImage() {
 
         if(mImageUri != null && !TextUtils.isEmpty(Name.getText().toString()) && !TextUtils.isEmpty(Description.getText().toString())
-                && !TextUtils.isEmpty(Location.getText().toString()) && !TextUtils.isEmpty(Wikipedia.getText().toString())
-                && !TextUtils.isEmpty(How_to_go.getText().toString()) && !TextUtils.isEmpty(Where_to_stay.getText().toString())){
+                && !TextUtils.isEmpty(Location.getText().toString())){
 
             final ProgressDialog mProgress = new ProgressDialog(this);
             mProgress.show();
