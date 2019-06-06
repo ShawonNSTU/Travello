@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.TouristDestination;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.DistrictModel;
 import com.example.shawon.travelbd.R;
@@ -74,7 +74,9 @@ public class TouristDestinationActivity extends AppCompatActivity {
                 viewHolder.setItemClickListener(new RecyclerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(TouristDestinationActivity.this, ""+mDistrictModel.getName(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(TouristDestinationActivity.this, TouringPlacesItemActivity.class);
+                        intent.putExtra("DistrictID", adapter.getRef(position).getKey());
+                        startActivity(intent);
                     }
                 });
             }
