@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.TouringPlaceItem;
@@ -52,6 +53,7 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
     private String districtID = "";
     private Context mContext;
     private FirebaseRecyclerAdapter<TouringPlaceItem,TouringPlaceItemViewHolder> adapter;
+    private ImageView mBackArrow;
 
     // will be deleted...
     private EditText Name,Description,Location,Type,Wikipedia,How_to_go,Where_to_stay;
@@ -76,6 +78,7 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(layoutManager);
 
         mContext = TouringPlacesItemActivity.this;
+        mBackArrow = (ImageView) findViewById(R.id.backArrow);
 
         if(getIntent() != null) {
             districtID = getIntent().getStringExtra("DistrictID");
@@ -83,6 +86,13 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
         if(!districtID.isEmpty() && districtID != null){
             loadListFood(districtID);
         }
+
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -241,7 +251,7 @@ public class TouringPlacesItemActivity extends AppCompatActivity{
 
     }
 
-    private void loadListFood(String categoryID) {
+    private void loadListFood(String districtID) {
 
         adapter = new FirebaseRecyclerAdapter<TouringPlaceItem, TouringPlaceItemViewHolder>(
                 TouringPlaceItem.class,
