@@ -55,6 +55,7 @@
             android:theme="@style/full_screen_window"/>
         <activity android:name=".TouristDestination.TouristDestinationActivity"/>
         <activity android:name=".TouristDestination.TouringPlacesItemActivity"/>
+        <activity android:name=".TouristDestination.PlaceDetailsActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
