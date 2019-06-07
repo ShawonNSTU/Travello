@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.TouristDestination;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -55,6 +56,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements RatingDia
     private TouringPlaceItem mTouringPlaceItem;
     private CardView how,where,web_link;
     private String mPlaceNameShow;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +64,9 @@ public class PlaceDetailsActivity extends AppCompatActivity implements RatingDia
         setContentView(R.layout.activity_place_details);
 
         mContext = PlaceDetailsActivity.this;
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
         mDatabasePlace = FirebaseDatabase.getInstance().getReference("Touring Places");
         mRatingBar = (RatingBar) findViewById(R.id.rating_bar);
         mButtonReview = (FloatingActionButton) findViewById(R.id.review_btn);
@@ -101,6 +106,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements RatingDia
                     getPlaceDetail(PlaceID);
                     mDatabasePlaceRating = FirebaseDatabase.getInstance().getReference().child("Place Rating").child(PlaceID);
                     getAllRatingOfThisPlace(PlaceID);
+                    progressDialog.dismiss();
             }
         }
 
@@ -118,8 +124,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements RatingDia
                 .setNegativeButtonText("Cancel")
                 .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
                 .setDefaultRating(1)
-                .setTitle("Review "+mPlaceNameShow)
-                .setDescription("Please review "+mPlaceNameShow+" and give your feedback")
+                .setTitle(mPlaceNameShow)
+                .setDescription("Please review this place and give your feedback")
                 .setTitleTextColor(R.color.example)
                 .setDescriptionTextColor(R.color.example)
                 .setHint("Describe your experience")
