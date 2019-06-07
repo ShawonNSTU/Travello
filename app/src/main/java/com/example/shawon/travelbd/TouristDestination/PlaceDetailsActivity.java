@@ -69,8 +69,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         mViewLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
 
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapseAppbar);
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar1);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapseAppbar1);
 
         // Set Toolbar for back arrow on it...
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
