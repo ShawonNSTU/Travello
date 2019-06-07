@@ -41,4 +41,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="CollapseAppbar1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ExpandedAppbar1" parent="@android:style/TextAppearance.Material.Title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
