@@ -2,6 +2,7 @@ package com.example.shawon.travelbd.TouristDestination;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,7 +36,10 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by SHAWON on 6/6/2019.
@@ -116,6 +121,46 @@ public class PlaceDetailsActivity extends AppCompatActivity implements RatingDia
                 showRatingDialog();
             }
         });
+
+        mShowReviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ProgressDialog progressDialog = new ProgressDialog(mContext);
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+                final DatabaseReference mPlaceRating = FirebaseDatabase.getInstance().getReference().child("Place Rating");
+                mPlaceRating.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(PlaceID)){
+                            progressDialog.dismiss();
+                            Intent intent = new Intent(mContext,ShowReviewActivity.class);
+                            intent.putExtra("PlaceID",PlaceID);
+                            startActivity(intent);
+                        }
+                        else{
+                            progressDialog.dismiss();
+                            Snackbar.make(mViewLayout,"Sorry, this place has no review to show!",Snackbar.LENGTH_SHORT).show();
+                        }
+                        mPlaceRating.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    private String getDateTime() {
+        Log.d(TAG,"getDateTime : getting default date-time format");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd't'HH:mm:ss'z'", Locale.CANADA);
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("Canada/Pacific"));
+        return sdf.format(new Date());
+
     }
 
     private void showRatingDialog() {
@@ -255,7 +300,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements RatingDia
                                                         String.valueOf(i),
                                                         s,
                                                         username,
-                                                        profile_photo);
+                                                        profile_photo,
+                                                        getDateTime());
         mDatabasePlaceRating.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
