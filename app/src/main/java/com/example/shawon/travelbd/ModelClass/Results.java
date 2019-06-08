@@ -32,6 +32,16 @@ public class Results {
 
     private String[] types;
 
+    private int user_ratings_total;
+
+    public int getUser_ratings_total() {
+        return user_ratings_total;
+    }
+
+    public void setUser_ratings_total(int user_ratings_total) {
+        this.user_ratings_total = user_ratings_total;
+    }
+
     public String getIcon () {
         return icon;
     }
