@@ -12,17 +12,19 @@ public class PlaceRating {
     private String review;
     private String name;
     private String profile_picture;
+    private String posted_date;
 
     public PlaceRating() {
     }
 
-    public PlaceRating(String user_id, String place_id, String rating_value, String review, String name, String profile_picture) {
+    public PlaceRating(String user_id, String place_id, String rating_value, String review, String name, String profile_picture, String posted_date) {
         this.user_id = user_id;
         this.place_id = place_id;
         this.rating_value = rating_value;
         this.review = review;
         this.name = name;
         this.profile_picture = profile_picture;
+        this.posted_date = posted_date;
     }
 
     public String getUser_id() {
@@ -73,6 +75,14 @@ public class PlaceRating {
         this.profile_picture = profile_picture;
     }
 
+    public String getPosted_date() {
+        return posted_date;
+    }
+
+    public void setPosted_date(String posted_date) {
+        this.posted_date = posted_date;
+    }
+
     @Override
     public String toString() {
         return "PlaceRating{" +
@@ -82,6 +92,7 @@ public class PlaceRating {
                 ", review='" + review + '\'' +
                 ", name='" + name + '\'' +
                 ", profile_picture='" + profile_picture + '\'' +
+                ", posted_date='" + posted_date + '\'' +
                 '}';
     }
 }
