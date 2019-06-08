@@ -145,11 +145,24 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             String la = String.valueOf(latLng.latitude);
                             String lo = String.valueOf(latLng.longitude);
                             String placeID = googlePlaces.getPlace_id();
+                            String totalRating = String.valueOf(googlePlaces.getUser_ratings_total());
+                            String status="null";
+                            try {
+                                status = googlePlaces.getOpening_hours().getOpen_now();
+                            }catch (RuntimeException e){
+                                e.getMessage();
+                            }
                             if (placeRating == null) placeRating = "2.5";
                             MarkerOptions markerOptions = new MarkerOptions();
                             markerOptions.position(latLng);
                             markerOptions.title(placeName);
-                            markerOptions.snippet("Rating : "+placeRating+"/5"+"\n"+"Latitude : "+la+"\n"+"Longitude : "+lo+"\n"+"Place ID : "+placeID);
+                            markerOptions.snippet("Rating : "+placeRating+"/5"+"\n"+
+                                                    "Latitude : "+la+"\n"+
+                                                    "Longitude : "+lo+"\n"+
+                                                    "Place ID : "+placeID+"\n"+
+                                                    "Place Name : "+placeName+"\n"+
+                                                    "Total Rating : "+totalRating+"\n"+
+                                                    "Status : "+status);
                             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                             mMap.addMarker(markerOptions).showInfoWindow();
                         }
@@ -296,6 +309,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(context,MapPlaceDetailsActivity.class);
+                intent.putExtra("Snippet", marker.getSnippet());
                 startActivity(intent);
             }
         });
