@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.shawon.travelbd.ModelClass.PlaceRating;
 import com.example.shawon.travelbd.R;
@@ -36,6 +38,7 @@ public class ShowReviewActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter<PlaceRating,ShowReviewViewHolder> adapter;
     private String PlaceID = "";
     private ProgressDialog mProgress;
+    private ImageView mBackArrow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +55,15 @@ public class ShowReviewActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        mBackArrow = (ImageView) findViewById(R.id.backArrow);
+
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         mProgress.setMessage("Loading...");
         mProgress.show();
         loadReviews();
