@@ -39,6 +39,6 @@ public class ShowReviewViewHolder extends RecyclerView.ViewHolder implements Vie
 
     @Override
     public void onClick(View v) {
-        itemClickListener.onClick(v,getAdapterPosition(),false);
+
     }
 }
