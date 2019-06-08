@@ -2,6 +2,7 @@ package com.example.shawon.travelbd.SearchDestinationPlaces;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -294,7 +295,8 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(context,""+marker.getSnippet(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(context,MapPlaceDetailsActivity.class);
+                startActivity(intent);
             }
         });
     }
