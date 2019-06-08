@@ -32,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import retrofit2.Call;
@@ -142,11 +143,12 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             String placeRating = googlePlaces.getRating();
                             String la = String.valueOf(latLng.latitude);
                             String lo = String.valueOf(latLng.longitude);
+                            String placeID = googlePlaces.getPlace_id();
                             if (placeRating == null) placeRating = "2.5";
                             MarkerOptions markerOptions = new MarkerOptions();
                             markerOptions.position(latLng);
                             markerOptions.title(placeName);
-                            markerOptions.snippet("Rating : "+placeRating+"/5"+"\n"+"Latitude : "+la+"\n"+"Longitude : "+lo);
+                            markerOptions.snippet("Rating : "+placeRating+"/5"+"\n"+"Latitude : "+la+"\n"+"Longitude : "+lo+"\n"+"Place ID : "+placeID);
                             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                             mMap.addMarker(markerOptions).showInfoWindow();
                         }
@@ -288,6 +290,13 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
         Log.d(TAG,"onMapReady : GoogleMap is ready");
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(context,""+marker.getSnippet(),Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
