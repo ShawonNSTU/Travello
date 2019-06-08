@@ -146,7 +146,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             String lo = String.valueOf(latLng.longitude);
                             String placeID = googlePlaces.getPlace_id();
                             String totalRating = String.valueOf(googlePlaces.getUser_ratings_total());
-                            String status="null";
+                            String status = "";
                             try {
                                 status = googlePlaces.getOpening_hours().getOpen_now();
                             }catch (RuntimeException e){
@@ -162,7 +162,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                                                     "Place ID : "+placeID+"\n"+
                                                     "Place Name : "+placeName+"\n"+
                                                     "Total Rating : "+totalRating+"\n"+
-                                                    "Status : "+status);
+                                                    "Status : "+status+"\n");
                             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                             mMap.addMarker(markerOptions).showInfoWindow();
                         }
