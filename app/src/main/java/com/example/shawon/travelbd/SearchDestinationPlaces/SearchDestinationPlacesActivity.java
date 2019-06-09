@@ -56,6 +56,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.RuntimeExecutionException;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
@@ -241,11 +242,15 @@ public class SearchDestinationPlacesActivity extends AppCompatActivity implement
             placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
                 @Override
                 public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
-                    PlaceLikelihoodBufferResponse places = task.getResult();
-                    PlaceLikelihood placeLikelihood = places.get(0);
-                    // request for getting place photo based on the place ID...
-                    getPhotoMetaData(placeLikelihood.getPlace().getId());
-                    places.release();
+                    try {
+                        PlaceLikelihoodBufferResponse places = task.getResult();
+                        PlaceLikelihood placeLikelihood = places.get(0);
+                        // request for getting place photo based on the place ID...
+                        getPhotoMetaData(placeLikelihood.getPlace().getId());
+                        places.release();
+                    }catch (RuntimeExecutionException e){
+                        e.getMessage();
+                    }
                 }
             });
         }catch (SecurityException e){
