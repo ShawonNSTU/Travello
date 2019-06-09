@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -59,6 +59,7 @@
             android:theme="@style/full_screen_window"/>
         <activity android:name=".TouristDestination.ShowReviewActivity"/>
         <activity android:name=".SearchDestinationPlaces.MapPlaceDetailsActivity"/>
+        <activity android:name=".SearchDestinationPlaces.DirectionActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
