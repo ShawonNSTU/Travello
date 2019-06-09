@@ -162,7 +162,9 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                                                     "Place ID : "+placeID+"\n"+
                                                     "Place Name : "+placeName+"\n"+
                                                     "Total Rating : "+totalRating+"\n"+
-                                                    "Status : "+status+"\n");
+                                                    "Status : "+status+"\n"+
+                                                    "Lat : "+latitude+"\n"+
+                                                    "Lng : "+longitude+"\n");
                             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                             mMap.addMarker(markerOptions).showInfoWindow();
                         }
