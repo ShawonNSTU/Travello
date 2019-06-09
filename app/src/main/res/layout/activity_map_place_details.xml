@@ -64,7 +64,7 @@
                             android:textColor="@color/black"
                             android:textSize="22sp"
                             android:layout_alignParentStart="true"
-                            android:justificationMode="inter_word"
+                            android:layout_marginEnd="45dp"
                             />
 
                         <ImageView
