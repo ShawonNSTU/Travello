@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.shawon.travelbd.ModelClass.UserInfo;
 import com.example.shawon.travelbd.ModelClass.UserPersonalInfo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
@@ -260,6 +261,8 @@ public class SignupActivity extends AppCompatActivity {
                             UserPublicInfo userPublicInfo = new UserPublicInfo(username,"",0,0,0,"",0,user.getUid());
                             myRef.child(getString(R.string.user_public_Info)).child(user.getUid()).setValue(userPublicInfo);
 
+                            UserInfo userInfo = new UserInfo(user.getUid(),username,"");
+                            myRef.child("Users").child(user.getUid()).setValue(userInfo);
                         }
 
                         @Override
