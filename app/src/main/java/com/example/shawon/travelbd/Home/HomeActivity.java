@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.shawon.travelbd.ChatWithFriends.MainActivity;
 import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
@@ -212,6 +213,9 @@ public class HomeActivity extends AppCompatActivity implements
         }
         else if (id == R.id.nav_tourist_destination){
             startActivity(new Intent(HomeActivity.this, TouristDestinationActivity.class));
+        }
+        else if (id == R.id.nav_message){
+            startActivity(new Intent(HomeActivity.this, MainActivity.class));
         }
 
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
