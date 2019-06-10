@@ -63,6 +63,8 @@
             android:theme="@style/full_screen_window"/>
         <activity android:name=".SearchDestinationPlaces.DirectionActivity"
             android:theme="@style/full_screen_window"/>
+        <activity android:name=".ChatWithFriends.MainActivity"/>
+        <activity android:name=".ChatWithFriends.MessageActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
