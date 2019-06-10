@@ -176,6 +176,11 @@ public class SettingsActivity extends AppCompatActivity {
                 .child(context.getString(R.string.profile_photo))
                 .setValue(url);
 
+        myRef.child("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("profile_image")
+                .setValue(url);
+
         finish();
     }
 
