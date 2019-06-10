@@ -207,10 +207,13 @@ public class PhotoFragment extends Fragment implements
 
                 if(bitmap != null){
                     Log.d(TAG,"nextButtonHandler : onClicked : Bitmap : "+bitmap);
-
-                    Intent intent = new Intent(getActivity(), NextShareActivity.class);
-                    intent.putExtra(getString(R.string.captured_image_bitmap), bitmap);
-                    startActivity(intent);
+                    try {
+                        Intent intent = new Intent(getActivity(), NextShareActivity.class);
+                        intent.putExtra(getString(R.string.captured_image_bitmap), bitmap);
+                        startActivity(intent);
+                    }catch (RuntimeException e){
+                        e.getMessage();
+                    }
                 }
                 else{
                     Toast.makeText(getActivity(),"Sorry, you have not captured any photo!",Toast.LENGTH_SHORT).show();
@@ -250,11 +253,11 @@ public class PhotoFragment extends Fragment implements
             int height = bitmap.getHeight();
             float bitmapRatio = (float)width / (float) height;
             if (bitmapRatio > 1){
-                width = 600;
+                width = 300;
                 height = (int) (width/bitmapRatio);
             }
             else {
-                height = 600;
+                height = 300;
                 width = (int) (height*bitmapRatio);
             }
 
