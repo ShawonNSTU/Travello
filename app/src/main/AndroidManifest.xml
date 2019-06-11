@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
@@ -65,6 +67,7 @@
             android:theme="@style/full_screen_window"/>
         <activity android:name=".ChatWithFriends.MainActivity"/>
         <activity android:name=".ChatWithFriends.MessageActivity"/>
+        <activity android:name=".Weather.WeatherActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
