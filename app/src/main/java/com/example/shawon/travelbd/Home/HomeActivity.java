@@ -31,6 +31,7 @@ import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.MainfeedListAdapter;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
 import com.example.shawon.travelbd.Utils.ViewCommentsFragment;
+import com.example.shawon.travelbd.Weather.WeatherActivity;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -216,6 +217,10 @@ public class HomeActivity extends AppCompatActivity implements
         }
         else if (id == R.id.nav_message){
             startActivity(new Intent(HomeActivity.this, MainActivity.class));
+        }
+
+        else if(id == R.id.nav_weather_info){
+            startActivity(new Intent(HomeActivity.this, WeatherActivity.class));
         }
 
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
