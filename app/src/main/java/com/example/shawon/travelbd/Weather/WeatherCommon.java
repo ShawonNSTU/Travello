@@ -29,10 +29,6 @@ public class WeatherCommon {
         return dateFormat.format(date);
     }
 
-    public static String getImage(String icon){
-        return String.format("http://openweathermap.org/img/w/%s.png",icon);
-    }
-
     public static String getDateNow(){
         DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm");
         Date date = new Date();
