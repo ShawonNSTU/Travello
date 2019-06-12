@@ -30,7 +30,7 @@ public class WeatherCommon {
     }
 
     public static String getDateNow(){
-        DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy  HH:mm");
         Date date = new Date();
         return dateFormat.format(date);
     }
