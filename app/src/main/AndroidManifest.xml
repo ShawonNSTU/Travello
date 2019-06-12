@@ -68,6 +68,7 @@
         <activity android:name=".ChatWithFriends.MainActivity"/>
         <activity android:name=".ChatWithFriends.MessageActivity"/>
         <activity android:name=".Weather.WeatherActivity"/>
+        <activity android:name=".Weather.SearchLocationForWeather"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
