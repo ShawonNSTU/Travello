@@ -103,6 +103,7 @@ public class WeatherActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pd.setMessage("Loading...");
             pd.show();
         }
 
