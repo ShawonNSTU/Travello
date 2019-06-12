@@ -293,7 +293,7 @@
         android:textStyle="bold"
         android:textSize="15sp"
         android:textColor="@color/red"
-        android:layout_marginStart="67dp"
+        android:layout_marginStart="70dp"
         android:visibility="invisible"
         />
 
