@@ -88,6 +88,7 @@ public class ProfileFragment extends Fragment {
     public static String mSelectedHometownLocation = "";
     private BottomNavigationViewEx bottomNavigationViewEx;
     private GridView gridView;
+    public static String latitude = "", longitude = "";
 
     private int mFollowersCount = 0;
     private int mFollowingCount = 0;
@@ -551,6 +552,18 @@ public class ProfileFragment extends Fragment {
                     .child(getString(R.string.hometown_field))
                     .setValue(mSelectedHometownLocation);
             mSelectedHometownLocation = "";
+
+            myRef.child(getString(R.string.user_public_Info))
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child("latitude")
+                    .setValue(latitude);
+            latitude = "";
+
+            myRef.child(getString(R.string.user_public_Info))
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child("longitude")
+                    .setValue(longitude);
+            longitude = "";
         }
     }
 }
