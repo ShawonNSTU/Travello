@@ -194,6 +194,8 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                         }
                         else{
                             ProfileFragment.mSelectedHometownLocation = placeName;
+                            ProfileFragment.latitude = String.valueOf(mPlace.getLatlng().latitude);
+                            ProfileFragment.longitude = String.valueOf(mPlace.getLatlng().longitude);
                             finish();
                         }
                     }catch (NullPointerException e){
