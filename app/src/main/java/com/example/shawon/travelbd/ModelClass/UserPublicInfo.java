@@ -17,13 +17,15 @@ public class UserPublicInfo implements Parcelable {
     private String profile_photo;
     private long number_of_travelled_places;
     private String user_id;
+    private String latitude;
+    private String longitude;
 
     public UserPublicInfo() {
 
     }
 
-    public UserPublicInfo(String username, String hometown, long posts, long followers, long following,
-                          String profile_photo, long number_of_travelled_places, String user_id) {
+    public UserPublicInfo(String username, String hometown, long posts, long followers, long following, String profile_photo,
+                          long number_of_travelled_places, String user_id, String latitude, String longitude) {
         this.username = username;
         this.hometown = hometown;
         this.posts = posts;
@@ -32,6 +34,8 @@ public class UserPublicInfo implements Parcelable {
         this.profile_photo = profile_photo;
         this.number_of_travelled_places = number_of_travelled_places;
         this.user_id = user_id;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     protected UserPublicInfo(Parcel in) {
@@ -121,6 +125,22 @@ public class UserPublicInfo implements Parcelable {
         this.user_id = user_id;
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     @Override
     public String toString() {
         return "UserPublicInfo{" +
@@ -131,6 +151,9 @@ public class UserPublicInfo implements Parcelable {
                 ", following=" + following +
                 ", profile_photo='" + profile_photo + '\'' +
                 ", number_of_travelled_places=" + number_of_travelled_places +
+                ", user_id='" + user_id + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
                 '}';
     }
 
