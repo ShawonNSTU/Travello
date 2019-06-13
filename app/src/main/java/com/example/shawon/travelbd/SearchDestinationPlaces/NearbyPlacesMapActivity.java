@@ -62,6 +62,7 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
     private GoogleMap mMap;
     private View mapView;
     private Location mCurrentLocation;
+    private String la, lo;
 
     private IGoogleAPIService mService;
 
@@ -142,8 +143,8 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                             LatLng latLng = new LatLng(lat,lng);
                             String placeName = googlePlaces.getName();
                             String placeRating = googlePlaces.getRating();
-                            String la = String.valueOf(latLng.latitude);
-                            String lo = String.valueOf(latLng.longitude);
+                            la = String.valueOf(latLng.latitude);
+                            lo = String.valueOf(latLng.longitude);
                             String placeID = googlePlaces.getPlace_id();
                             String totalRating = String.valueOf(googlePlaces.getUser_ratings_total());
                             String status = "";
@@ -167,6 +168,14 @@ public class NearbyPlacesMapActivity extends AppCompatActivity implements
                                                     "Lng : "+longitude+"\n");
                             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                             mMap.addMarker(markerOptions).showInfoWindow();
+                            Location currentLocation = new Location("Current Location");
+                            currentLocation.setLatitude(latitude);
+                            currentLocation.setLongitude(longitude);
+                            Location destinationLocation = new Location("Destination Location");
+                            destinationLocation.setLatitude(Double.valueOf(la));
+                            destinationLocation.setLongitude(Double.valueOf(lo));
+                            double distance = currentLocation.distanceTo(destinationLocation);
+                            Log.d(TAG,placeName+" "+String.valueOf(distance));
                         }
                     }
                 }
