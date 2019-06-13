@@ -7,7 +7,7 @@
 
     <item android:id="@+id/nav_message"
         android:icon="@drawable/ic_message"
-        android:title="Chat With Friends"/>
+        android:title="Chat"/>
 
 
     <item android:id="@+id/nav_tourist_destination"
@@ -18,9 +18,13 @@
         android:icon="@drawable/ic_search"
         android:title="@string/search_destination_places"/>
 
+    <item android:id="@+id/nav_suggested_places"
+        android:icon="@drawable/ic_place"
+        android:title="Suggested Places"/>
+
     <item android:id="@+id/nav_weather_info"
         android:icon="@drawable/ic_weather"
-        android:title="Weather Information"/>
+        android:title="Weather"/>
 
     <item android:id="@+id/nav_sign_out"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
