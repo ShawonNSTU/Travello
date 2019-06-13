@@ -258,7 +258,7 @@ public class SignupActivity extends AppCompatActivity {
                             UserPersonalInfo userPersonalInfo = new UserPersonalInfo(username,user.getEmail(),isUserEmailVerified,"","","","",mPassword,user.getUid());
                             myRef.child(getString(R.string.user_personal_Info)).child(user.getUid()).setValue(userPersonalInfo);
 
-                            UserPublicInfo userPublicInfo = new UserPublicInfo(username,"",0,0,0,"",0,user.getUid());
+                            UserPublicInfo userPublicInfo = new UserPublicInfo(username,"",0,0,0,"",0,user.getUid(),"","");
                             myRef.child(getString(R.string.user_public_Info)).child(user.getUid()).setValue(userPublicInfo);
 
                             UserInfo userInfo = new UserInfo(user.getUid(),username,"");
