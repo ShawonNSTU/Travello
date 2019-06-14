@@ -42,7 +42,7 @@
         </activity>
         <activity android:name=".Search.SearchActivity" android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".AddPost.AddPostActivity" android:theme="@style/full_screen_window"/>
-        <activity android:name=".Notification.NotificationActivity" />
+        <activity android:name=".UserStatus.StatusActivity" />
         <activity android:name=".Profile.ProfileActivity" />
         <activity android:name=".Profile.SettingsActivity" />
         <activity android:name=".Login.LoginActivity" />
