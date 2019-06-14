@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.example.shawon.travelbd.AddPost.AddPostActivity;
 import com.example.shawon.travelbd.Home.HomeActivity;
-import com.example.shawon.travelbd.Notification.NotificationActivity;
+import com.example.shawon.travelbd.UserStatus.StatusActivity;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Search.SearchActivity;
@@ -54,7 +54,7 @@ public class BottomNavigationViewHelper {
                         break;
 
                     case R.id.ic_favorite:
-                        Intent intent4 = new Intent(context,NotificationActivity.class);    // ACTIVITY_NUM 3
+                        Intent intent4 = new Intent(context,StatusActivity.class);    // ACTIVITY_NUM 3
                         context.startActivity(intent4);
                         break;
 
