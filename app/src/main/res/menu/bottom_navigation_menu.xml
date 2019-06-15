@@ -18,8 +18,8 @@
     </item>
     <item
         android:id="@+id/ic_favorite"
-        android:icon="@drawable/ic_notification"
-        android:title="Notification">
+        android:icon="@drawable/ic_status"
+        android:title="Status">
     </item>
     <item
         android:id="@+id/ic_person"
