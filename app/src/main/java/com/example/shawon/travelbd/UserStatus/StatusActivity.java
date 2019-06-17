@@ -2,6 +2,7 @@ package com.example.shawon.travelbd.UserStatus;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -81,7 +82,6 @@ public class StatusActivity extends AppCompatActivity {
         setProfilePhoto();
 
         getInfo();
-
     }
 
     private void setProfilePhoto() {
@@ -183,6 +183,14 @@ public class StatusActivity extends AppCompatActivity {
         }
         mSeekbar.setEnabled(false);
         dialog.dismiss();
+
+        mLinearLayout3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,LeaderboardActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     // BottomNavigationView Setup
