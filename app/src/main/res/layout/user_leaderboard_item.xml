@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/ranking"
         android:layout_centerVertical="true"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_marginStart="20dp"
