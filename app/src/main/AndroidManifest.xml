@@ -71,6 +71,7 @@
         <activity android:name=".Weather.SearchLocationForWeather"/>
         <activity android:name=".SuggestedPlaces.SuggestedPlacesActivity" />
         <activity android:name=".UserStatus.LeaderboardActivity"/>
+        <activity android:name=".SuggestForFollow.SuggestForFollowActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
