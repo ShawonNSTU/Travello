@@ -72,6 +72,8 @@
         <activity android:name=".SuggestedPlaces.SuggestedPlacesActivity" />
         <activity android:name=".UserStatus.LeaderboardActivity"/>
         <activity android:name=".SuggestForFollow.SuggestForFollowActivity"/>
+        <activity android:name=".CurrencyConverter.CurrencyConverterActivity"/>
+        <activity android:name=".Utilities.UtilitiesActivity"/>
 
         <provider
             android:authorities="com.facebook.app.FacebookContentProvider1786036838111875"
