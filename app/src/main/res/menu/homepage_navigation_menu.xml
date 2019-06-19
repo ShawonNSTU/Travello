@@ -26,9 +26,9 @@
         android:icon="@drawable/ic_place"
         android:title="Suggested Places"/>
 
-    <item android:id="@+id/nav_weather_info"
-        android:icon="@drawable/ic_weather"
-        android:title="Weather"/>
+    <item android:id="@+id/nav_utilities_info"
+        android:icon="@drawable/ic_utilities"
+        android:title="Utilities"/>
 
     <item android:id="@+id/nav_sign_out"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
