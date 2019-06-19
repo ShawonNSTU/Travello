@@ -29,11 +29,11 @@ import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlac
 import com.example.shawon.travelbd.SuggestForFollow.SuggestForFollowActivity;
 import com.example.shawon.travelbd.SuggestedPlaces.SuggestedPlacesActivity;
 import com.example.shawon.travelbd.TouristDestination.TouristDestinationActivity;
+import com.example.shawon.travelbd.Utilities.UtilitiesActivity;
 import com.example.shawon.travelbd.Utils.BottomNavigationViewHelper;
 import com.example.shawon.travelbd.Utils.MainfeedListAdapter;
 import com.example.shawon.travelbd.Utils.SectionsPagerAdapter;
 import com.example.shawon.travelbd.Utils.ViewCommentsFragment;
-import com.example.shawon.travelbd.Weather.SearchLocationForWeather;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -221,8 +221,8 @@ public class HomeActivity extends AppCompatActivity implements
             startActivity(new Intent(HomeActivity.this, MainActivity.class));
         }
 
-        else if(id == R.id.nav_weather_info){
-            startActivity(new Intent(HomeActivity.this, SearchLocationForWeather.class));
+        else if(id == R.id.nav_utilities_info){
+            startActivity(new Intent(HomeActivity.this, UtilitiesActivity.class));
         }
 
         else if(id == R.id.nav_suggested_places){
