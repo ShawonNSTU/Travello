@@ -126,6 +126,47 @@
     <string name="home_activity">Home Activity</string>
     <string name="tourist_destination">Tourist Destination</string>
 
+    <!-- TODO: Country Array for Currency Converter -->
+
+    <string-array name="country_arrays">
+        <item>BDT</item>
+        <item>USD</item>
+        <item>BGN</item>
+        <item>BRL</item>
+        <item>CAD</item>
+        <item>CHF</item>
+        <item>INR</item>
+        <item>AED</item>
+        <item>ANG</item>
+        <item>ARS</item>
+        <item>BAM</item>
+        <item>BIF</item>
+        <item>COP</item>
+        <item>DZD</item>
+        <item>EGP</item>
+        <item>GEL</item>
+        <item>GMD</item>
+        <item>HTG</item>
+        <item>JPY</item>
+        <item>KHR</item>
+        <item>LBP</item>
+        <item>MNT</item>
+        <item>MVR</item>
+        <item>NPR</item>
+        <item>OMR</item>
+        <item>PLN</item>
+        <item>RSD</item>
+        <item>SDG</item>
+        <item>SHP</item>
+        <item>TJS</item>
+        <item>TWD</item>
+        <item>UAH</item>
+        <item>UZS</item>
+        <item>YER</item>
+        <item>ZMW</item>
+
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
