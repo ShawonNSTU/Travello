@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.Home;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,6 +44,7 @@ public class HomeFragment extends Fragment{
     private ListView mListView;
     private MainfeedListAdapter mAdapter;
     private int mResults;
+    private ProgressDialog pd;
 
     @Nullable
     @Override
@@ -51,6 +53,9 @@ public class HomeFragment extends Fragment{
         mListView = (ListView) view.findViewById(R.id.listView);
         mFollowing = new ArrayList<>();
         mPhotos = new ArrayList<>();
+        pd = new ProgressDialog(getActivity());
+        pd.setMessage("Loading...");
+        pd.show();
 
         getFollowing();
 
@@ -179,6 +184,7 @@ public class HomeFragment extends Fragment{
 
                 mAdapter = new MainfeedListAdapter(getActivity(), R.layout.layout_mainfeed_listitem, mPaginatedPhotos);
                 mListView.setAdapter(mAdapter);
+                pd.dismiss();
 
             }catch (NullPointerException e){
                 Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage() );
