@@ -1,18 +1,24 @@
 package com.example.shawon.travelbd.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.shawon.travelbd.Home.HomeActivity;
@@ -23,6 +29,9 @@ import com.example.shawon.travelbd.ModelClass.UserPersonalInfo;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,6 +63,42 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
     }
     OnLoadMoreItemsListener mOnLoadMoreItemsListener;
 
+    private ShareDialog mShareDialog;
+
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Log.d(TAG, "Target : onBitmapLoaded : Started");
+
+            SharePhoto sharePhoto = new SharePhoto.Builder()
+                    .setBitmap(bitmap)
+                    .build();
+
+            if (ShareDialog.canShow(SharePhotoContent.class)){
+
+                SharePhotoContent sharePhotoContent = new SharePhotoContent.Builder()
+                        .addPhoto(sharePhoto)
+                        .build();
+
+                mShareDialog.show(sharePhotoContent);
+
+                Log.d(TAG, "Target : onBitmapLoaded : Finished");
+
+            }
+            else {
+                Log.d(TAG, "Target : onBitmapLoaded : SharePhotoContent.class does not supported.");
+            }
+        }
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            Log.d(TAG, "Target : onBitmapFailed");
+        }
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+            //later code
+        }
+    };
+
     private static final String TAG = "MainfeedListAdapter";
 
     private LayoutInflater mInflater;
@@ -67,6 +113,7 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         mLayoutResource = resource;
         this.mContext = context;
         mReference = FirebaseDatabase.getInstance().getReference();
+        mShareDialog = new ShareDialog((Activity) mContext);
     }
 
     static class ViewHolder{
@@ -75,6 +122,8 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         TextView username, timeDetla, caption, likes, comments, location_text, userRatingNumber, googleRatingNumber;
         SquareImageView image;
         ImageView heartRed, heartWhite, comment;
+        RatingBar userRatingBar, googleRatingBar;
+        ImageView ivEllipses;
 
         UserPublicInfo settings = new UserPublicInfo();
         UserPersonalInfo user  = new UserPersonalInfo();
@@ -109,6 +158,9 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
             holder.userRatingNumber = (TextView) convertView.findViewById(R.id.userRatingNumber);
             holder.googleRatingNumber = (TextView) convertView.findViewById(R.id.googleRatingNumber);
             holder.mprofileImage = (CircleImageView) convertView.findViewById(R.id.profile_photo);
+            holder.userRatingBar = (RatingBar) convertView.findViewById(R.id.userRatingBar);
+            holder.googleRatingBar = (RatingBar) convertView.findViewById(R.id.googleRatingBar);
+            holder.ivEllipses = (ImageView) convertView.findViewById(R.id.ivEllipses);
             holder.heart = new Heart(holder.heartWhite, holder.heartRed);
             holder.photo = getItem(position);
             holder.detector = new GestureDetector(mContext, new GestureListener(holder));
@@ -134,9 +186,31 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
 
         //set the userRating
         holder.userRatingNumber.setText(getItem(position).getRating());
+        holder.userRatingBar.setRating(Float.parseFloat(getItem(position).getRating()));
 
         //set the googlePlacesRating
         holder.googleRatingNumber.setText(getItem(position).getGoogle_places_rating());
+        holder.googleRatingBar.setRating(Float.parseFloat(getItem(position).getGoogle_places_rating()));
+
+        holder.ivEllipses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(mContext,holder.ivEllipses);
+                popupMenu.inflate(R.menu.recycler_option_menu);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        if(item.getItemId() == R.id.ic_share){
+                            Picasso.get().load(getItem(position).getImage_url()).into(target);
+                        }
+
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
 
         //set the comment
         List<Comment> comments = getItem(position).getComments();
