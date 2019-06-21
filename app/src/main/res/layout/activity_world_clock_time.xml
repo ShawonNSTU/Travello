@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1">
+
+        <include layout="@layout/snippet_top_toolbar_world_clock"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/select_item"
+        android:text="Select TimeZone"
+        android:textColor="@color/color_Accent"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/select_item">
+    </Spinner>
+
+    <com.tomerrosenfeld.customanalogclockview.CustomAnalogClock
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/spinner"
+        android:id="@+id/analog_clock"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:default_watchface="false"/>
+
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_zone_time"
+        android:textSize="16sp"
+        android:textColor="@color/light_black"
+        android:textStyle="bold"
+        android:layout_below="@+id/analog_clock"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>
