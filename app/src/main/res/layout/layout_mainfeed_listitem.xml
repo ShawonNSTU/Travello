@@ -11,33 +11,31 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:layout_marginBottom="20dp"
                 android:id="@+id/relLayout1">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:id="@+id/profile_photo"
-                    android:layout_marginTop="20dp"
                     app:civ_border_color="@color/light_black"
                     app:civ_border_width="0.3dp"
                     android:layout_marginLeft="25dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/avatar"/>
-
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="emptiness.shawon"
                     android:layout_toRightOf="@+id/profile_photo"
                     android:layout_marginLeft="15dp"
                     android:layout_centerVertical="true"
                     android:id="@+id/username"
                     android:textColor="@color/black"
                     />
-
 
                 <ImageView
                     android:layout_width="20dp"
@@ -47,6 +45,36 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
                     android:id="@+id/ivEllipses"/>
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:id="@+id/location_icon"
+                        android:src="@drawable/ic_location"
+                        android:layout_below="@+id/username"
+                        android:layout_marginTop="45dp"
+                        android:layout_marginStart="63dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/username"
+                        android:id="@+id/location_text"
+                        android:textColor="@color/next"
+                        android:textSize="12sp"
+                        android:layout_toEndOf="@+id/location_icon"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="45dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:textSize="12sp"
+                    android:layout_below="@+id/location_icon"
+                    android:layout_marginStart="66dp"
+                    android:id="@+id/image_time_posted"
+                    android:layout_marginTop="5dp"/>
 
             </RelativeLayout>
 
@@ -116,7 +144,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Liked by Nur, Moshiur, Santho and 30 others"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:id="@+id/image_likes"/>
@@ -124,7 +151,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="emptiness.shawon moutains #earthporn #mountains"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:id="@+id/image_caption"
@@ -136,32 +162,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/image_caption"
-                    android:id="@+id/location"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="-5dp">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:id="@+id/location_icon"
-                        android:src="@drawable/ic_location"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Noakhali"
-                        android:id="@+id/location_text"
-                        android:textColor="@color/next"
-                        android:textSize="16sp"
-                        android:layout_toEndOf="@+id/location_icon"
-                        android:layout_marginStart="5dp"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/location"
                     android:id="@+id/userRating"
                     android:layout_marginTop="10dp">
 
@@ -176,12 +176,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3.5"
                         android:textColor="@color/black"
                         android:textStyle="bold|italic"
                         android:textSize="16sp"
                         android:id="@+id/userRatingNumber"
                         android:layout_toEndOf="@+id/rating_text"/>
+
+                    <RatingBar
+                        android:id="@+id/userRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@id/userRatingNumber"
+                        style="?android:attr/ratingBarStyleSmall"/>
 
                 </RelativeLayout>
 
@@ -203,33 +211,30 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.5"
                         android:textColor="@color/black"
                         android:textStyle="bold|italic"
                         android:textSize="16sp"
                         android:id="@+id/googleRatingNumber"
                         android:layout_toEndOf="@+id/google_rating_text"/>
 
+                    <RatingBar
+                        android:id="@+id/googleRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@id/googleRatingNumber"
+                        style="?android:attr/ratingBarStyleSmall"/>
+
                 </RelativeLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="View all 3 comments"
                     android:textColor="@color/gray"
                     android:textSize="16sp"
                     android:layout_below="@+id/googleRating"
                     android:id="@+id/image_comments_link"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3 DAYS AGO"
-                    android:textColor="@color/gray"
-                    android:textSize="16sp"
-                    android:layout_below="@+id/image_comments_link"
-                    android:id="@+id/image_time_posted"
                     android:layout_marginTop="10dp"/>
 
             </RelativeLayout>
