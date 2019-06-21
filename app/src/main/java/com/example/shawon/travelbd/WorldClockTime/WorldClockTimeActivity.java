@@ -42,8 +42,6 @@ public class WorldClockTimeActivity extends AppCompatActivity {
         txtTimeZoneTime = (TextView) findViewById(R.id.txt_zone_time);
         mBackArrow = (ImageView) findViewById(R.id.backArrow);
         customAnalogClock = (CustomAnalogClock) findViewById(R.id.analog_clock);
-
-        customAnalogClock.setAutoUpdate(true);
         customAnalogClock.init(WorldClockTimeActivity.this,R.drawable.clock_face,R.drawable.hour_hand,R.drawable.minute_hand,
                 0,false,false);
 
