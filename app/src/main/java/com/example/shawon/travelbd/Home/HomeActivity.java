@@ -24,6 +24,7 @@ import com.example.shawon.travelbd.ChatWithFriends.MainActivity;
 import com.example.shawon.travelbd.FavouritePlace.FavouritePlaceActivity;
 import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.ModelClass.Photo;
+import com.example.shawon.travelbd.MyTrips.AddNewTripActivity;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.SearchDestinationPlaces.SearchDestinationPlacesActivity;
@@ -236,6 +237,10 @@ public class HomeActivity extends AppCompatActivity implements
 
         else if (id == R.id.nav_favourite_places){
             startActivity(new Intent(HomeActivity.this, FavouritePlaceActivity.class));
+        }
+
+        else if (id == R.id.nav_my_trips){
+            startActivity(new Intent(HomeActivity.this, AddNewTripActivity.class));
         }
 
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
