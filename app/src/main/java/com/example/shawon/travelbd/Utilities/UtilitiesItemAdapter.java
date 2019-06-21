@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.shawon.travelbd.CurrencyConverter.CurrencyConverterActivity;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Weather.SearchLocationForWeather;
+import com.example.shawon.travelbd.WorldClockTime.WorldClockTimeActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -78,6 +79,9 @@ public class UtilitiesItemAdapter extends ArrayAdapter<String> {
                 }
                 else if(getItem(position).equals("Currency Converter")){
                     mContext.startActivity(new Intent(mContext,CurrencyConverterActivity.class));
+                }
+                else if (getItem(position).equals("World Clock Time")) {
+                    mContext.startActivity(new Intent(mContext,WorldClockTimeActivity.class));
                 }
             }
         });
