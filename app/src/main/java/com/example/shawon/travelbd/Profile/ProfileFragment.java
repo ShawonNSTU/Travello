@@ -83,7 +83,6 @@ public class ProfileFragment extends Fragment {
     private ImageView mEditHometown;
     private ImageView mSeeTraveledPlaces;
     private ImageView mProfileMenu;
-    private ImageView mProfileAddPerson;
     private Toolbar toolbar;
     public static String mSelectedHometownLocation = "";
     private BottomNavigationViewEx bottomNavigationViewEx;
@@ -111,7 +110,6 @@ public class ProfileFragment extends Fragment {
         mTextEditProfile = (TextView) view.findViewById(R.id.textEditProfile);
         mSeeTraveledPlaces = (ImageView) view.findViewById(R.id.see_traveled_places);
         mProfileMenu = (ImageView) view.findViewById(R.id.profileMenu);
-        mProfileAddPerson = (ImageView) view.findViewById(R.id.profileAddPerson);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         bottomNavigationViewEx = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
@@ -373,14 +371,6 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG,"Profile Menu onClick : Account Settings");
                 startActivity(new Intent(getActivity(),SettingsActivity.class));
-            }
-        });
-
-        mProfileAddPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Profile Add Person onClick : Follow Person");
-                // later code
             }
         });
     }
