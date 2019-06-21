@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.shawon.travelbd.ChatWithFriends.MainActivity;
+import com.example.shawon.travelbd.FavouritePlace.FavouritePlaceActivity;
 import com.example.shawon.travelbd.Login.LoginActivity;
 import com.example.shawon.travelbd.ModelClass.Photo;
 import com.example.shawon.travelbd.Profile.ProfileActivity;
@@ -231,6 +232,10 @@ public class HomeActivity extends AppCompatActivity implements
 
         else if (id == R.id.nav_nearbyPeople) {
             startActivity(new Intent(HomeActivity.this, SuggestForFollowActivity.class));
+        }
+
+        else if (id == R.id.nav_favourite_places){
+            startActivity(new Intent(HomeActivity.this, FavouritePlaceActivity.class));
         }
 
         DrawerLayout mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout_HomeActivity);
