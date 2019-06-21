@@ -1,5 +1,6 @@
 package com.example.shawon.travelbd.SearchDestinationPlaces;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +18,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.shawon.travelbd.ModelClass.Favourites;
 import com.example.shawon.travelbd.R;
+import com.example.shawon.travelbd.Utils.FilePath;
+import com.example.shawon.travelbd.Utils.ImageManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,7 +40,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,7 +95,12 @@ public class MapPlaceDetailsActivity extends AppCompatActivity implements OnMapR
     private TextView text_website;
     private ImageView mWebsite;
     private TextView mLocation,mPlaceStatus,mPhoneNumber;
+    private ImageView mFavourite;
     private String website = "", location = "", phone_number = "";
+    private DatabaseReference favouritesDatabase;
+    private Bitmap bitmap;
+    private byte[] bytes;
+    private long imageCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,15 +126,22 @@ public class MapPlaceDetailsActivity extends AppCompatActivity implements OnMapR
         mLocation = (TextView) findViewById(R.id.location_text);
         mPlaceStatus = (TextView) findViewById(R.id.place_status);
         mPhoneNumber = (TextView) findViewById(R.id.phone_number);
+        mFavourite = (ImageView) findViewById(R.id.favourite_place);
+
+        favouritesDatabase = FirebaseDatabase.getInstance().getReference()
+                .child("Favourites")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         if(getIntent() != null) {
             mSnippet = getIntent().getStringExtra("Snippet");
+            Log.d(TAG,mSnippet);
         }
         if(!mSnippet.isEmpty() && mSnippet != null){
             splitStringFromSnippet(mSnippet);
             geoDataClient = Places.getGeoDataClient(this, null);
             details(mPlaceID);
             setUpWidgets();
+            favouriteOnClick();
         }
 
         mBackArrow.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +161,86 @@ public class MapPlaceDetailsActivity extends AppCompatActivity implements OnMapR
                 .build();
         googleApiClient.connect();
 
+    }
+
+    private void favouriteOnClick() {
+        mFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"favouriteOnClick");
+
+                favouritesDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        imageCount = dataSnapshot.getChildrenCount();
+                        ++imageCount;
+                        if(dataSnapshot.hasChild(mPlaceID)) {
+                            mFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_outline));
+                            favouritesDatabase.child(mPlaceID).removeValue();
+                        }
+                        else{
+                            final ProgressDialog pd = new ProgressDialog(MapPlaceDetailsActivity.this);
+                            pd.setMessage("Loading...");
+                            pd.show();
+                            bytes = ImageManager.getBytesFromBitmap(bitmap,100);
+                            StorageReference  mStorageReference = FirebaseStorage.getInstance().getReference();
+                            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            FilePath filePath = new FilePath();
+                            StorageReference storageReference = mStorageReference
+                                    .child(filePath.FIREBASE_IMAGE_STORAGE_PATH_OF_USERS + "/" + userID + "/favourites" + "/photo" + imageCount);
+
+                            UploadTask uploadTask = null;
+                            uploadTask = storageReference.putBytes(bytes);
+
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Log.d(TAG,"uploadPhoto : onSuccess");
+
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    uploadToDatabase(downloadUrl.toString());
+                                    pd.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG,"uploadPhoto : onFailure");
+
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void uploadToDatabase(String url) {
+        mFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_red));
+        Favourites favourites = new Favourites();
+        favourites.setPlace_id(mPlaceID);
+        favourites.setPlace_name(mPlaceName);
+        favourites.setLatitude(mLat);
+        favourites.setLongitude(mLng);
+        favourites.setPlace_rating(mRating);
+        favourites.setTotal_rating(mTotalRating);
+        favourites.setStatus(mStatus);
+        favourites.setPrevious_place_latitude(mPrevLat);
+        favourites.setPrevious_place_longitude(mPrevLng);
+        favourites.setPlace_image(url);
+        Log.d(TAG,favourites.toString());
+        favouritesDatabase.child(mPlaceID).setValue(favourites);
     }
 
     private void details(String reference) {
@@ -318,6 +426,24 @@ public class MapPlaceDetailsActivity extends AppCompatActivity implements OnMapR
             location_icon.setVisibility(View.GONE);
         }
         else mLocation.setText(location);
+
+        favouritesDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(mPlaceID)) {
+                    mFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_red));
+                }
+                else{
+                    mFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_outline));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void buildAlertDialog(String msg) {
@@ -427,7 +553,7 @@ public class MapPlaceDetailsActivity extends AppCompatActivity implements OnMapR
             @Override
             public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
                 PlacePhotoResponse photo = task.getResult();
-                Bitmap bitmap = photo.getBitmap();
+                bitmap = photo.getBitmap();
                 place_image.setImageBitmap(bitmap);
             }
         });
