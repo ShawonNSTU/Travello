@@ -24,20 +24,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textColor="@color/black"
                     android:layout_marginStart="5dp"
                     android:id="@+id/profileName"
                     />
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="50dp"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/profileAddPerson"
-                    android:src="@drawable/ic_add_person"/>
 
                 <ImageView
                     android:layout_width="25dp"
