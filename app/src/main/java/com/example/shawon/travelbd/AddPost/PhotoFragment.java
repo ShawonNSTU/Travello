@@ -173,7 +173,6 @@ public class PhotoFragment extends Fragment implements
             else {
                 mGeoAddress = address.getAddressLine(0);
             }
-            Toast.makeText(getActivity(),""+mGeoAddress,Toast.LENGTH_LONG).show();
         }catch (NullPointerException e){
             e.printStackTrace();
         }
