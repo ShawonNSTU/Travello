@@ -13,6 +13,10 @@
         android:icon="@drawable/ic_message"
         android:title="Chat"/>
 
+    <item android:id="@+id/nav_my_trips"
+        android:icon="@drawable/ic_trips"
+        android:title="My Trips"/>
+
     <item android:id="@+id/nav_nearbyPeople"
         android:icon="@drawable/ic_add_person"
         android:title="Nearby People"/>
