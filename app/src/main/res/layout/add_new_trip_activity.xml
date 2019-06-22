@@ -112,7 +112,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_show_review"
+            android:id="@+id/btn_add_trip"
             android:layout_width="match_parent"
             android:textAlignment="center"
             android:textSize="15sp"
