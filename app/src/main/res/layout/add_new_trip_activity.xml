@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/activityAddNewTrip"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1">
+
+        <include layout="@layout/snippet_add_new_trip_toolbar"/>
+
+    </RelativeLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="loading.json"
+        app:lottie_imageAssetsFolder="images"
+        app:lottie_loop="true"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp">
+
+            <EditText
+                android:id="@+id/tname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/black"
+                android:ems="10"
+                android:hint="Enter trip Name"
+                android:maxLines="1"
+                android:popupBackground="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:inputType="text"
+                tools:targetApi="lollipop" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_event"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"/>
+
+            <TextView
+                android:id="@+id/sdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:hint="Select Trip Date"
+                android:textColor="?attr/editTextColor"
+                android:background="?attr/editTextBackground" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_location"
+                android:layout_marginStart="-5dp"
+                android:layout_weight="0"/>
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/select_city_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:hint="Select City"
+                android:textColor="?attr/editTextColor"
+                android:background="?attr/editTextBackground" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_show_review"
+            android:layout_width="match_parent"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content"
+            android:text="Add Trip"
+            android:background="@color/color_Accent"
+            android:textAllCaps="true"
+            android:fontFamily="serif" />
+
+    </LinearLayout>
+
+</RelativeLayout>
