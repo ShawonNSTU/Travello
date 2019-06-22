@@ -47,6 +47,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.volley:volley:1.1.0'
     compile 'com.tomerrosenfeld.customanalogclockview:custom-analog-clock-view:1.1'
+    compile 'com.airbnb.android:lottie:2.7.0'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
