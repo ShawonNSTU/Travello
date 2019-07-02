@@ -60,6 +60,7 @@ public class HomeActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private NavigationView navigationView;
     private ImageView cameraFragment;
+    private RelativeLayout relativeLayout;
 
     private static final String TAG = "HomeActivity";
     private static final int ACTIVITY_NUM = 0;
@@ -74,6 +75,7 @@ public class HomeActivity extends AppCompatActivity implements
     private RelativeLayout mRelativeLayout;
 
     private static final int HOME_FRAGMENT = 0;
+    BottomNavigationViewEx bottomNavigationViewEx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,8 @@ public class HomeActivity extends AppCompatActivity implements
         mViewPager = (ViewPager) findViewById(R.id.viewpager_container);
         mFrameLayout = (FrameLayout) findViewById(R.id.container);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.relLayoutParent);
+        bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout1);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view_home_page);
         navigationView.setNavigationItemSelectedListener(this);
@@ -157,9 +161,13 @@ public class HomeActivity extends AppCompatActivity implements
             public void onPageSelected(int position) {
                 if (position == 1){         // Position 1 means Camera Fragment
                     getSupportActionBar().hide();
+                    bottomNavigationViewEx.setVisibility(View.GONE);
+                    relativeLayout.setVisibility(View.GONE);
                 }
                 else if (position == 0){        // Position 0 means Home Fragment
                     getSupportActionBar().show();
+                    bottomNavigationViewEx.setVisibility(View.VISIBLE);
+                    relativeLayout.setVisibility(View.VISIBLE);
                 }
             }
             @Override
@@ -183,7 +191,6 @@ public class HomeActivity extends AppCompatActivity implements
     private void setupBottomNavigationView() {
         Log.d(TAG,"HomeActivity setupBottomNavigationView: setting up BottomNavigationView");
 
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(context, bottomNavigationViewEx);
         Menu menu = bottomNavigationViewEx.getMenu();
