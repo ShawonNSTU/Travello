@@ -130,6 +130,7 @@ public class AddNewTripActivity extends AppCompatActivity implements DatePickerD
 
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.activityAddNewTrip);
         Snackbar.make(relativeLayout,"Trip added!",Snackbar.LENGTH_LONG).show();
+        finish();
     }
 
     private void loadAllCity() {
