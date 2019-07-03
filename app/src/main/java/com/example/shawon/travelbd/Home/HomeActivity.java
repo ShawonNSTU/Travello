@@ -163,11 +163,19 @@ public class HomeActivity extends AppCompatActivity implements
                     getSupportActionBar().hide();
                     bottomNavigationViewEx.setVisibility(View.GONE);
                     relativeLayout.setVisibility(View.GONE);
+                    View decorView = getWindow().getDecorView();
+                    //Hide status bar
+                    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                    decorView.setSystemUiVisibility(uiOptions);
                 }
                 else if (position == 0){        // Position 0 means Home Fragment
                     getSupportActionBar().show();
                     bottomNavigationViewEx.setVisibility(View.VISIBLE);
                     relativeLayout.setVisibility(View.VISIBLE);
+                    View decorView = getWindow().getDecorView();
+                    //show status bar
+                    int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+                    decorView.setSystemUiVisibility(uiOptions);
                 }
             }
             @Override
