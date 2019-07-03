@@ -166,8 +166,8 @@ public class AddNewTripActivity extends AppCompatActivity implements DatePickerD
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
         Log.d("Month", String.valueOf(month));
-        String mStartDate = Long.toString(calendar.getTimeInMillis() / 1000);
-        trip.setTrip_start_date(mStartDate);
         tripStartDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+        String mStartDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+        trip.setTrip_start_date(mStartDate);
     }
 }
