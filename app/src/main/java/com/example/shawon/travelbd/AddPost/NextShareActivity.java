@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shawon.travelbd.ModelClass.Photo;
+import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.Utils.FilePath;
 import com.example.shawon.travelbd.Utils.ImageManager;
@@ -45,6 +46,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -98,6 +100,7 @@ public class NextShareActivity extends AppCompatActivity {
     private SwitchCompat mSwitchCompat;
     private EditText mPhotoDescription;
     private TextView mShareButton;
+    private de.hdodenhof.circleimageview.CircleImageView mProfileImage;
 
     // Related to the dialog of images of selected location
     public static List<Bitmap> mSelectedLocationPhotosBitmap = new ArrayList<>();
@@ -166,11 +169,14 @@ public class NextShareActivity extends AppCompatActivity {
         mSwitchCompat = (SwitchCompat) findViewById(R.id.facebook_share_switch);
         mPhotoDescription = (EditText) findViewById(R.id.description);
         mShareButton = (TextView) findViewById(R.id.tvShare);
+        mProfileImage = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.profile_image);
         mStorageReference = FirebaseStorage.getInstance().getReference();
 
         setupToolbar();
 
         setSelectedImage();
+
+        setProfilePicture();
 
         addLocationOnClick();
 
@@ -185,6 +191,29 @@ public class NextShareActivity extends AppCompatActivity {
         mSwitchCompatCheckedOnChangeListener();
 
         mShareButtonOnClick();
+    }
+
+    private void setProfilePicture() {
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
+        Query query = reference1.child(getString(R.string.user_public_Info))
+                .orderByChild(getString(R.string.field_user_id)).equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(UserPublicInfo.class).toString());
+
+                    UserPublicInfo userPublicInfo = new UserPublicInfo();
+                    userPublicInfo = singleSnapshot.getValue(UserPublicInfo.class);
+                    Picasso.get().load(userPublicInfo.getProfile_photo()).into(mProfileImage);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void mShareButtonOnClick() {
