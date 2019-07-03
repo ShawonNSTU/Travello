@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.shawon.travelbd.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ public class MyTripsActivity extends AppCompatActivity {
     private FloatingActionButton button;
     private ViewPager viewPager;
     private Adapter adapter;
+    private ImageView mBackArrow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,10 +39,22 @@ public class MyTripsActivity extends AppCompatActivity {
         button = (FloatingActionButton) findViewById(R.id.fab);
         viewPager = findViewById(R.id.viewPager);
         viewPager.setPadding(130, 0, 130, 0);
+        mBackArrow = (ImageView) findViewById(R.id.backArrow);
 
         onClickFab();
 
+        onClickBackArrow();
+
         loadAllTrips();
+    }
+
+    private void onClickBackArrow() {
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void loadAllTrips() {
