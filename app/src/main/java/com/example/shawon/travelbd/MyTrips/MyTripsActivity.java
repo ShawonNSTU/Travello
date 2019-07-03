@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.shawon.travelbd.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ public class MyTripsActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private Adapter adapter;
     private ImageView mBackArrow;
+    private LottieAnimationView animationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class MyTripsActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         viewPager.setPadding(130, 0, 130, 0);
         mBackArrow = (ImageView) findViewById(R.id.backArrow);
+        animationView = (LottieAnimationView) findViewById(R.id.animation_view);
+        animationView.setVisibility(View.VISIBLE);
+        animationView.playAnimation();
 
         onClickFab();
 
@@ -73,6 +78,8 @@ public class MyTripsActivity extends AppCompatActivity {
                         adapter = new Adapter(myTrips,MyTripsActivity.this);
 
                         viewPager.setAdapter(adapter);
+
+                        animationView.setVisibility(View.GONE);
 
                     }
 
