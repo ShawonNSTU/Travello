@@ -92,6 +92,7 @@ public class ProfileFragment extends Fragment {
     private int mFollowersCount = 0;
     private int mFollowingCount = 0;
     private int mPostsCount = 0;
+    private int mPlaceCount = 0;
 
     @Nullable
     @Override
@@ -505,15 +506,40 @@ public class ProfileFragment extends Fragment {
         mEditHometown.setVisibility(View.VISIBLE);
 
         long numberOfTraveledPlaces = userPublicInfo.getNumber_of_travelled_places();
-        if (numberOfTraveledPlaces > 0){
-            String textNumberOfTraveledPlaces = "Traveled to "+numberOfTraveledPlaces+" places!";
-            mNumberOfTraveledPlaces.setText(textNumberOfTraveledPlaces);
-            mSeeTraveledPlaces.setVisibility(View.VISIBLE);
-        }
-        else{
-            mNumberOfTraveledPlaces.setText("You haven't traveled any place yet!");
-            mNumberOfTraveledPlaces.setTextColor(getResources().getColor(R.color.gray));
-        }
+
+        getNumberOfTraveledPlaces();
+    }
+
+    private int getNumberOfTraveledPlaces() {
+        mPlaceCount = 0;
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child(getString(R.string.user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(getString(R.string.uploaded));
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found place:" + singleSnapshot.getValue());
+                    mPlaceCount++;
+                }
+                if (mPlaceCount > 0){
+                    String textNumberOfTraveledPlaces = "Traveled to "+mPlaceCount+" places!";
+                    mNumberOfTraveledPlaces.setText(textNumberOfTraveledPlaces);
+                }
+                else{
+                    mNumberOfTraveledPlaces.setText("You haven't traveled any place yet!");
+                    mNumberOfTraveledPlaces.setTextColor(getResources().getColor(R.color.gray));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return mPlaceCount;
     }
 
    @Override
