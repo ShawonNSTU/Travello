@@ -123,11 +123,8 @@ public class AddNewTripActivity extends AppCompatActivity implements DatePickerD
         DatabaseReference mTripDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("Upcoming Trips")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
         String key = mTripDatabase.push().getKey();
-
         mTripDatabase.child(key).setValue(trip);
-
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.activityAddNewTrip);
         Snackbar.make(relativeLayout,"Trip added!",Snackbar.LENGTH_LONG).show();
         finish();
