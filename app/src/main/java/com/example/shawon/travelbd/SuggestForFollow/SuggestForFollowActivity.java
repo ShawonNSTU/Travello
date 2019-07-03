@@ -1,6 +1,5 @@
 package com.example.shawon.travelbd.SuggestForFollow;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.shawon.travelbd.ModelClass.UserPublicInfo;
 import com.example.shawon.travelbd.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +39,7 @@ public class SuggestForFollowActivity extends AppCompatActivity{
     private ArrayList<Integer> mMutualFriendList;
     private ListView listView;
     private ImageView mBackArrow;
-    private ProgressDialog progressDialog;
+    private LottieAnimationView animationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +54,9 @@ public class SuggestForFollowActivity extends AppCompatActivity{
         mMutualFriendList = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView);
         mBackArrow = (ImageView) findViewById(R.id.backArrow);
-        progressDialog = new ProgressDialog(mContext);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
+        animationView = (LottieAnimationView) findViewById(R.id.animation_view);
+        animationView.setVisibility(View.VISIBLE);
+        animationView.playAnimation();
 
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,7 +239,7 @@ public class SuggestForFollowActivity extends AppCompatActivity{
 
             mNearbyPeopleList.add(nearbyPeople);
         }
-        progressDialog.dismiss();
+        animationView.setVisibility(View.GONE);
         listView.setAdapter(new SuggestForFollowAdapter(mContext,R.layout.suggest_for_follow_item, mNearbyPeopleList));
     }
 }
