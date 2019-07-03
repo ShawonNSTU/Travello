@@ -1,6 +1,5 @@
 package com.example.shawon.travelbd.FavouritePlace;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.shawon.travelbd.ModelClass.Favourites;
 import com.example.shawon.travelbd.R;
 import com.example.shawon.travelbd.SearchDestinationPlaces.MapPlaceDetailsActivity;
@@ -37,8 +37,8 @@ public class FavouritePlaceActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseRecyclerAdapter<Favourites, FavouritePlaceItemViewHolder> adapter;
     private ImageView mBackArrow;
-    private ProgressDialog pd;
     private RelativeLayout relativeLayout;
+    private LottieAnimationView animationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,9 +48,9 @@ public class FavouritePlaceActivity extends AppCompatActivity {
         mDatabaseFavourite = FirebaseDatabase.getInstance().getReference()
                 .child("Favourites")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        pd = new ProgressDialog(this);
-        pd.setMessage("Loading...");
-        pd.show();
+        animationView = (LottieAnimationView) findViewById(R.id.animation_view);
+        animationView.setVisibility(View.VISIBLE);
+        animationView.playAnimation();
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout2);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_favourites);
@@ -67,7 +67,7 @@ public class FavouritePlaceActivity extends AppCompatActivity {
                     loadFavoritePlaces();
                 }
                 else{
-                    pd.dismiss();
+                    animationView.setVisibility(View.GONE);
                     Snackbar.make(relativeLayout,"You have not added any place to favourites!",Snackbar.LENGTH_LONG).show();
                 }
             }
@@ -130,6 +130,6 @@ public class FavouritePlaceActivity extends AppCompatActivity {
             }
         };
         recyclerView.setAdapter(adapter);
-        pd.dismiss();
+        animationView.setVisibility(View.GONE);
     }
 }
