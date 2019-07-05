@@ -134,6 +134,15 @@ public class ProfileFragment extends Fragment {
 
         onClickEditHometown();
 
+        mNumberOfTraveledPlaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mNumberOfTraveledPlaces.getText().equals("You haven't traveled any place yet!")){
+                    // later code...
+                }
+            }
+        });
+
         return view;
     }
 
