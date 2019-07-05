@@ -85,6 +85,7 @@ public class NextShareActivity extends AppCompatActivity {
     private double mPhotoUploadProgress = 0.0;
     private String mSelectedLocation = "";
     private String mSelectedLocationRating = "";
+    private String mSelectedLocationID = "";
     private float mRating = (float) 0.0;
     private String mTotalSelectedUserNameForTag = "";
     private String mTotalSelectedUserAuthIdForTag = "";
@@ -332,6 +333,12 @@ public class NextShareActivity extends AppCompatActivity {
                 .child(newPhotoKey).setValue(photo);
         myRef.child(context.getString(R.string.photos))
                 .child(newPhotoKey).setValue(photo);
+
+        myRef.child("Places")
+                .child(mSelectedLocationID)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(newPhotoKey)
+                .setValue(photo);
 
         String taggedAuthID = "";
         for(int i=0; i<mTotalSelectedUserAuthIdForTag.length(); i++){
@@ -592,14 +599,21 @@ public class NextShareActivity extends AppCompatActivity {
                 String mGetIntentFromIncomingActivity = data.getStringExtra(getString(R.string.user_selected_location));
                 mSelectedLocation = "";
                 mSelectedLocationRating = "";
-                int i;
+                mSelectedLocationID = "";
+                int i,j,k;
                 for (i=0; i<mGetIntentFromIncomingActivity.length(); i++){
                     if(mGetIntentFromIncomingActivity.charAt(i)!='@') mSelectedLocation+=mGetIntentFromIncomingActivity.charAt(i);
                     else break;
                 }
-                for(int j = i+1; j<mGetIntentFromIncomingActivity.length(); j++){
-                    mSelectedLocationRating+=mGetIntentFromIncomingActivity.charAt(j);
+                for(j = i+1; j<mGetIntentFromIncomingActivity.length(); j++){
+                    if(mGetIntentFromIncomingActivity.charAt(j)!='@') mSelectedLocationRating+=mGetIntentFromIncomingActivity.charAt(j);
+                    else break;
                 }
+
+                for(k = j+1; k<mGetIntentFromIncomingActivity.length(); k++){
+                    mSelectedLocationID+=mGetIntentFromIncomingActivity.charAt(k);
+                }
+
                 if (Float.parseFloat(mSelectedLocationRating) < 0){
                     mSelectedLocationRating = "2.2";
                 }
