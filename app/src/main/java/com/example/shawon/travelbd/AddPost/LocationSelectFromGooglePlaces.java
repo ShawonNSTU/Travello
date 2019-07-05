@@ -185,10 +185,11 @@ public class LocationSelectFromGooglePlaces extends AppCompatActivity implements
                     try {
                         String placeName = mPlace.getName();
                         float placeRating = mPlace.getRating();
+                        String placeID = mPlace.getId();
                         Log.d(TAG,"mSaveCheck : onClick : Location Found By Places Object : Place Name : "+placeName+" Place Ratings :"+placeRating);
                         if(isRootTask()) {
                             Intent intent = new Intent();
-                            intent.putExtra(getString(R.string.user_selected_location), placeName + "@" + placeRating);
+                            intent.putExtra(getString(R.string.user_selected_location), placeName + "@" + placeRating + "@" + placeID);
                             setResult(RESULT_OK, intent);
                             finish();
                         }
