@@ -18,3 +18,4 @@
 15) Also user can see his/her nearby tourist place. [Optional]
 16) Another interesting feature is that user’s review/post can be read by Text Recognition. That means user can hear the post. This will be helpful for the blind people who want to know about the place. Again by the Speech Recognition it can convert the user’s speech to text and finally able to post.
 17)  User can plan a trip and can find new people of his/her area who are planned to trip those location.
+Test
